@@ -11,10 +11,6 @@ var iacuc;
 var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacuc_id+"'");
 ?'iacucQ.count() =>'+iacucQ.count()+'\n';
 
-
-var subType = '{{topaz.submissionType.oid}}';
-var proType = '{{topaz.protocolType.oid}}';
-
 {{#if topaz.submissionType.oid}}
 {{#if topaz.protocolType.oid}}
 /*
