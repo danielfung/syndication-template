@@ -127,7 +127,7 @@ router.post('/:store', [
       var i = iacuc.compiledHandleBars(req.body, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
-      logger.info(compiledScript);
+      //logger.info(compiledScript);
       i = '{"script":"'+compiledScript+'"}'
       //res.writeHead(200, {"Content-Type":"application/json"});
       //res.write(JSON.stringify(i));
