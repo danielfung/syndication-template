@@ -11,6 +11,12 @@ var iacuc;
 var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacuc_id+"'");
 ?'iacucQ.count() =>'+iacucQ.count()+'\n';
 
+
+var subType = '{{topaz.submissionType.oid}}';
+var proType = '{{topaz.protocolType.oid}}';
+
+{{#if topaz.submissionType.oid}}
+{{#if topaz.protocolType.oid}}
 /*
 	1. Create iacuc Submission if it doesn't exist.
 */
@@ -153,7 +159,9 @@ if(iacucQ.count() == 0){
 			var submissionType = entityUtils.getObjectFromString('{{topaz.submissionType.oid}}');
 			iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
 	         ?'setting iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
-		{{else}}
+        {{/if}}
+
+        {{#if studyDetails}}
 			var submissionType = ApplicationEntity.getResultSet("_SubmissionType").query("ID = 'PROTOYYYY'");
 	    	if(submissionType.count() == 1) {
 	            submissionType = submissionType.elements().item(1);
@@ -169,7 +177,9 @@ if(iacucQ.count() == 0){
         	var protocolType = entityUtils.getObjectFromString('{{topaz.protocolType.oid}}');
         	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
         	?'setting ProtocolType =>'+protocolType+'\n';
-        {{else}}
+        {{/if}}
+
+        {{#if studyDetails}}
         	var protocolType = ApplicationEntity.getResultSet("_ClickProtocolType").query("customAttributes.name='Experimental Research'").elements().item(1);
         	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
         	?'defaulting ProtocolType =>Experimental Research1\n';
@@ -397,3 +407,6 @@ else{
 	        ?'setting iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
     {{/if}}
 }
+
+{{/if}}
+{{/if}}
