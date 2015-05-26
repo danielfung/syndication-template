@@ -8,6 +8,10 @@
 {{/if}}
 ?'IACUC ID =>'+iacuc_id+'\n';
 
+var iacuc;
+var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacuc_id+"'");
+?'iacucQ.count() =>'+iacucQ.count()+'\n';
+
 {{#if topaz.submissionType.oid}}
 {{#if topaz.protocolType.oid}}
 /*
@@ -355,10 +359,6 @@ else{
 
 {{/if}}
 {{/if}}
-
-var iacuc;
-var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacuc_id+"'");
-?'iacucQ.count() =>'+iacucQ.count()+'\n';
 
 {{#if studyDetails}}
 /*
