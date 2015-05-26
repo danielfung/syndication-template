@@ -10,9 +10,9 @@ module.exports = function(testData, preTemp) {
   	compiledScript = 'Error: JSON missing id';
   }
   else{
-    /*var data = fs.readFileSync('./data/15-00029_sql_populated.json', {encoding:'utf8'});
+    var data = fs.readFileSync('./data/15-00029_sql_populated.json', {encoding:'utf8'});
     testData = JSON.parse(data);
-  	var rawTemplate = fs.readFileSync('./iacuc/templates/create.tpl', {encoding:'utf8'});
+  	/*var rawTemplate = fs.readFileSync('./iacuc/templates/create.tpl', {encoding:'utf8'});
 
   	var compiledTemplate = handlebars.compile(rawTemplate);
   	compiledScript = compiledTemplate(testData);
