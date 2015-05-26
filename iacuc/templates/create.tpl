@@ -8,7 +8,6 @@
 {{/if}}
 ?'IACUC ID =>'+iacuc_id+'\n';
 
-
 {{#if topaz.submissionType.oid}}
 {{#if topaz.protocolType.oid}}
 /*
@@ -50,28 +49,6 @@ if(iacucQ.count() == 0){
 			var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
 
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
-			
-			if(investigator == null && person.count() > 0){
-				var studyTeamMember = _StudyTeamMemberInfo.createEntity();
-				?'_StudyTeamMemberInfo =>'+studyTeamMember+'\n';
-				iacucQ.setQualifiedAttribute("customAttributes.investigator", studyTeamMember);
-				person = person.item(1);
-				?'person adding as PI =>'+person+'\n';
-				studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
-				var department = person.customAttributes;
-				if(department != null){
-					department = person.customAttributes.department;
-					iacucQ.company = department;
-					?'iacucQ.company =>'+department+'\n';
-				}
-			}
-		{{/if}}
-
-		{{#if studyDetails.principalInvestigator}}
-			//studyDetails.pi
-			var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
-
-			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.principalInvestigator.userId}}'").elements();
 			
 			if(investigator == null && person.count() > 0){
 				var studyTeamMember = _StudyTeamMemberInfo.createEntity();
@@ -155,28 +132,10 @@ if(iacucQ.count() == 0){
 	         ?'setting iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
         {{/if}}
 
-        {{#if studyDetails}}
-			var submissionType = ApplicationEntity.getResultSet("_SubmissionType").query("ID = 'PROTOYYYY'");
-	    	if(submissionType.count() == 1) {
-	            submissionType = submissionType.elements().item(1);
-	            iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
-	            ?'default to iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
-	        }
-	        else {
-	            ?"IACUC New Protocol Application submission type not found, please contact an administrator\n";
-	        }
-        {{/if}}
-
         {{#if topaz.protocolType}}
         	var protocolType = entityUtils.getObjectFromString('{{topaz.protocolType.oid}}');
         	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
         	?'setting ProtocolType =>'+protocolType+'\n';
-        {{/if}}
-
-        {{#if studyDetails}}
-        	var protocolType = ApplicationEntity.getResultSet("_ClickProtocolType").query("customAttributes.name='Experimental Research'").elements().item(1);
-        	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
-        	?'defaulting ProtocolType =>Experimental Research1\n';
         {{/if}}
 
     /*
@@ -352,14 +311,6 @@ if(iacucQ.count() == 0){
 			?'setting protocolNumber =>'+protocolNumber+'\n';
 	{{/if}}
 
-	{{#if studyDetails}}
-		/*
-			2e. Add RNAV ID
-		*/
-			var rnavID = '{{id}}';
-			iacucQ.setQualifiedAttribute("customAttributes.rnavID", rnavID);
-			?'set rnavID =>'+rnavID+'\n';
-	{{/if}}
 }
 else{
 	iacucQ = iacucQ.elements().item(1);
