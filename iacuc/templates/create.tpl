@@ -140,6 +140,18 @@ if(iacucQ.count() == 0){
         	var protocolType = entityUtils.getObjectFromString('{{topaz.protocolType.oid}}');
         	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
         	?'setting ProtocolType =>'+protocolType+'\n';
+        	var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+        	if(submissionTypeName != 'New Protocol Application'){
+        		iacucQ.setQualifiedAttribute("customAttributes.previousTypeOfProtocol", protocolType);
+        		?'setting Previous ProtocolType =>'+protocolType+'\n';
+        	}
+        {{/if}}
+
+        {{#if topaz.draftProtocol}}
+        	var draft = entityUtils.getObjectFromString('{{topaz.draftType.id}}');
+        	iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", draft);
+        	?'setting draftProtocol =>'+draft+'\n';
+
         {{/if}}
 
     /*

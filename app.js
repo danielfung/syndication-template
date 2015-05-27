@@ -13,19 +13,19 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 
 //DLAR Pre-Compile Template
-var rawDlarTemplate = fs.readFileSync('./dlar/templates/create.tpl', {encoding:'utf8'});
+var rawDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/create.tpl', {encoding:'utf8'});
 var dlarCompliedTemplate = handlebars.compile(rawDlarTemplate);
 
 //IACUC Pre-Compile Template
-var rawIacucTemplate = fs.readFileSync('./iacuc/templates/create.tpl', {encoding:'utf8'});
+var rawIacucTemplate = fs.readFileSync(__dirname+'/iacuc/templates/create.tpl', {encoding:'utf8'});
 var iacucCompliedTemplate = handlebars.compile(rawIacucTemplate);
 
 //IRB Pre-Compile Template
-var rawIrbTemplate = fs.readFileSync('./irb/templates/create.tpl', {encoding:'utf8'});
+var rawIrbTemplate = fs.readFileSync(__dirname+'/irb/templates/create.tpl', {encoding:'utf8'});
 var irbCompliedTemplate = handlebars.compile(rawIrbTemplate);
 
 //CRMS Pre-Compile Template
-var rawCrmsTemplate = fs.readFileSync('./crms/templates/create.tpl', {encoding:'utf8'});
+var rawCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/create.tpl', {encoding:'utf8'});
 var crmsCompliedTemplate = handlebars.compile(rawCrmsTemplate);
 
 logger.debug("Overriding 'Express' logger");
