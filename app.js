@@ -69,7 +69,7 @@ router.get('/:store/:action', function (req, res, next) {
 
 
 router.post('/', function(req,res){
-  console.log(req.body);
+  //console.log(req.body);
   var j = 'test, received';
   res.send(j);
 });
@@ -153,6 +153,7 @@ app.use('/', router);
 
 var server = app.listen(port, function () {
   var host = server.address().address;
-  console.log('Example app listening at http://%s:%s', host, port, env);
+  //console.log('Example app listening at http://%s:%s', host, port, env);
+  logger.info('app listening at http://%s:%s', host, port, env);
 });
 
