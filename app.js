@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var logger = require("./utils/logger.js");
 var handlebars = require('handlebars');
 var fs = require('fs');
+var config = require('./config');
 
 //DLAR Pre-Compile Template
 var rawDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/create.tpl', {encoding:'utf8'});
@@ -127,7 +128,8 @@ router.post('/:store', [
       var i = iacuc.compiledHandleBars(req.body, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
-      logger.info(compiledScript);
+      //console.log(compiledScript);
+      //logger.info(compiledScript);
       i = '{"script":"'+compiledScript+'"}'
       //res.writeHead(200, {"Content-Type":"application/json"});
       //res.write(JSON.stringify(i));
