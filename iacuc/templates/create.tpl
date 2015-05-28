@@ -148,9 +148,12 @@ if(iacucQ.count() == 0){
         {{/if}}
 
         {{#if topaz.draftProtocol}}
-        	var draft = entityUtils.getObjectFromString('{{topaz.draftType.id}}');
-        	iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", draft);
-        	?'setting draftProtocol =>'+draft+'\n';
+        	var draft = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
+        	if(draft.count() > 0){
+        		draft = draft.elements().item(1);
+        		iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", draft);
+        		?'setting draftProtocol =>'+draft+'\n';
+        	}
 
         {{/if}}
 
@@ -162,13 +165,24 @@ if(iacucQ.count() == 0){
         ?'iacucQ.customAttributes.iacucSettings =>'+iacucQ.customAttributes.iacucSettings+'\n';
 
     /*
-    	1f. set IACUC parent to self
+    	1f. set IACUC parent to self if new protocol
     */
+    {{#if topaz.draftProtocol}}
+    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
+    	var parentSubmission = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
+		if(parentStudy == null && parentSubmission.count() > 0){
+			parentSubmission = parentSubmission.elements().item(1);
+			iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", parentSubmission);
+		}
+		?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
+
+    {{else}}
     	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
 		if(parentStudy == null){
 			iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
 		}
 		?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
+	{{/if}}
 
 	/*
 		1g. set irb status to pre-submission
@@ -327,6 +341,20 @@ if(iacucQ.count() == 0){
 			?'setting protocolNumber =>'+protocolNumber+'\n';
 	{{/if}}
 
+	/*
+		2e. create active amendment set
+	*/
+
+	var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+	if(submissionTypeName == "New Protocol Application"){
+		var amend = _ClickAmendment.createEntity();
+		iacucQ.setQualifiedAttribute('customAttributes.amendment', amend);
+		?'set amendment=>'+amend+'\n';
+
+		var activeAmendSet = ApplicationEntity.createEntitySet('_ClickActiveAmendment');
+		iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.activeAmendments" , activeAmendSet);
+		?'set activeAmendSet =>'+iacucQ.customAttributes.amendment.customAttributes.activeAmendments+'\n';
+	}
 }
 else{
 	iacucQ = iacucQ.elements().item(1);
