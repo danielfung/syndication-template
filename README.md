@@ -25,7 +25,7 @@
     $ sudo service syndication-template stop
  ```
 
-3. Usage to create studies in IRB/CRMS/IACUC/DLAR
+3a. Usage to create studies in IRB/CRMS/IACUC/DLAR
   - To Create IRB/CRMS _uid is expected
   - To Create IACUC/DLAR either _uid or id is expected
   - Example to create IACUC Submission: 
@@ -40,3 +40,6 @@
       "submissionType":{"oid":"com.webridge.entity.Entity[OID[123123123]]"}}
       }' -H "Content-Type: application/json" http://10.137.100.55:4441/iacuc
  ```
+
+3b. Animal Order/Animal Order Line Item/Cage Card
+  
