@@ -3,7 +3,7 @@ var fs = require('fs');
 
 module.exports = function(testData, preTemp) {
   var compiledScript;
-  if(!testData._uid){
+  if(!testData.id){
   	//var data = fs.readFileSync('./data/15-00306.json', {encoding:'utf8'});
   	//testData = JSON.parse(data);
   	compiledScript = 'Error: JSON missing id';
