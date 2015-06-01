@@ -176,9 +176,16 @@ if(iacucQ.count() == 0){
 		}
 		?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
 
+		var draftProtocol = iacucQ.getQualifiedAttribute("customAttributes.draftProtocol");
+		if(draftProtocol == null && parentSubmission.count() > 0){
+			parentSubmission = parentSubmission.elements().item(1);
+			iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", parentSubmission);
+		}
+		?'draftProtocol =>'+iacucQ.customAttributes.draftProtocol +'\n';
+
     {{else}}
-    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
-		if(parentStudy == null){
+    	var parentProtocol = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
+		if(parentProtocol == null){
 			iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
 		}
 		?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
@@ -354,6 +361,33 @@ if(iacucQ.count() == 0){
 		var activeAmendSet = ApplicationEntity.createEntitySet('_ClickActiveAmendment');
 		iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.activeAmendments" , activeAmendSet);
 		?'set activeAmendSet =>'+iacucQ.customAttributes.amendment.customAttributes.activeAmendments+'\n';
+	}
+	if(submissionTypeName == "Amendment"){
+		var parent = iacucQ.customAttributes.parentProtocol;
+		if(parent != null){
+			var amendment = parent.customAttributes.amendment;
+			if(amendment != null){
+				var activeSet = amendment.customAttributes.activeAmendments;
+				if(activeSet){
+					var activeAmend = _ClickActiveAmendment.createEntity();
+					?'iacucQ create _ClickActiveAmendment => '+activeAmend+'\n';
+					activeAmend.setQualifiedAttribute('customAttributes.activeAmendment', iacucQ);
+					?'assign active amendment => '+iacucQ+'\n';
+					activeSet.addElement(activeAmend);
+					?'add activeAmendment to set => '+activeAmend+'\n';
+				}
+			}
+			else{
+				?'parent.amendment not found\n';
+				var amend = _ClickAmendment.createEntity();
+				iacucQ.customAttributes.parentProtocol.setQualifiedAttribute('customAttributes.amendment', amend);
+				?'set amendment=>'+amend+'\n';
+
+				var activeAmendSet = ApplicationEntity.createEntitySet('_ClickActiveAmendment');
+				iacucQ.customAttributes.parentProtocol.customAttributes.amendment.setQualifiedAttribute("customAttributes.activeAmendments" , activeAmendSet);
+				?'set activeAmendSet =>'+iacucQ.customAttributes.amendment.customAttributes.activeAmendments+'\n';
+			}
+		}
 	}
 }
 else{
