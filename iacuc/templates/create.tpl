@@ -285,7 +285,22 @@ if(iacucQ.count() == 0){
 		}
 
 		var template =	ContainerTemplate.getElements("ContainerTemplateForID", "ID", whichTemplate);
-		var container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
+		var container;
+		if(submissionTypeName == "New Protocol Application"){
+			container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
+		}
+		else if(submissionTypeName == "Triennial Review" || submissionTypeName == "Annual Review" || submissionTypeName == "Amendment"){
+			var parentSubmission = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
+			if(parentSubmission.count() > 0){
+					parentSubmission = parentSubmission.elements().item(1);
+					container = parentSubmission.resourceContainer;
+					?'using parent.resourceContainer =>'+container+'\n';
+			}
+			else{
+				container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
+				?'Can't find parent, using default container =>'+container+'\n';
+			}
+		}
 		
 		var resourceContainer = iacucQ.resourceContainer;
 		if(resourceContainer == null){
@@ -652,7 +667,7 @@ if(iacucQ.count() == 0){
 
 		var template =	ContainerTemplate.getElements("ContainerTemplateForID", "ID", whichTemplate);
 		var container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
-		
+
 		var resourceContainer = iacucQ.resourceContainer;
 		if(resourceContainer == null){
 			if(template.count == 1 && container != null){
@@ -717,5 +732,4 @@ else{
 	iacucQ = iacucQ.elements().item(1);
 	?'iacucQ submission found =>'+iacucQ.ID+'\n';
 }
-
 {{/if}}
