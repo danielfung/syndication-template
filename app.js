@@ -5,6 +5,9 @@ var irb = require('./irb');
 var crms = require('./crms');
 var iacuc = require('./iacuc');
 var dlar = require('./dlar');
+var dlaraoi = require('./dlar-aolineitem');//dlar animal order line item
+var dlaraot = require('./dlar-aotransfer');//dlar animal order transfer
+var dlarcage = require('./dlar-cagecard');//dlar cage card
 var test = require('./irb/test.js');
 var winston = require('winston');
 var bodyParser = require('body-parser');
@@ -28,6 +31,18 @@ var irbCompliedTemplate = handlebars.compile(rawIrbTemplate);
 //CRMS Pre-Compile Template
 var rawCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/create.tpl', {encoding:'utf8'});
 var crmsCompliedTemplate = handlebars.compile(rawCrmsTemplate);
+
+//DLAR(Animal Order Line Item) Pre-Compile Template
+var rawDlarAoiTemplate = fs.readFileSync(__dirname+'/dlar-aolineitem/templates/create.tpl', {encoding:'utf8'});
+var dlarAoiCompliedTemplate = handlebars.compile(rawDlarAoiTemplate);
+
+//DLAR(Animal Order Transfer) Pre-Compile Template
+var rawDlarAotTemplate = fs.readFileSync(__dirname+'/dlar-aotransfer/templates/create.tpl', {encoding:'utf8'});
+var dlarAotCompliedTemplate = handlebars.compile(rawDlarAotTemplate);
+
+//DLAR(Animal Order Line Item) Pre-Compile Template
+var rawDlarCageTemplate = fs.readFileSync(__dirname+'/dlar-cagecard/templates/create.tpl', {encoding:'utf8'});
+var dlarCageCompliedTemplate = handlebars.compile(rawDlarCageTemplate);
 
 logger.debug("Overriding 'Express' logger");
 app.use(require('express')({ "stream": logger.stream }));
@@ -94,6 +109,15 @@ router.post('/:store', [
     if(store == 'dlar'){
       req.preTemp = dlarCompliedTemplate;
     }
+    if(store == 'dlaraolineitem'){
+      req.preTemp = dlarAoiCompliedTemplate;
+    }
+    if(store == 'dlaraotransfer'){
+      req.preTemp = dlarAotCompliedTemplate;
+    }
+    if(store == 'dlarcagecard'){
+      req.preTemp = dlarCageCompliedTemplate;
+    }
     next();
   },
   function (req, res, next) {
@@ -148,6 +172,43 @@ router.post('/:store', [
       res.send(i);
 
   }
+  if(store == 'dlaraolineitem'){
+      var i = dlaraoi.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      //logger.info(compiledScript);
+      i = '{"script":"'+compiledScript+'"}'
+      //res.writeHead(200, {"Content-Type":"application/json"});
+      //res.write(JSON.stringify(i));
+      //res.end();
+      res.send(i);
+
+  }
+  if(store == 'dlaraotransfer'){
+      var i = dlaraot.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      //logger.info(compiledScript);
+      i = '{"script":"'+compiledScript+'"}'
+      //res.writeHead(200, {"Content-Type":"application/json"});
+      //res.write(JSON.stringify(i));
+      //res.end();
+      res.send(i);
+
+  }
+  if(store == 'dlarcagecard'){
+      var i = dlarcage.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      //logger.info(compiledScript);
+      i = '{"script":"'+compiledScript+'"}'
+      //res.writeHead(200, {"Content-Type":"application/json"});
+      //res.write(JSON.stringify(i));
+      //res.end();
+      res.send(i);
+
+  }
+
   next();
 }]);
 
