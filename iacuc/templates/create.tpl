@@ -13,6 +13,9 @@ var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='
 ?'iacucQ.count() =>'+iacucQ.count()+'\n';
 
 {{#if topaz.draftProtocol}}
+/*
+	DRAFT PROTOCOL IN JSON
+*/
 var draft = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
 
 if(draft.count() > 0)
@@ -463,6 +466,9 @@ else{
 {{else}}
 {{#if topaz.submissionType.oid}}
 {{#if topaz.protocolType.oid}}
+/*
+	NO DRAFT PROTOCOL IN JSON
+*/
 	/*
 		1. Create iacuc Submission if it doesn't exist.
 	*/
