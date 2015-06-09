@@ -40,7 +40,7 @@ var dlarAoiCompliedTemplate = handlebars.compile(rawDlarAoiTemplate);
 var rawDlarAotTemplate = fs.readFileSync(__dirname+'/dlar-aotransfer/templates/create.tpl', {encoding:'utf8'});
 var dlarAotCompliedTemplate = handlebars.compile(rawDlarAotTemplate);
 
-//DLAR(Animal Order Line Item) Pre-Compile Template
+//DLAR(Cage Card) Pre-Compile Template
 var rawDlarCageTemplate = fs.readFileSync(__dirname+'/dlar-cagecard/templates/create.tpl', {encoding:'utf8'});
 var dlarCageCompliedTemplate = handlebars.compile(rawDlarCageTemplate);
 
@@ -91,7 +91,7 @@ router.post('/', function(req,res){
 });
 
 /*
-* Use a specific template depending on store: /store/templates/create.tpl
+* Use a specific template depending on store: /:store/templates/template.tpl => example: /irb/tempaltes/create.tpl
 * Return compiled template using Handlebars
 */
 router.post('/:store', [
@@ -216,6 +216,5 @@ app.use('/', router);
 
 var server = app.listen(port, function () {
   var host = server.address().address;
-  //console.log('Example app listening at http://%s:%s', host, port, env);
   logger.info('app listening at http://%s:%s', host, port, env);
 });

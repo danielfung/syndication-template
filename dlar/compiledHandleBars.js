@@ -9,8 +9,8 @@ module.exports = function(testData, preTemp) {
   	compiledScript = 'Error: JSON missing id';
   }
   else{
-    //var data = fs.readFileSync('./data/15-00306.json', {encoding:'utf8'});
-    //testData = JSON.parse(data);
+    var data = fs.readFileSync('./data/15-00143_sql_populatedDLAR.json', {encoding:'utf8'});
+    testData = JSON.parse(data);
   	//var rawTemplate = fs.readFileSync('./dlar/templates/create.tpl', {encoding:'utf8'});
 
   	//var compiledTemplate = handlebars.compile(rawTemplate);
@@ -19,6 +19,6 @@ module.exports = function(testData, preTemp) {
     //console.log(compiledScript);
     var compiledScript = preTemp(testData);
   }
-  //fs.writeFileSync('./test-outDLAR', compiledScript, {encoding:'utf8'});
+  fs.writeFileSync('./output/test-outDLAR', compiledScript, {encoding:'utf8'});
   return compiledScript;
 };

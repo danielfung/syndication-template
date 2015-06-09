@@ -1,8 +1,9 @@
 {{#if _uid}}
 	var iacuc_id = "{{this._uid}}";
-	iacuc_id = iacuc_id.split('-')[1];
-	var currentYear = new Date().getFullYear();
-	iacuc_id = 'PROTO'+currentYear+iacuc_id;
+	//iacuc_id = iacuc_id.split('-')[1];
+	//var currentYear = new Date().getFullYear();
+	//iacuc_id = 'PROTO'+currentYear+iacuc_id;
+	iacuc_id = "IA"+iacuc_id;
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
@@ -957,8 +958,10 @@ if(iacucQ.count() == 0){
 				var department = person.customAttributes;
 				if(department != null){
 					department = person.customAttributes.department;
-					iacucQ.company = department;
-					?'iacucQ.company =>'+department+'\n';
+					if(department != null){
+						iacucQ.company = department;
+						?'iacucQ.company =>'+department+'\n';
+					}
 				}
 			}
 		{{/if}}
@@ -973,6 +976,9 @@ if(iacucQ.count() == 0){
 				}
 				else{
 					?'Company Not Found =>{{company.id}}\n';
+					var company = ApplicationEntity.getResultSet("Company").query("NAME = 'MCIT'").elements().item(1);
+					iacucQ.company = company;
+					?'defaulting iacucQ.company => MCIT: '+company+'\n';
 				}
 			}
 		{{else}}
