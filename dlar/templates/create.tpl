@@ -233,6 +233,11 @@ if(iacucQ.count() == 0){
 		var painCategoryC = ' Pain Category C ';
 		var painCategoryD = ' Pain Category D ';
 		var painCategoryE = ' Pain Category E ';
+		var speciesArray = [];
+		{{#each animalGroups}}
+			speciesArray.push({"species":"{{species}}", "name":"{{name}}"});
+		{{/each}}
+		
 
 		{{#each animalCounts}}
 
@@ -290,12 +295,26 @@ if(iacucQ.count() == 0){
 					selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
 					?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';	
 
-					selAnimalGroup.customAttributes._ProtocolGroup = species;
-					?'set protocolGroup name =>'+species+'\n';
+					for(var i=0; i<speciesArray.length; i++){
+						if(speciesArray[i]){
+							if(speciesArray[i].species == "{{species}}"){
+							    var name = speciesArray[i].name;
+							    var name_1 = name.replace(/\s/g,"");
+							    if(name_1.length>0){
+									selAnimalGroup.customAttributes._ProtocolGroup = name;
+									?'set protocolGroup name =>'+name+'\n';
+								}
+								else{
+									selAnimalGroup.customAttributes._ProtocolGroup = species;
+									?'set protocolGroup name =>'+species+'\n';
+								}
+							}
+						}
+					}
+
 
 					animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
 					animalGroupSet.addElement(animalGroup);
-
 				}
 		    }
 		{{/each}}
