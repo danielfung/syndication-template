@@ -259,6 +259,9 @@ if(iacucQ.count() == 0){
 				species = species.replace(" ", "");
 				var painCategory = partsArray[1];
 				var painCategory_1;
+				var usda = partsArray[2];
+				usda = usda.replace(/^.+:/,'');
+				usda = usda.replace(/\s/g,"");
 
 				if(painCategory == painCategoryB){
 					painCategory_1 = "B";
@@ -286,10 +289,20 @@ if(iacucQ.count() == 0){
 					}
 
 					var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+					if(usda == "yes" || usda == "Yes"){
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+					}
+					else{
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+					}
+
 					if(clickSpecies.count() > 0){
 						clickSpecies = clickSpecies.elements().item(1);
 						selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
-						?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'\n';
+						?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
+					}
+					else{
+						?'Cant find animal =>'+species+' usda =>'+usda+'\n';
 					}
 
 					selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
