@@ -12,8 +12,8 @@
  		         "subjectType":"{"type":"Animal"}"
  		         ....
  		        }
- }
  "_uid":"18-00001"
+ }
 
  ```
 

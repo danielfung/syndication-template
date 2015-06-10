@@ -27,7 +27,8 @@
 
 3a. Usage to create studies in IRB/CRMS/IACUC/DLAR
   - To Create IRB/CRMS _uid is expected
-  - To Create IACUC/DLAR either _uid or id is expected
+  - To Create IACUC either _uid or id is expected
+  - To Create DLAR protocolNumber is expected
   - Example to create IACUC Submission: 
  ```
     $ curl -d '{
