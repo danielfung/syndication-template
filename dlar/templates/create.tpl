@@ -235,7 +235,7 @@ if(iacucQ.count() == 0){
 		var painCategoryE = ' Pain Category E ';
 		var speciesArray = [];
 		{{#each animalGroups}}
-			speciesArray.push({"species":"{{species}}", "name":"{{name}}"});
+			speciesArray.push({"species":"{{species.commonName}}", "name":"{{name}}"});
 		{{/each}}
 		
 
@@ -297,7 +297,7 @@ if(iacucQ.count() == 0){
 
 					for(var i=0; i<speciesArray.length; i++){
 						if(speciesArray[i]){
-							if(speciesArray[i].species == "{{species}}"){
+							if(speciesArray[i].species == "{{species.commonName}}"){
 							    var name = speciesArray[i].name;
 							    var name_1 = name.replace(/\s/g,"");
 							    if(name_1.length>0){
