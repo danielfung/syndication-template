@@ -119,7 +119,7 @@ if(iacucQ.count() == 0){
 	*/
 		var status = iacucQ.status;
 		if(status == null){
-			var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Active'").elements().item(1);
+			var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Pending Accounts'").elements().item(1);
 			iacucQ.status = statusOID;
 			?'iacucQ.status =>'+iacucQ.status.ID+'\n';
 		}
