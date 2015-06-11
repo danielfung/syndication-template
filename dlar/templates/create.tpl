@@ -210,6 +210,9 @@ if(iacucQ.count() == 0){
 		SF_AnimalSource  => _IS_AnimalSource
 		SF_AnimalGroup => _IS_AnimalGroup
 		Contact eSet => IACUC Study.contacts
+		_attribute32(species) eSet
+		groups(_IS_SEL_AnimalGroup) eSet
+		housingFacilities(_Facility) eSet
 	*/
 
 		var animalHousing = _IS_AnimalHousing.createEntitySet();
@@ -431,8 +434,9 @@ if(iacucQ.count() == 0){
 			 if(room.count() > 0){
 			 	 room = room.elements().item(1);
 				 var housing = _IS_AnimalHousing.createEntity();
-				 housing.setQualifiedAttribute('customAttributes.facility', room);
 				 ?'creating animal housing =>'+housing+'\n';
+				 housing.setQualifiedAttribute('customAttributes.facility', room);
+				 ?'set facility housing =>'+room+'\n';
 
 				 housingAdminSet.addElement(room)+'\n';
 				 ?'adding to housingAdminSet => '+room+'\n';
@@ -469,8 +473,9 @@ if(iacucQ.count() == 0){
 			 if(room.count() > 0){
 			 	 room = room.elements().item(1);
 				 var housing = _IS_AnimalHousing.createEntity();
+				 ?'creating animal housing =>'+housing+'\n'
 				 housing.setQualifiedAttribute('customAttributes.facility', room);
-				 ?'creating animal housing =>'+housing+'\n';
+				 ?'set facility housing =>'+room+'\n';
 
 				 housingAdminSet.addElement(room);
 				 ?'adding to eset housingAdminSet => '+room+'\n';
@@ -498,6 +503,12 @@ if(iacucQ.count() == 0){
 				 housingSet.addElement(housing);
 				 ?'adding Animal Housing to Housing set => '+housing+'\n';
 			 }
+		{{/each}}
+
+		{{#each longTermNonVivariumHousingLocations}}
+			/*
+				SF: lab locations - not done yet
+			*/
 		{{/each}}
 
 		//_IS_AnimalSource
