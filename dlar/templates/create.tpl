@@ -329,7 +329,7 @@ if(iacucQ.count() == 0){
 
 					selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
 					?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';	
-
+					/*
 					for(var i=0; i<speciesArray.length; i++){
 						if(speciesArray[i]){
 							if(speciesArray[i].species == "{{species.commonName}}"){
@@ -346,6 +346,11 @@ if(iacucQ.count() == 0){
 							}
 						}
 					}
+					*/
+
+					var protoGroupName = species + ' {{painCategory.category}}';
+					selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
+					?'set protocolGroup name =>'+protoGroupName+'\n';
 
 
 					animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
