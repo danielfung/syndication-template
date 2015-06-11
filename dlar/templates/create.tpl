@@ -217,6 +217,10 @@ if(iacucQ.count() == 0){
 		var animalGroup = _IS_AnimalGroup.createEntitySet();
 		var contact = Person.createEntitySet();
 
+		var species = ApplicationEntity.createEntitySet("_IACUC-Species");
+		var group = _IS_SEL_AnimalGroup.createEntitySet();
+		var housingFacilitiy = _Facility.createEntitySet();
+
 		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
 		?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
 
@@ -228,6 +232,19 @@ if(iacucQ.count() == 0){
 
 		iacucQ.contacts = contact;
 		?'create eset iacucQ.contacts =>'+iacucQ.contacts+'\n';
+
+		iacucQ.setQualifiedAttribute('customAttributes._attribute32', species);
+		?'create eset iacucQ.customAttributes._attribute32=>'+species+'\n';
+
+		iacucQ.setQualifiedAttribute('customAttributes.groups', group);
+		?'create eset iacucQ.customAttributes.groups=>'+group+'\n';
+
+		iacucQ.setQualifiedAttribute('customAttributes.housingFacilities', housingFacilitiy);
+		?'create eset iacucQ.customAttributes.housingFacilities=>'+housingFacilitiy+'\n';
+
+		var speciesAdminSet = iacucQ.customAttributes._attribute32;
+		var groupAdminSet = iacucQ.customAttributes.groups;
+		var housingAdminSet = iacucQ.customAttributes.housingFacilities;
 
 		var painCategoryB = ' Pain Category B ';
 		var painCategoryC = ' Pain Category C ';
@@ -299,6 +316,8 @@ if(iacucQ.count() == 0){
 					if(clickSpecies.count() > 0){
 						clickSpecies = clickSpecies.elements().item(1);
 						selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
+						speciesAdminSet.addElement(clickSpecies);
+						?'adding clickSpeices to speciesAdminSet =>'+clickSpecies+'\n';
 						?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
 					}
 					else{
@@ -328,6 +347,9 @@ if(iacucQ.count() == 0){
 
 					animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
 					animalGroupSet.addElement(animalGroup);
+					?'adding eset animalGroupSet => '+animalGroup+'\n';
+					groupAdminSet.addElement(selAnimalGroup);
+					?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
 				}
 		    }
 		{{/each}}
@@ -412,6 +434,9 @@ if(iacucQ.count() == 0){
 				 housing.setQualifiedAttribute('customAttributes.facility', room);
 				 ?'creating animal housing =>'+housing+'\n';
 
+				 housingAdminSet.addElement(room)+'\n';
+				 ?'adding to housingAdminSet => '+room+'\n';
+
 				 var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
 				 housing.customAttributes._ProtocolGroup = animalHousingGroupSet;
 				 ?'creating housing.groupSet =>'+animalHousingGroupSet+'\n';
@@ -428,11 +453,13 @@ if(iacucQ.count() == 0){
 				 			if(findAnimal == animal_name){
 				 				animalHousingGroupSet_1.addElement(animal);
 				 				?'adding animal to housing.animalSet =>'+animal+'\n';
+
 				 			}
 				 		}
 				 	}
 				 {{/each}}
 				 housingSet.addElement(housing);
+				 ?'adding to housingSet => '+housing+'\n';
 			 }
 		{{/each}}
 
@@ -444,6 +471,9 @@ if(iacucQ.count() == 0){
 				 var housing = _IS_AnimalHousing.createEntity();
 				 housing.setQualifiedAttribute('customAttributes.facility', room);
 				 ?'creating animal housing =>'+housing+'\n';
+
+				 housingAdminSet.addElement(room);
+				 ?'adding to eset housingAdminSet => '+room+'\n';
 
 				 var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
 				 housing.customAttributes._ProtocolGroup = animalHousingGroupSet;
