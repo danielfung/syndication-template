@@ -333,6 +333,16 @@ if(iacucQ.count() == 0){
 		{{/each}}
 
 		var contactSet = iacucQ.contacts;
+
+		var protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
+		if(protocolTeamMembers == null){
+			var studyTeamMemberInfo = _StudyTeamMemberINfo.createEntitySet();
+			iacucQ.customAttributes.protocolTeamMembers = studyTeamMemberInfo;
+			?'iacucQ.customAttributes.protocolTeamMembers =>'+studyTeamMemberInfo+'\n';
+		}
+
+		protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
+
 		{{#each studyTeamMembers}}
 			{{#if studyTeamMember.userId}}
 
@@ -341,6 +351,40 @@ if(iacucQ.count() == 0){
 					person = person.elements().item(1);
 					contactSet.addElement(person);
 					?'added person to contact set =>'+person+'\n';
+
+					var studyTeam = _StudyTeamMemberINfo.createEntity();
+					?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
+
+					studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
+					?'set person to studyTeamMember => '+person+'\n';
+
+					var iacucAuthorizedToOrderAnimals = "{{isAuthorizedToOrderAnimals}}";
+					var iacucInvolvedInAnimalHandling = "{{isInvolvedInAnimalHandling}}";
+					var dlarAuthorizedToOrderAnimals;
+					var dlarInvolvedInAnimalHandling;
+
+					if(iacucAuthorizedToOrderAnimals == "1"){
+						dlarAuthorizedToOrderAnimals = true;
+					}
+					else{
+						dlarAuthorizedToOrderAnimals = false;
+					}
+
+					if(iacucInvolvedInAnimalHandling == "1"){
+						dlarInvolvedInAnimalHandling = true;
+					}
+					else{
+						dlarInvolvedInAnimalHandling = false;
+					}
+
+					studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
+					?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
+					studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
+					?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
+
+					protocolTeamMembers.addElement(studyTeam);
+					?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
+
 				}
 
 			{{/if}}
