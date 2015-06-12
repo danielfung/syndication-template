@@ -6,10 +6,10 @@
 Example: Name: Rat, USDA: No(false)
 
  ```
-2. Locations will be matched by Building or Room.
+2. Locations will be matched depending on type:example) Building
  ```
-facilityRoom => Room
-facilityBuilding => Building
+facilityRoom => Room - will be found by Room #, and Building Name
+facilityBuilding => Building - will be found by Building Name
  ```
 
 3. ID used in DLAR.IACUC
