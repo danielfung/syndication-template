@@ -119,7 +119,8 @@ if(iacucQ.count() == 0){
 	*/
 		var status = iacucQ.status;
 		if(status == null){
-			var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Pending Accounts'").elements().item(1);
+			//var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Pending Accounts'").elements().item(1);
+			var statusOID = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[5ABEF2B631731F4C9C9E665C2D0AF3AD]]');
 			iacucQ.status = statusOID;
 			?'iacucQ.status =>'+iacucQ.status.ID+'\n';
 		}
