@@ -437,6 +437,7 @@ if(iacucQ.count() == 0){
 		//_IS_AnimalHousing
 		{{#each animalHousingLocationRoom}}
 			 var room = ApplicationEntity.getResultSet('_Facility').query("name='{{facilityRoom.name}}'");
+			 room = room.query("customAttributes.building.name='{{facilityRoom.building.name}}'");
 			 room = room.query("customAttributes._attribute2='Room'");
 			 if(room.count() > 0){
 			 	 room = room.elements().item(1);
