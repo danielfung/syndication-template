@@ -205,7 +205,7 @@ if(iacucQ.count() == 0){
 		?'create eset iacucQ.customAttributes.departmentAdministrators=>'+person+'\n';
 
 	/*
-		2b. create ESETS
+		2b. create following sets for dlar:
 		SF_AnimalHousing => _IS_AnimalHousing
 		SF_AnimalSource  => _IS_AnimalSource
 		SF_AnimalGroup => _IS_AnimalGroup
@@ -328,7 +328,8 @@ if(iacucQ.count() == 0){
 					}
 
 					selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
-					?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';	
+					?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
+
 					/*
 					for(var i=0; i<speciesArray.length; i++){
 						if(speciesArray[i]){
