@@ -462,6 +462,8 @@ if(draft.count() > 0)
 else{
 	?'ERROR: Draft Protocol Not Found =>{{topaz.draftProtocol.id}}\n';
 	?'IACUC ID =>{{id}}\n';
+	?'SubmissionType =>{{topaz.submissionType.oid}}\n';
+	?'ProtocolType =>{{topaz.protocolType.oid}}\n';
 }
 
 {{else}}
