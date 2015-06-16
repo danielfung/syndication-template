@@ -206,7 +206,7 @@ if(iacucQ.count() == 0){
 		?'create eset iacucQ.customAttributes.departmentAdministrators=>'+person+'\n';
 
 	/*
-		2b. create following sets for dlar:
+		2b. create the following sets for dlar IACUC Study:
 		SF_AnimalHousing => _IS_AnimalHousing
 		SF_AnimalSource  => _IS_AnimalSource
 		SF_AnimalGroup => _IS_AnimalGroup
