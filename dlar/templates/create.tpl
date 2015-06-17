@@ -554,6 +554,17 @@ if(iacucQ.count() == 0){
 		animalSourceSet.addElement(animalSource);
 		?'adding Animal Source to source set => '+animalSource+'\n';
 
+		{{#if id}}
+			/*
+				2c. Set assignNumber(IACUC ID=>(example)PROTO201500001)
+			*/		
+
+			var a = iacucQ.customAttributes.assignNumber;
+			if(a == null){
+				iacucQ.customAttributes.assignNumber = '{{id}}';
+				?'setting iacucQ.customAttriubtes.assignNumber => '+iacucQ.customAttributes.assignNumber+'\n';
+			}
+		{{/if}}
 
 
 }
