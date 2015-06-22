@@ -7,7 +7,7 @@ module.exports = function(testData, preTemp) {
   	//var data = fs.readFileSync('./data/15-00306.json', {encoding:'utf8'});
   	//testData = JSON.parse(data);
     //console.log(testData.id);
-  	compiledScript = '?Error: JSON missing id';
+  	compiledScript = "?'Error: JSON missing id'";
   }
   else{
     /*
