@@ -3,6 +3,9 @@ irb_id = 'i'+irb_id;
 var irb;
 var irbQ = ApplicationEntity.getResultSet('_IRBSubmission').query("ID='"+irb_id+"'");
 ?'irbQ.count() =>'+irbQ.count()+'\n';
+
+var status = '{{status}}';
+if(status == "Submitted"){
 /*
 	1. Create IRB Submission if it doesn't exist.
 */
@@ -580,4 +583,10 @@ if(irbQ.count() == 0){
 			?'adding Other location =>'+location+'\n';
 		{{/each}}
 
+}
+}
+else{
+	?'Error: Status is not submitted\n';
+	?'RN Study ID =>{{id}}\n';
+	?'current status =>{{status}}\n';
 }

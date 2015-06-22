@@ -4,6 +4,8 @@ var crms;
 var crmsQ = ApplicationEntity.getResultSet('_ClinicalTrial').query("ID='"+crms_id+"'");
 ?'crmsQ.count() =>'+crmsQ.count()+'\n';
 
+var status = '{{status}}';
+if(status == "Submitted"){
 /*
 	1. Create CRMS Submission if it doesn't exist.
 */
@@ -447,4 +449,10 @@ if(crmsQ.count() == 0){
 			arms_1.setQualifiedAttribute('customAttributes.expectedEnrollment', {{studyDetails.subjectAnalysis.targetedAccrual}});
 			?'set arms expectedEnrollment =>'+arms_1.customAttributes.expectedEnrollment+'\n';
 		}
+}
+}
+else{
+	?'Error: Status is not submitted\n';
+	?'RN Study ID =>{{id}}\n';
+	?'current status =>{{status}}\n';
 }
