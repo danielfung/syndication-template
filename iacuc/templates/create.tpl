@@ -909,6 +909,29 @@ else{
 {{/if}}
 
 {{#if studyDetails}}
+{{#if studyDetails.iacucProtocol}}
+var status = "{{status}}";
+if(status == "Submitted"){
+	var iacucStudy = '{{studyDetails.iacucProtocol}}';
+	var iacucStudyExist = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacucStudy+"'");
+	if(iacucStudyExist.count() > 0){
+		iacucStudyExist = iacucStudyExist.elements().item(1);
+		?'IACUC Study(Exist) Found =>'+iacucStudyExist+'\n';
+
+	}
+	else{
+		?'IACUC Protocol To Copy From Does Not Exist =>{{studyDetails.iacucProtocol}}\n';
+		?'RN Study ID =>{{id}}\n';
+		?'RN Current Status =>{{status}}\n';
+	}
+}
+else{
+	?'Error: Status is not submitted\n';
+	?'RN Study ID =>{{id}}\n';
+	?'current status =>{{status}}\n';
+}
+
+{{else}}
 var status = "{{status}}";
 if(status == "Submitted"){
 /*
@@ -1204,4 +1227,5 @@ else{
 	?'RN Study ID =>{{id}}\n';
 	?'current status =>{{status}}\n';
 }
+{{/if}}
 {{/if}}
