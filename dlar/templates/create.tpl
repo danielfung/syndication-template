@@ -4,6 +4,10 @@
 	var iacuc_id ="{{this.id}}";
 {{/if}}
 
+var status = '{{status}}';
+
+if(status == "Approved"){
+
 ?'IACUC ID =>'+iacuc_id+'\n';
 var iacuc;
 var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
@@ -572,4 +576,10 @@ else{
 	iacucQ = iacucQ.elements().item(1);
 	?'DLAR.iacucQ protocol found =>'+iacucQ.ID+'\n';
 	//update fields below total animal #.
+}
+}
+else{
+	?'Error: Status is not Approved\n';
+	?'IACUC Study ID: {{id}}\n';
+	?'current status =>{{status}}\n';
 }

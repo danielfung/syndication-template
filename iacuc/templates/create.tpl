@@ -909,6 +909,8 @@ else{
 {{/if}}
 
 {{#if studyDetails}}
+var status = "{{status}}";
+if(status == "Submitted"){
 /*
 	1. Create iacuc Submission if it doesn't exist.
 */
@@ -1195,5 +1197,11 @@ if(iacucQ.count() == 0){
 else{
 	iacucQ = iacucQ.elements().item(1);
 	?'iacucQ submission found =>'+iacucQ.ID+'\n';
+}
+}
+else{
+	?'Error: Status is not submitted\n';
+	?'RN Study ID =>{{id}}\n';
+	?'current status =>{{status}}\n';
 }
 {{/if}}
