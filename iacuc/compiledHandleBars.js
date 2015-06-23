@@ -10,7 +10,7 @@ module.exports = function(testData, preTemp) {
   	compiledScript = "?'Error: JSON missing id'";
   }
   else{
-    
+    /*
     //var data = fs.readFileSync('./data/15-00066_sql_populatedApproved.json', {encoding:'utf8'});
     //var data = fs.readFileSync('./data/15-00066_sql_populated.json', {encoding:'utf8'});
     //var data = fs.readFileSync('./data/15-00069_sql_populatedNoIACUCProtocol.json', {encoding:'utf8'});
@@ -23,6 +23,6 @@ module.exports = function(testData, preTemp) {
     */
     compiledScript = preTemp(testData);
   }
-  fs.writeFileSync('./output/test-outIACUC', compiledScript, {encoding:'utf8'});
+  //fs.writeFileSync('./output/test-outIACUC', compiledScript, {encoding:'utf8'});
   return compiledScript;
 };
