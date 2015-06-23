@@ -8,6 +8,9 @@
 var cageCard = ApplicationEntity.getResultSet('_CageCard').query("ID='"+cageCard_id+"'");
 ?'cageCard.count() =>'+cageCard.count()+'\n';
 
+var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{parentProject.id}}'");
+
+if(parentProtocol.count() > 0){
 /*
 	1. Create cage card if it doesn't exist.
 */
@@ -77,10 +80,20 @@ if(cageCard.count() == 0){
 		cageCard.dateModified=currentDate;
 		?'dateModified =>'+cageCard.dateModified+'\n';
 
+	/*
+		1d. set parent Protocol;
+	*/
+		parentProtocol = parentProtocol.elements().item(1);
+		cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol);
+		?'setting cageCard.parentProtocol =>'+cageCard.customAttributes.IACUCProtocol+'\n';
 
 }
 else{
 	cageCard = cageCard.elements().item(1);
 	?'DLAR.cageCard protocol found =>'+cageCard.ID+'\n';
 	//update fields below total animal #.
+}
+}
+else{
+	?'Error: Parent Protocol Not Found, ID=>{{parentProject.id}}\n';
 }
