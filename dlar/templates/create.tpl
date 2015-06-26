@@ -8,12 +8,13 @@ var status = '{{status}}';
 
 var submissionType = '{{typeOfSubmission.id}}';
 
+var iacuc;
+var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
+
 if(submissionType == 'PROTOYYYY'){
 	
 	if(status == "Approved"){
 		?'IACUC ID =>'+iacuc_id+'\n';
-		var iacuc;
-		var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
 		?'iacucQ.count() =>'+iacucQ.count()+'\n';
 		/*
 			1. Create iacuc Submission if it doesn't exist.
@@ -589,8 +590,25 @@ if(submissionType == 'PROTOYYYY'){
 		?'current status =>{{status}}\n';
 	}	
 }
+else if(submissionType == 'AMENDYYYY'){
+	if(status == "Approved"){
+		if(iacucQ.count()> 0){
+			iacucQ = iacucQ.elements().item(1);
+			?'SubmissionType => Amendment\n';
+			?'DLAR(IACUC Study) to update => '+iacucQ.ID+'\n';
+		}
+		else{
+			?'Error: Cant Find Study =>{{protocolNumber}}';
+		}
+	}
+	else{
+		?'Error: Status is not Approved\n';
+		?'IACUC Study ID: {{id}}\n';
+		?'current status =>{{status}}\n';	
+	}
+}
 else{
-	?'Error: SubmissionType is not PROTOYYYY\n';
+	?'Error: SubmissionType is not PROTOYYYY OR AMENDYYYY\n';
 	?'IACUC Study ID: {{id}}\n';
 	?'current status =>{{typeOfSubmission.id}}\n';
 }
