@@ -1027,8 +1027,22 @@ if(subjectType == "Animal"){
 					if(department != null){
 						department = person.customAttributes.department;
 						if(department != null){
-							iacucQ.company = department;
-							?'iacucQ.company =>'+department+'\n';
+							if(department.name == "Medicine" || department.name == "Population Health"){
+								var division = person.customAttributes.division;
+								if(division != null){
+									iacucQ.company = division;
+									?'Department is Medicine/Population Health => Check Division\n';
+									?'iacucQ.company =>'+division+'\n';
+								}
+								else{
+									iacucQ.company = department;
+									?'iacucQ.company =>'+department+'\n';
+								}
+							}
+							else{
+								iacucQ.company = department;
+								?'iacucQ.company =>'+department+'\n';
+							}
 						}
 					}
 				}
