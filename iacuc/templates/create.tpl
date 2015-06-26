@@ -911,51 +911,58 @@ else{
 {{#if studyDetails}}
 {{#if studyDetails.iacucProtocol}}
 if(iacucQ.count() == 0){
-	var status = "{{status}}";
-	if(status == "Submitted"){
-		var iacucStudy = '{{studyDetails.iacucProtocol}}';
-		var iacucStudyExist = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacucStudy+"'");
-		if(iacucStudyExist.count() > 0){
-			iacucStudyExist = iacucStudyExist.elements().item(1);
-			?'IACUC Study(Exist) Found =>'+iacucStudyExist+'\n';
-			var name = '{{name}}';
-			var id = iacuc_id;
-			var date = new Date();
-			var activity = _ClickIACUCSubmission_CopySubmission.createEntity();
-			?'_ClickIACUCSubmission_CopySubmission created =>'+activity+'\n';
-			activity.setQualifiedAttribute('customAttributes.newStudyName', name);
-			?'activity set newStudyName =>'+activity.customAttributes.newStudyName+'\n';
-			activity.setQualifiedAttribute('customAttributes.newStudyID', id);
-			?'activity set newstudyID =>'+activity.customAttributes.newStudyID+'\n';
-			activity.dateCreated = date;
-			?'activity set dateCreated =>'+activity.dateCreated+'\n';
-			activity.dateModified = date;
-			?'activity.dateModified =>'+activity.dateModified+'\n';
-			activity.loggedFor = iacucStudyExist;
-			?'activity.loggedFor =>'+activity.loggedFor+'\n';
-			activity.notesAsStr = "Copy in progress...Refresh the new page and repeat until copy completes.";
-			?'activity.notesAsStr =>'+activity.notesAsStr+'\n';
+	var subjectType = "{{studyDetails.subjectType.name}}";
+	if(subjectType == "Animal"){
+		var status = "{{status}}";
+		if(status == "Submitted"){
+			var iacucStudy = '{{studyDetails.iacucProtocol}}';
+			var iacucStudyExist = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacucStudy+"'");
+			if(iacucStudyExist.count() > 0){
+				iacucStudyExist = iacucStudyExist.elements().item(1);
+				?'IACUC Study(Exist) Found =>'+iacucStudyExist+'\n';
+				var name = '{{name}}';
+				var id = iacuc_id;
+				var date = new Date();
+				var activity = _ClickIACUCSubmission_CopySubmission.createEntity();
+				?'_ClickIACUCSubmission_CopySubmission created =>'+activity+'\n';
+				activity.setQualifiedAttribute('customAttributes.newStudyName', name);
+				?'activity set newStudyName =>'+activity.customAttributes.newStudyName+'\n';
+				activity.setQualifiedAttribute('customAttributes.newStudyID', id);
+				?'activity set newstudyID =>'+activity.customAttributes.newStudyID+'\n';
+				activity.dateCreated = date;
+				?'activity set dateCreated =>'+activity.dateCreated+'\n';
+				activity.dateModified = date;
+				?'activity.dateModified =>'+activity.dateModified+'\n';
+				activity.loggedFor = iacucStudyExist;
+				?'activity.loggedFor =>'+activity.loggedFor+'\n';
+				activity.notesAsStr = "Copy in progress...Refresh the new page and repeat until copy completes.";
+				?'activity.notesAsStr =>'+activity.notesAsStr+'\n';
 
-			var thisRequest = EntityCloner.createRequest(activity, iacucStudyExist, "Copied submission.");
-			?'create request =>'+thisRequest+'\n';
-			if (thisRequest==null) {
-	        	?"The clone request could not be created.\n";
-	    	}
-	    	else{
-	    		thisRequest.startRequest();
-	    		?'starting copy\n';
-	    	}
+				var thisRequest = EntityCloner.createRequest(activity, iacucStudyExist, "Copied submission.");
+				?'create request =>'+thisRequest+'\n';
+				if (thisRequest==null) {
+		        	?"The clone request could not be created.\n";
+		    	}
+		    	else{
+		    		thisRequest.startRequest();
+		    		?'starting copy\n';
+		    	}
+			}
+			else{
+				?'IACUC Protocol To Copy From Does Not Exist =>{{studyDetails.iacucProtocol}}\n';
+				?'RN Study ID =>{{id}}\n';
+				?'RN Current Status =>{{status}}\n';
+			}
 		}
 		else{
-			?'IACUC Protocol To Copy From Does Not Exist =>{{studyDetails.iacucProtocol}}\n';
+			?'Error: Status is not submitted\n';
 			?'RN Study ID =>{{id}}\n';
-			?'RN Current Status =>{{status}}\n';
+			?'current status =>{{status}}\n';
 		}
 	}
 	else{
-		?'Error: Status is not submitted\n';
+		?'Error: subjectType is not animal, not for IACUC\n';
 		?'RN Study ID =>{{id}}\n';
-		?'current status =>{{status}}\n';
 	}
 }
 else{
@@ -964,300 +971,307 @@ else{
 }
 
 {{else}}
-var status = "{{status}}";
-if(status == "Submitted"){
-/*
-	1. Create iacuc Submission if it doesn't exist.
-*/
-if(iacucQ.count() == 0){
-	iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
-	?'iacucQ =>'+iacucQ+'\n';
-
+var subjectType = "{{studyDetails.subjectType.name}}";
+if(subjectType == "Animal"){
+	var status = "{{status}}";
+	if(status == "Submitted"){
 	/*
-		1a. update ID of iacuc Submission
+		1. Create iacuc Submission if it doesn't exist.
 	*/
+	if(iacucQ.count() == 0){
+		iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
+		?'iacucQ =>'+iacucQ+'\n';
 
-		iacucQ.ID = iacuc_id;
-		?'iacucQ.ID =>'+iacucQ.ID+'\n';
+		/*
+			1a. update ID of iacuc Submission
+		*/
 
-	/*
-		1b. Register and initalize iacuc Submission
-	*/
-		iacucQ.registerEntity();
-		//iacucQ.initalize();
-		//initalize
-		var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacuc_id+"'").elements().item(1);
+			iacucQ.ID = iacuc_id;
+			?'iacucQ.ID =>'+iacucQ.ID+'\n';
 
-		if(iacucQ.customAttributes == null){
-			var c = _ClickIACUCSubmission_CustomAttributesManager.createEntity();
-			iacucQ.customAttributes = c;
-			?'created iacucQ.customAttributes =>'+c+'\n';
-		}
+		/*
+			1b. Register and initalize iacuc Submission
+		*/
+			iacucQ.registerEntity();
+			//iacucQ.initalize();
+			//initalize
+			var iacucQ = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='"+iacuc_id+"'").elements().item(1);
 
-	/*
-		1c. set required fields (owner, company, createdby, pi)
-		if company not found --> default to MCIT
-		if createdBy not found --> default to Sys Admin
-		if PI not found --> leave empty
-	*/
+			if(iacucQ.customAttributes == null){
+				var c = _ClickIACUCSubmission_CustomAttributesManager.createEntity();
+				iacucQ.customAttributes = c;
+				?'created iacucQ.customAttributes =>'+c+'\n';
+			}
 
-		{{#if studyDetails.principalInvestigator}}
-			//studyDetails.pi
-			var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
+		/*
+			1c. set required fields (owner, company, createdby, pi)
+			if company not found --> default to MCIT
+			if createdBy not found --> default to Sys Admin
+			if PI not found --> leave empty
+		*/
 
-			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.principalInvestigator.userId}}'").elements();
-			
-			if(investigator == null && person.count() > 0){
-				var studyTeamMember = _StudyTeamMemberInfo.createEntity();
-				?'_StudyTeamMemberInfo =>'+studyTeamMember+'\n';
-				iacucQ.setQualifiedAttribute("customAttributes.investigator", studyTeamMember);
-				person = person.item(1);
-				?'person adding as PI =>'+person+'\n';
-				studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
-				var department = person.customAttributes;
-				if(department != null){
-					department = person.customAttributes.department;
+			{{#if studyDetails.principalInvestigator}}
+				//studyDetails.pi
+				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
+
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.principalInvestigator.userId}}'").elements();
+				
+				if(investigator == null && person.count() > 0){
+					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
+					?'_StudyTeamMemberInfo =>'+studyTeamMember+'\n';
+					iacucQ.setQualifiedAttribute("customAttributes.investigator", studyTeamMember);
+					person = person.item(1);
+					?'person adding as PI =>'+person+'\n';
+					studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					var department = person.customAttributes;
 					if(department != null){
-						iacucQ.company = department;
-						?'iacucQ.company =>'+department+'\n';
+						department = person.customAttributes.department;
+						if(department != null){
+							iacucQ.company = department;
+							?'iacucQ.company =>'+department+'\n';
+						}
 					}
 				}
-			}
-		{{/if}}
+			{{/if}}
 
-		var company = iacucQ.company;
-		{{#if company}}
-			if(company == null){
-				var a = ApplicationEntity.getResultSet("Company").query("ID = '{{company.id}}'");
-				if(a.count()>0){
-					iacucQ.company = a.elements().item(1);
-					?'iacucQ.company =>'+iacucQ.company+'\n';
+			var company = iacucQ.company;
+			{{#if company}}
+				if(company == null){
+					var a = ApplicationEntity.getResultSet("Company").query("ID = '{{company.id}}'");
+					if(a.count()>0){
+						iacucQ.company = a.elements().item(1);
+						?'iacucQ.company =>'+iacucQ.company+'\n';
+					}
+					else{
+						?'Company Not Found =>{{company.id}}\n';
+						var company = ApplicationEntity.getResultSet("Company").query("NAME = 'MCIT'").elements().item(1);
+						iacucQ.company = company;
+						?'defaulting iacucQ.company => MCIT: '+company+'\n';
+					}
 				}
-				else{
-					?'Company Not Found =>{{company.id}}\n';
+			{{else}}
+				if(company == null){
 					var company = ApplicationEntity.getResultSet("Company").query("NAME = 'MCIT'").elements().item(1);
 					iacucQ.company = company;
 					?'defaulting iacucQ.company => MCIT: '+company+'\n';
 				}
+			{{/if}}
+
+			{{#if createdBy}}
+				//createdby => RN.createdBy
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{createdBy.userId}}'");
+				if(person.count() > 0){
+					person = person.elements().item(1);
+					iacucQ.createdBy = person;
+					?'iacucQ.createdBy =>'+iacucQ.createdBy+'\n';
+				}
+				else{
+					?'Person Not Found =>{{createdBy.userId}}\n';
+					?'Person Not Found =>topaz.principalInvestigator.userId\n';
+					var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
+					iacucQ.createdBy = person;
+					?'defaulting iacucQ.createdBy => administrator: '+iacucQ.createdBy+'\n';
+				}
+			{{/if}}
+
+		/*
+			1d. set submissionType, typeofProtocol --> required fields
+		*/	
+	        {{#if studyDetails}}
+				var submissionType = ApplicationEntity.getResultSet("_SubmissionType").query("ID = 'PROTOYYYY'");
+		    	if(submissionType.count() == 1) {
+		            submissionType = submissionType.elements().item(1);
+		            iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
+		            ?'default to iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
+		        }
+		        else {
+		            ?"IACUC New Protocol Application submission type not found, please contact an administrator\n";
+		        }
+	        {{/if}}
+
+	        {{#if studyDetails}}
+	        	var protocolType = ApplicationEntity.getResultSet("_ClickProtocolType").query("customAttributes.name='Experimental Research'").elements().item(1);
+	        	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
+	        	?'defaulting ProtocolType =>Experimental Research1\n';
+	        {{/if}}
+
+	    /*
+	    	1e. set IACUC Settings
+	    */
+	    	var iacucSettings = _ClickIACUCSettings.getIACUCSettings();
+	        iacucQ.setQualifiedAttribute("customAttributes.iacucSettings", iacucSettings);
+	        ?'iacucQ.customAttributes.iacucSettings =>'+iacucQ.customAttributes.iacucSettings+'\n';
+
+	    /*
+	    	1f. set IACUC parent to self
+	    */
+	    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
+			if(parentStudy == null){
+				iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
 			}
-		{{else}}
-			if(company == null){
-				var company = ApplicationEntity.getResultSet("Company").query("NAME = 'MCIT'").elements().item(1);
-				iacucQ.company = company;
-				?'defaulting iacucQ.company => MCIT: '+company+'\n';
-			}
-		{{/if}}
+			?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
 
-		{{#if createdBy}}
-			//createdby => RN.createdBy
-			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{createdBy.userId}}'");
-			if(person.count() > 0){
-				person = person.elements().item(1);
-				iacucQ.createdBy = person;
-				?'iacucQ.createdBy =>'+iacucQ.createdBy+'\n';
-			}
-			else{
-				?'Person Not Found =>{{createdBy.userId}}\n';
-				?'Person Not Found =>topaz.principalInvestigator.userId\n';
-				var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
-				iacucQ.createdBy = person;
-				?'defaulting iacucQ.createdBy => administrator: '+iacucQ.createdBy+'\n';
-			}
-		{{/if}}
+		/*
+			1g. set irb status to pre-submission
+				set dateCreated/dateModified;
+		*/
+				var status = iacucQ.status;
+				if(status == null){
+					var statusOID = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[9F73BE7925820443ABD79B34AD90AA55]]');
+					iacucQ.status = statusOID;
+					?'iacucQ.status =>'+iacucQ.status+'\n';
+				}
 
-	/*
-		1d. set submissionType, typeofProtocol --> required fields
-	*/	
-        {{#if studyDetails}}
-			var submissionType = ApplicationEntity.getResultSet("_SubmissionType").query("ID = 'PROTOYYYY'");
-	    	if(submissionType.count() == 1) {
-	            submissionType = submissionType.elements().item(1);
-	            iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
-	            ?'default to iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
-	        }
-	        else {
-	            ?"IACUC New Protocol Application submission type not found, please contact an administrator\n";
-	        }
-        {{/if}}
-
-        {{#if studyDetails}}
-        	var protocolType = ApplicationEntity.getResultSet("_ClickProtocolType").query("customAttributes.name='Experimental Research'").elements().item(1);
-        	iacucQ.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
-        	?'defaulting ProtocolType =>Experimental Research1\n';
-        {{/if}}
-
-    /*
-    	1e. set IACUC Settings
-    */
-    	var iacucSettings = _ClickIACUCSettings.getIACUCSettings();
-        iacucQ.setQualifiedAttribute("customAttributes.iacucSettings", iacucSettings);
-        ?'iacucQ.customAttributes.iacucSettings =>'+iacucQ.customAttributes.iacucSettings+'\n';
-
-    /*
-    	1f. set IACUC parent to self
-    */
-    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
-		if(parentStudy == null){
-			iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
-		}
-		?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
-
-	/*
-		1g. set irb status to pre-submission
-			set dateCreated/dateModified;
-	*/
-			var status = iacucQ.status;
-			if(status == null){
-				var statusOID = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[9F73BE7925820443ABD79B34AD90AA55]]');
-				iacucQ.status = statusOID;
-				?'iacucQ.status =>'+iacucQ.status+'\n';
+			var dateCreate = iacucQ.dateCreated;
+			if(dateCreate == null){
+				iacucQ.dateCreated = new Date();
+				?'iacucQ.dateCreated =>'+iacucQ.dateCreated+'\n';
 			}
 
-		var dateCreate = iacucQ.dateCreated;
-		if(dateCreate == null){
-			iacucQ.dateCreated = new Date();
-			?'iacucQ.dateCreated =>'+iacucQ.dateCreated+'\n';
-		}
+			var dateMod = iacucQ.dateModified;
+			if(dateMod == null){
+				iacucQ.dateModified = new Date();
+				?'iacucQ.dateModified =>'+iacucQ.dateModified+'\n';
+			}
+		
+		/*
+			1h. set resourceContainer.template
+		*/
+			var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+			var status = iacucQ.status.ID;
+			var whichTemplate;
 
-		var dateMod = iacucQ.dateModified;
-		if(dateMod == null){
-			iacucQ.dateModified = new Date();
-			?'iacucQ.dateModified =>'+iacucQ.dateModified+'\n';
-		}
-	
-	/*
-		1h. set resourceContainer.template
-	*/
-		var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
-		var status = iacucQ.status.ID;
-		var whichTemplate;
+			if(submissionTypeName != null){
+				if(submissionTypeName == "New Protocol Application"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D07C62360C5A80";
+						?'template New Proto=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D02B5766D47C23";
+						?'template New Proto=>'+whichTemplate+'\n';
+					}
+				}
 
-		if(submissionTypeName != null){
-			if(submissionTypeName == "New Protocol Application"){
-				if(status == "Approved"){
-					whichTemplate = "TMPL8D07C62360C5A80";
-					?'template New Proto=>'+whichTemplate+'\n';
+				else if(submissionTypeName == "Triennial Review"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D089BC317FF635";
+						?'template TR=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D089BC317FF632";
+						?'template TR=>'+whichTemplate+'\n';
+					}
+				}
+
+				else if(submissionTypeName == "Annual Review"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D0B9AB62B6DF48";
+						?'template AR=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D07C62360C5AC7";
+						?'template AR=>'+whichTemplate+'\n';
+					}
+				}
+
+				else if(submissionTypeName == "Amendment"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D0C8D3FA92169A";
+						?'template amendment=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D0B9AB62B6DDD2";
+						?'template amendment=>'+whichTemplate+'\n';
+					}
 				}
 				else{
 					whichTemplate = "TMPL8D02B5766D47C23";
-					?'template New Proto=>'+whichTemplate+'\n';
-				}
-			}
-
-			else if(submissionTypeName == "Triennial Review"){
-				if(status == "Approved"){
-					whichTemplate = "TMPL8D089BC317FF635";
-					?'template TR=>'+whichTemplate+'\n';
-				}
-				else{
-					whichTemplate = "TMPL8D089BC317FF632";
-					?'template TR=>'+whichTemplate+'\n';
-				}
-			}
-
-			else if(submissionTypeName == "Annual Review"){
-				if(status == "Approved"){
-					whichTemplate = "TMPL8D0B9AB62B6DF48";
-					?'template AR=>'+whichTemplate+'\n';
-				}
-				else{
-					whichTemplate = "TMPL8D07C62360C5AC7";
-					?'template AR=>'+whichTemplate+'\n';
-				}
-			}
-
-			else if(submissionTypeName == "Amendment"){
-				if(status == "Approved"){
-					whichTemplate = "TMPL8D0C8D3FA92169A";
-					?'template amendment=>'+whichTemplate+'\n';
-				}
-				else{
-					whichTemplate = "TMPL8D0B9AB62B6DDD2";
-					?'template amendment=>'+whichTemplate+'\n';
+					?'default template to new protocol=>'+whichTemplate+'\n';
 				}
 			}
 			else{
 				whichTemplate = "TMPL8D02B5766D47C23";
 				?'default template to new protocol=>'+whichTemplate+'\n';
 			}
-		}
-		else{
-			whichTemplate = "TMPL8D02B5766D47C23";
-			?'default template to new protocol=>'+whichTemplate+'\n';
-		}
 
-		var template =	ContainerTemplate.getElements("ContainerTemplateForID", "ID", whichTemplate);
-		var container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
+			var template =	ContainerTemplate.getElements("ContainerTemplateForID", "ID", whichTemplate);
+			var container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
 
-		var resourceContainer = iacucQ.resourceContainer;
-		if(resourceContainer == null){
-			if(template.count == 1 && container != null){
-				template = template.item(1);
-				iacucQ.createWorkspace(container, template);
-				?'iacucQ.resourceContainer =>'+iacucQ.resourceContainer+'\n';
-				?'iacucQ.resourceContainer.template =>'+iacucQ.resourceContainer.template+'\n';
+			var resourceContainer = iacucQ.resourceContainer;
+			if(resourceContainer == null){
+				if(template.count == 1 && container != null){
+					template = template.item(1);
+					iacucQ.createWorkspace(container, template);
+					?'iacucQ.resourceContainer =>'+iacucQ.resourceContainer+'\n';
+					?'iacucQ.resourceContainer.template =>'+iacucQ.resourceContainer.template+'\n';
+				}
+				else{
+					?'Template not found\n';
+				}
 			}
-			else{
-				?'Template not found\n';
-			}
-		}
 
-	/*
-		1i. set name, shortDescription, longTitle
-	*/
-		iacucQ.name = "{{name}}";
-		?'setting iacucQ name =>'+iacucQ.name+'\n';
-		{{#if studyDetails.longTitle}}
-			iacucQ.customAttributes.fullTitle = "{{studyDetails.longTitle}}";
-			?'setting iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
-			iacucQ.customAttributes.fullTitle_text = "{{studyDetails.longTitle}}";
-			?'setting iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
-		{{else}}
-			iacucQ.customAttributes.fullTitle = "{{name}}";
-			?'default setting to name: iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
-			iacucQ.customAttributes.fullTitle_text = "{{name}}";
-			?'default setting to name: iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
-		{{/if}}
-
-	/*
-		2a. set admin office --> com.webridge.entity.Entity[OID[455A658DB0BA7D498CB6DF34E2CA25EA]];
-	*/
-		var adminOffice = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[455A658DB0BA7D498CB6DF34E2CA25EA]]');
-		iacucQ.setQualifiedAttribute('customAttributes.adminOffice', adminOffice);
-		?'setting adminOffice added=>'+adminOffice+'\n';
-
-	/*
-		2b. create guest list 
-	*/
-		var person = Person.createEntitySet();
-		iacucQ.setQualifiedAttribute("customAttributes.guestList", person );
-		?'guestList set created=>'+iacucQ.customAttributes.guestList+'\n';
-
-	/*
-		2c. create readers
-	*/
-		var person = Person.createEntitySet();
-		iacucQ.setQualifiedAttribute("customAttributes.readers", person );
-		?'readers set created=>'+iacucQ.customAttributes.readers+'\n';
-
-	{{#if studyDetails}}
 		/*
-			2e. Add RNAV ID
+			1i. set name, shortDescription, longTitle
 		*/
-			var rnavID = '{{id}}';
-			iacucQ.setQualifiedAttribute("customAttributes.rnavID", rnavID);
-			?'set rnavID =>'+rnavID+'\n';
-	{{/if}}
+			iacucQ.name = "{{name}}";
+			?'setting iacucQ name =>'+iacucQ.name+'\n';
+			{{#if studyDetails.longTitle}}
+				iacucQ.customAttributes.fullTitle = "{{studyDetails.longTitle}}";
+				?'setting iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
+				iacucQ.customAttributes.fullTitle_text = "{{studyDetails.longTitle}}";
+				?'setting iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
+			{{else}}
+				iacucQ.customAttributes.fullTitle = "{{name}}";
+				?'default setting to name: iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
+				iacucQ.customAttributes.fullTitle_text = "{{name}}";
+				?'default setting to name: iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
+			{{/if}}
+
+		/*
+			2a. set admin office --> com.webridge.entity.Entity[OID[455A658DB0BA7D498CB6DF34E2CA25EA]];
+		*/
+			var adminOffice = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[455A658DB0BA7D498CB6DF34E2CA25EA]]');
+			iacucQ.setQualifiedAttribute('customAttributes.adminOffice', adminOffice);
+			?'setting adminOffice added=>'+adminOffice+'\n';
+
+		/*
+			2b. create guest list 
+		*/
+			var person = Person.createEntitySet();
+			iacucQ.setQualifiedAttribute("customAttributes.guestList", person );
+			?'guestList set created=>'+iacucQ.customAttributes.guestList+'\n';
+
+		/*
+			2c. create readers
+		*/
+			var person = Person.createEntitySet();
+			iacucQ.setQualifiedAttribute("customAttributes.readers", person );
+			?'readers set created=>'+iacucQ.customAttributes.readers+'\n';
+
+		{{#if studyDetails}}
+			/*
+				2e. Add RNAV ID
+			*/
+				var rnavID = '{{id}}';
+				iacucQ.setQualifiedAttribute("customAttributes.rnavID", rnavID);
+				?'set rnavID =>'+rnavID+'\n';
+		{{/if}}
+	}
+	else{
+		iacucQ = iacucQ.elements().item(1);
+		?'iacucQ submission found =>'+iacucQ.ID+'\n';
+	}
+	}
+	else{
+		?'Error: Status is not submitted\n';
+		?'RN Study ID =>{{id}}\n';
+		?'current status =>{{status}}\n';
+	}
 }
 else{
-	iacucQ = iacucQ.elements().item(1);
-	?'iacucQ submission found =>'+iacucQ.ID+'\n';
-}
-}
-else{
-	?'Error: Status is not submitted\n';
+	?'Error: subjectType is not animal, not for IACUC\n';
 	?'RN Study ID =>{{id}}\n';
-	?'current status =>{{status}}\n';
 }
 {{/if}}
 {{/if}}

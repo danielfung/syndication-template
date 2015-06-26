@@ -148,7 +148,7 @@ if(iacucQ.count() == 0){
 			var month = dateArray[1] - 1;
 			var year = dateArray[0];
 			var a = new Date(year, month, day);
-			iacucQ.customAttributes._attribute6 = a;
+			iacucQ.setQualifiedAttribute("customAttributes._attribute6", a);
 			?'iacucQ.customAttributes._attribute6(Date Approved) =>'+a+'\n';
 		{{/if}}
 
