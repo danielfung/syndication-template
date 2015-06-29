@@ -46,8 +46,9 @@ var dlarCageCompliedTemplate = handlebars.compile(rawDlarCageTemplate);
 
 logger.debug("Overriding 'Express' logger");
 app.use(require('express')({ "stream": logger.stream }));
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({limit:'5mb', extended:true}));
+
 
 var port = process.env.Port || 4441; //set port
 var env = process.env.NODE_ENV || 'development';
@@ -217,4 +218,5 @@ app.use('/', router);
 var server = app.listen(port, function () {
   var host = server.address().address;
   logger.info('app listening at http://%s:%s', host, port, env);
+  //logger.info('Limit file size: '+limit);
 });
