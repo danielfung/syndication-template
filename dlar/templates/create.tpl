@@ -445,8 +445,8 @@ if(submissionType == 'PROTOYYYY'){
 			//_IS_AnimalHousing
 			{{#each animalHousingLocationRoom}}
 				 var room = ApplicationEntity.getResultSet('_Facility').query("name='{{facilityRoom.name}}'");
-				 {{if facilityRoomCustomExtension.floor}}
-				 room = room.query("customAttributes.floor.name='{{facilityRoomCustomExtension.floor}}'");
+				 {{#if facilityRoom.facilityRoomCustomExtension.floor}}
+				 room = room.query("customAttributes.floor.name='{{facilityRoom.facilityRoomCustomExtension.floor}}'");
 				 {{/if}}
 				 room = room.query("customAttributes.building.name='{{facilityRoom.building.name}}'");
 				 room = room.query("customAttributes._attribute2='Room'");
@@ -483,6 +483,13 @@ if(submissionType == 'PROTOYYYY'){
 					 {{/each}}
 					 housingSet.addElement(housing);
 					 ?'adding to housingSet => '+housing+'\n';
+				 }
+				 else{
+				 	?'Room Number Not Found => {{facilityRoom.name}}\n';
+				 	{{#if facilityRoom.facilityRoomCustomExtension.floor}}
+				 	?'Floor => {{facilityRoom.facilityRoomCustomExtension.floor}}\n';
+				 	{{/if}}
+				 	?'Building => {{facilityRoom.building.name}}\n';
 				 }
 			{{/each}}
 

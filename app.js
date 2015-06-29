@@ -189,7 +189,16 @@ var stepCreateTwo = function (req, res, next) {
 *               => based on store -> example: irb/crms/iacuc/dlar 
 */
 var stepUpdateOne = function (req, res, next) {
-  console.log('update');
+  var store = req.params.store;
+  if(store == 'rnumber'){
+    req.preTemp = rnUpdateTemplate;
+  }
+  if(store == 'crms'){
+    req.preTemp = crmsUpdateTemplate;
+  }
+  if(store == 'dlar'){
+    req.preTemp = dlarCompliedUpdateTemplate;
+  }
   next();
 };
 

@@ -13,12 +13,12 @@ var rnumber;
 var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+rnumber_id+"'");
 ?'rnumberQ.count() => '+rnumbeerQ.count()+'\n';
 
-{{#if }}
+{{#if submissionType}}
 //IRB UPDATE
 	if(rnumberQ.count() > 0){
 		rnumberQ = rnumberQ.elements().item(1);
 		?'RN Study Found => '+rnumberQ.ID+'\n';
-
+		
 	}
 	else{
 		?'RN Study Not Found =>'+rnumber_id+'\n';
@@ -26,7 +26,7 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 	}
 {{/if}}
 
-{{#if investigator.studyTeamMember}}
+{{#if typeOfSubmission}}
 //IACUC UPDATE
 	if(rnumberQ.count() > 0){
 		rnumberQ = rnumberQ.elements().item(1);
