@@ -529,6 +529,9 @@ if(submissionType == 'PROTOYYYY'){
 					 housingSet.addElement(housing);
 					 ?'adding Animal Housing to Housing set => '+housing+'\n';
 				 }
+				 else{
+				 	?'Building Not Found => {{facilityBuilding.name}}\n';
+				 }
 			{{/each}}
 
 			{{#each longTermNonVivariumHousingLocations}}
