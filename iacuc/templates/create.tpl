@@ -1261,11 +1261,41 @@ if(subjectType == "Animal"){
 		*/
 			var person = Person.createEntitySet();
 			iacucQ.setQualifiedAttribute("customAttributes.readers", person );
-			?'readers set created=>'+iacucQ.customAttributes.readers+'\n';
+			?'readers set created=> '+iacucQ.customAttributes.readers+'\n';
+
+			var readers = iacucQ.customAttributes.readers;
+
+		/*
+			2d. create editors
+		*/
+			var person = Person.createEntitySet();
+			iacucQ.setQualifiedAttribute("customAttributes.editors", person);
+			?'editors set created => '+iacucQ.customAttributes.editors+'\n';
+
+			var editors = iacucQ.customAttributes.editors;
+
+		/*
+			2e. add people readers/editors
+			example: PI
+		*/
+
+		{{#if studyDetails.principalInvestigator}}
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.principalInvestigator.userId}}'").elements();
+				if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added PI to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added PI to editors set => '+editors+'\n';
+				}
+				else{
+					?'Cant Find PI => {{studyDetails.principalInvestigator.userId}} not found \n';
+				}
+		{{/if}}
 
 		{{#if studyDetails}}
 			/*
-				2e. Add RNAV ID
+				2f. Add RNAV ID
 			*/
 				var rnavID = '{{id}}';
 				iacucQ.setQualifiedAttribute("customAttributes.rnavID", rnavID);
