@@ -21,7 +21,7 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 		var studyDetails = rnumberQ.customAttributes.studyDetails;
 		if(studyDetails != null){			
 			/*
-				1a. Update Locations
+				1a. Update Locations From IRB => My Studies
 			*/
 			var locationBellevue = studyDetails.customAttributes.bellevueLocations;
 			var locationNyuFGP = studyDetails.customAttributes.nyufgpLocations;
@@ -30,7 +30,47 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 			var locationOther = studyDetails.customAttributes.otherLocations;
 			var locationVaHospital = studyDetails.customAttributes.vaHospitalLocations;
 
-			
+			if(locationsBellevue == null){
+				?'Bellevue Location Eset Not Found\n';
+			}
+			else{
+				?'Bellevue Location Eset Found => '+locationBellevue+'\n';
+			}
+
+			if(locationNyuFGP == null){
+				?'NYUFGP Location Eset Not Found\n';
+			}
+			else{
+				?'NYUFGP Location Eset Found => '+locationNyuFGP+'\n';
+			}
+
+			if(locationNyuSchoolCollege == null){
+				?'NYU School or College Location Eset not found\n';
+			}
+			else{
+				?'NYU School or College Location Eset Found => '+locationNyuSchoolCollege+'\n';
+			}
+
+			if(locationNyumc == null){
+				?'NYUMC Location Eset not found\n';
+			}
+			else{
+				?'NYUMC Location Eset Found => '+locationNyumc+'\n';
+			}
+
+			if(locationOther == null){
+				?'Other Location Eset not found\n';
+			}
+			else{
+				?'Other Location Eset Found => '+locationOther+'\n';
+			}
+
+			if(locationVaHospital == null){
+				?'VA Hospital Location Eset not found\n';
+			}
+			else{
+				?'VA Hospital Location Eset Found => '+locationVaHospital+'\n';
+			}
 
  		}
 		else{
