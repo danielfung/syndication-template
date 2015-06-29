@@ -1,13 +1,14 @@
 var express = require('express');
 var http = require('http');
 var app = express();
-var irb = require('./irb');
-var crms = require('./crms');
-var iacuc = require('./iacuc');
-var dlar = require('./dlar');
+var irb = require('./irb');//IRB
+var crms = require('./crms');//CRMS
+var iacuc = require('./iacuc');//IACUC
+var dlar = require('./dlar'); //DLAR
 var dlaraoi = require('./dlar-aolineitem');//dlar animal order line item
 var dlaraot = require('./dlar-aotransfer');//dlar animal order transfer
 var dlarcage = require('./dlar-cagecard');//dlar cage card
+var rnumber = require('./rnumber');//My Studies
 var test = require('./irb/test.js');
 var winston = require('winston');
 var bodyParser = require('body-parser');
@@ -16,33 +17,49 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var config = require('./config');
 
+/*
+* Pre-Compile Create Templates
+*/
+
 //DLAR Pre-Compile Create Template
 var rawCreateDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/create.tpl', {encoding:'utf8'});
-var dlarCompliedTemplate = handlebars.compile(rawCreateDlarTemplate);
+var dlarCompliedCreateTemplate = handlebars.compile(rawCreateDlarTemplate);
 
 //IACUC Pre-Compile Create Template
 var rawCreateIacucTemplate = fs.readFileSync(__dirname+'/iacuc/templates/create.tpl', {encoding:'utf8'});
-var iacucCompliedTemplate = handlebars.compile(rawCreateIacucTemplate);
+var iacucCompliedCreateTemplate = handlebars.compile(rawCreateIacucTemplate);
 
 //IRB Pre-Compile Create Template
 var rawCreateIrbTemplate = fs.readFileSync(__dirname+'/irb/templates/create.tpl', {encoding:'utf8'});
-var irbCompliedTemplate = handlebars.compile(rawCreateIrbTemplate);
+var irbCompliedCreateTemplate = handlebars.compile(rawCreateIrbTemplate);
 
 //CRMS Pre-Compile Create Template
 var rawCreateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/create.tpl', {encoding:'utf8'});
-var crmsCompliedTemplate = handlebars.compile(rawCreateCrmsTemplate);
+var crmsCompliedCreateTemplate = handlebars.compile(rawCreateCrmsTemplate);
 
 //DLAR(Animal Order Line Item) Pre-Compile Create Template
 var rawCreateDlarAoiTemplate = fs.readFileSync(__dirname+'/dlar-aolineitem/templates/create.tpl', {encoding:'utf8'});
-var dlarAoiCompliedTemplate = handlebars.compile(rawCreateDlarAoiTemplate);
+var dlarAoiCompliedCreateTemplate = handlebars.compile(rawCreateDlarAoiTemplate);
 
 //DLAR(Animal Order Transfer) Pre-Compile Create Template
 var rawCreateDlarAotTemplate = fs.readFileSync(__dirname+'/dlar-aotransfer/templates/create.tpl', {encoding:'utf8'});
-var dlarAotCompliedTemplate = handlebars.compile(rawCreateDlarAotTemplate);
+var dlarAotCompliedCreateTemplate = handlebars.compile(rawCreateDlarAotTemplate);
 
 //DLAR(Cage Card) Pre-Compile Create Template
 var rawCreateDlarCageTemplate = fs.readFileSync(__dirname+'/dlar-cagecard/templates/create.tpl', {encoding:'utf8'});
-var dlarCageCompliedTemplate = handlebars.compile(rawCreateDlarCageTemplate);
+var dlarCageCompliedCreateTemplate = handlebars.compile(rawCreateDlarCageTemplate);
+
+/*
+* Pre-Compile Update Templates
+*/
+
+//RNUMBER Pre-Compile Update Template
+var rawUpdateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/update.tpl', {encoding:'utf8'});
+var rnUpdateTemplate = handlebars.compile(rawUpdateResearchNavigatorTemplate);
+
+//CRMS Pre-Compile Update Template
+var rawUpdateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/update.tpl', {encoding:'utf8'});
+var crmsUpdateTemplate = handlebars.compile(rawUpdateCrmsTemplate);
 
 /*
   https://www.npmjs.com/package/body-parser --> Added limit because of Error: request entity too large
@@ -51,7 +68,6 @@ logger.debug("Overriding 'Express' logger");
 app.use(require('express')({ "stream": logger.stream }));
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({limit:'5mb', extended:true}));
-
 
 var port = process.env.Port || 4441; //set port
 var env = process.env.NODE_ENV || 'development';
@@ -77,25 +93,25 @@ router.post('/', function(req,res){
 var stepCreateOne = function (req, res, next) {
     var store = req.params.store;
     if(store == 'irb'){
-      req.preTemp = irbCompliedTemplate;
+      req.preTemp = irbCompliedCreateTemplate;
     }
     if(store == 'crms'){
-      req.preTemp = crmsCompliedTemplate;
+      req.preTemp = crmsCompliedCreateTemplate;
     }
     if(store == 'iacuc'){
-      req.preTemp = iacucCompliedTemplate;
+      req.preTemp = iacucCompliedCreateTemplate;
     } 
     if(store == 'dlar'){
-      req.preTemp = dlarCompliedTemplate;
+      req.preTemp = dlarCompliedCreateTemplate;
     }
     if(store == 'dlaraolineitem'){
-      req.preTemp = dlarAoiCompliedTemplate;
+      req.preTemp = dlarAoiCompliedCreateTemplate;
     }
     if(store == 'dlaraotransfer'){
-      req.preTemp = dlarAotCompliedTemplate;
+      req.preTemp = dlarAotCompliedCreateTemplate;
     }
     if(store == 'dlarcagecard'){
-      req.preTemp = dlarCageCompliedTemplate;
+      req.preTemp = dlarCageCompliedCreateTemplate;
     }
     next();
   };
@@ -104,7 +120,7 @@ var stepCreateOne = function (req, res, next) {
 * stepCreateTwo => create scripts(create) for debug console
 *               => action -> create, send json with correct template to compile based on store
 */
-  var stepCreateTwo = function (req, res, next) {
+var stepCreateTwo = function (req, res, next) {
   var store = req.params.store;
   store = store.toLowerCase();
   logger.info("Store: "+store);
