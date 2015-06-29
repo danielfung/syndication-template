@@ -23,6 +23,6 @@ module.exports = function(testData, preTemp) {
     */
     var compiledScript = preTemp(testData);
   }
-  fs.writeFileSync('./output/test-outDLAR', compiledScript, {encoding:'utf8'});
+  //fs.writeFileSync('./output/test-outDLAR', compiledScript, {encoding:'utf8'});
   return compiledScript;
 };
