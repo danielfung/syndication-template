@@ -20,7 +20,6 @@ var config = require('./config');
 /*
 * Pre-Compile Create Templates
 */
-
 //DLAR Pre-Compile Create Template
 var rawCreateDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/create.tpl', {encoding:'utf8'});
 var dlarCompliedCreateTemplate = handlebars.compile(rawCreateDlarTemplate);
@@ -52,7 +51,6 @@ var dlarCageCompliedCreateTemplate = handlebars.compile(rawCreateDlarCageTemplat
 /*
 * Pre-Compile Update Templates
 */
-
 //RNUMBER Pre-Compile Update Template
 var rawUpdateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/update.tpl', {encoding:'utf8'});
 var rnUpdateTemplate = handlebars.compile(rawUpdateResearchNavigatorTemplate);
@@ -60,6 +58,10 @@ var rnUpdateTemplate = handlebars.compile(rawUpdateResearchNavigatorTemplate);
 //CRMS Pre-Compile Update Template
 var rawUpdateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/update.tpl', {encoding:'utf8'});
 var crmsUpdateTemplate = handlebars.compile(rawUpdateCrmsTemplate);
+
+//DLAR Pre-Compile Update Template
+var rawUpdateDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/update.tpl', {encoding:'utf8'});
+var dlarCompliedUpdateTemplate = handlebars.compile(rawUpdateDlarTemplate);
 
 /*
   https://www.npmjs.com/package/body-parser --> Added limit because of Error: request entity too large
@@ -204,6 +206,9 @@ var stepUpdateTwo = function (req, res, next) {
     res.send(store);
   }
   if(store == 'crms'){
+    res.send(store);
+  }
+  if(store == 'dlar'){
     res.send(store);
   }
   next();
