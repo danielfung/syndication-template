@@ -9,7 +9,7 @@ module.exports = function(testData, preTemp) {
   	compiledScript = "?'Error: JSON missing protocolNumber'";
   }
   else{
-    
+    /*
     var data = fs.readFileSync('./data/15-00143_sql_populatedDLAR.json', {encoding:'utf8'});
     //var data = fs.readFileSync('./data/15-00093_sql_populatedDLAR', {encoding:'utf8'});
     testData = JSON.parse(data);

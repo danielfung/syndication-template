@@ -445,6 +445,9 @@ if(submissionType == 'PROTOYYYY'){
 			//_IS_AnimalHousing
 			{{#each animalHousingLocationRoom}}
 				 var room = ApplicationEntity.getResultSet('_Facility').query("name='{{facilityRoom.name}}'");
+				 {{if facilityRoomCustomExtension.floor}}
+				 room = room.query("customAttributes.floor.name='{{facilityRoomCustomExtension.floor}}'");
+				 {{/if}}
 				 room = room.query("customAttributes.building.name='{{facilityRoom.building.name}}'");
 				 room = room.query("customAttributes._attribute2='Room'");
 				 if(room.count() > 0){
