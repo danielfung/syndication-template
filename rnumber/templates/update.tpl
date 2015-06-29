@@ -18,7 +18,24 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 	if(rnumberQ.count() > 0){
 		rnumberQ = rnumberQ.elements().item(1);
 		?'RN Study Found => '+rnumberQ.ID+'\n';
-		
+		var studyDetails = rnumberQ.customAttributes.studyDetails;
+		if(studyDetails != null){			
+			/*
+				1a. Update Locations
+			*/
+			var locationBellevue = studyDetails.customAttributes.bellevueLocations;
+			var locationNyuFGP = studyDetails.customAttributes.nyufgpLocations;
+			var locationNyuSchoolCollege = studyDetails.customAttributes.nyuSchoolCollegeLocations;
+			var locationNyumc = studyDetails.customAttributes.nyumcLocations;
+			var locationOther = studyDetails.customAttributes.otherLocations;
+			var locationVaHospital = studyDetails.customAttributes.vaHospitalLocations;
+
+			
+
+ 		}
+		else{
+			?'Error => {{id}} studyDetails is null \n';
+		}
 	}
 	else{
 		?'RN Study Not Found =>'+rnumber_id+'\n';
