@@ -1175,6 +1175,10 @@ if(subjectType == "Animal"){
 				?'created iacucQ.customAttributes =>'+c+'\n';
 			}
 
+			var projectSet = Project.createEntitySet();
+			iacucQ.projects = projectSet;
+			?'Created Project Set => '+iacucQ.projects+'\n';
+			
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
