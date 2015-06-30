@@ -878,7 +878,7 @@ else{
 
 		/*
 			2f. create following esets :
-			alternativeProceduresSearch => _ClickProcedureRefinement
+			alternativeProceduresSearch => _ClickProcedureRefinement --> created
 			ancillaryReviews => _ancillaryReview --> created
 			animalCounts => _ClickAnimalCounts --> created
 			animalDisposition => _clickAnimalDisposition --> created
