@@ -871,7 +871,7 @@ else{
 		}
 
 		/*
-			2f. create following esets
+			2f. create following esets :
 			alternativeProceduresSearch => _ClickProcedureRefinement
 			ancillaryReviews => _ancillaryReview
 			animalCounts => _ClickAnimalCounts
@@ -881,15 +881,15 @@ else{
 			backgroundStrains => _ClickBackgroundStrain
 			changeLog => _ClickChangeLog
 			designatedMemberReviews => _ClickDesignatedMemberReview
-			duplicateProceduresSearch => _ClickProcedureRefinement
+			duplicateProceduresSearch => _ClickProcedureRefinement --> created
 			editors => Person --> created
-			animalGroups => _ClickAnimalGroup
+			animalGroups => _ClickAnimalGroup --> created
 			externalProtocolTeamInformation => ?(Set of Document)
 			financialInterests => ?(Set of Document)
-			financiallyInterested => Person
-			fundingSources => _ClickFundingSource
+			financiallyInterested => Person --> created
+			fundingSources => _ClickFundingSource --> created
 			guestList => Person --> created
-			guestListOrgs => Company
+			guestListOrgs => Company --> created
 			historicalReviewerNotes => ?(Set of ReviewerNote)
 			lapses => _ClickLapse --> created
 			longTermNonVivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
@@ -908,6 +908,41 @@ else{
 			usedAnimalCounts => _ClickUsedAnimalCounts --> created
 			vivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
 		*/	
+			var dupProcSearch = iacucQ.customAttributes.duplicateProceduresSearch;
+			if(dupProcSearch == null){
+				var a = ApplicationEntity.createEntitySet('_ClickProcedureRefinement');
+				iacucQ.customAttributes.duplicateProceduresSearch = a;
+				?'setting duplicate procedures search eset => '+iacucQ.customAttributes.duplicateProceduresSearch+'\n';
+			}
+
+			var animalGroup = iacucQ.customAttributes.animalGroups;
+			if(animalGroup == null){
+				var a = ApplicationEntity.createEntitySet('_ClickAnimalGroup');
+				iacucQ.customAttributes.animalGroups = a;
+				?'setting animal groups eset => '+iacucQ.customAttributes.animalGroups+'\n';
+			}
+
+			var financialInterest = iacucQ.customAttributes.financiallyInterested;
+			if(financialInterest == null){
+				var a = ApplicationEntity.createEntitySet('Person');
+				iacucQ.customAttributes.financiallyInterested = a;
+				?'setting financiallyInterested eset => '+iacucQ.customAttributes.financiallyInterested+'\n';
+			}
+
+			var fundSources = iacucQ.customAttributes.fundingSources;
+			if(fundSources == null){
+				var a = ApplicationEntity.createEntitySet('_ClickFundingSource');
+				iacucQ.customAttributes.fundingSources = a;
+				?'setting funding sources eset => '+iacucQ.customAttributes.fundingSources+'\n';
+			}
+
+			var guestListsOrg = iacucQ.customAttributes.guestListOrgs;
+			if(guestListsOrg == null){
+				var a = ApplicationEntity.createEntitySet('Company');
+				iacucQ.customAttributes.guestListOrgs = a;
+				?'setting guest list organizations eset => '+acucQ.customAttributes.guestListOrgs+'\n';
+			}
+
 			var lapse = iacucQ.customAttributes.lapses;
 			if(lapse == null){
 				var a = ApplicationEntity.createEntitySet('_ClickLapse');
