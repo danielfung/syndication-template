@@ -503,9 +503,12 @@ else{
 				?'created iacucQ.customAttributes =>'+c+'\n';
 			}
 
-			var projectSet = Project.createEntitySet();
-			iacucQ.projects = projectSet;
-			?'Created Project Set => '+iacucQ.projects+'\n';
+			var projectSet = iacucQ.projects;
+			if(projectSet == null){
+				var projectSet = Project.createEntitySet();
+				iacucQ.projects = projectSet;
+				?'Created Project Set => '+iacucQ.projects+'\n';
+			}
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
@@ -876,14 +879,14 @@ else{
 		/*
 			2f. create following esets :
 			alternativeProceduresSearch => _ClickProcedureRefinement
-			ancillaryReviews => _ancillaryReview
-			animalCounts => _ClickAnimalCounts
-			animalDisposition => _clickAnimalDisposition
-			animalHousingLocationRoom => _ClickNonVivariumHousingLocation
-			approvedDepartures => _ClickDeparture
-			backgroundStrains => _ClickBackgroundStrain
-			changeLog => _ClickChangeLog
-			designatedMemberReviews => _ClickDesignatedMemberReview
+			ancillaryReviews => _ancillaryReview --> created
+			animalCounts => _ClickAnimalCounts --> created
+			animalDisposition => _clickAnimalDisposition --> created
+			animalHousingLocationRoom => _ClickNonVivariumHousingLocation --> created
+			approvedDepartures => _ClickDeparture --> created
+			backgroundStrains => _ClickBackgroundStrain --> created
+			changeLog => _ClickChangeLog --> created
+			designatedMemberReviews => _ClickDesignatedMemberReview --> created
 			duplicateProceduresSearch => _ClickProcedureRefinement --> created
 			editors => Person --> created
 			animalGroups => _ClickAnimalGroup --> created
@@ -911,6 +914,69 @@ else{
 			usedAnimalCounts => _ClickUsedAnimalCounts --> created
 			vivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
 		*/	
+			var altProc = iacucQ.customAttributes.alternativeProceduresSearch;
+			if(altProc == null){
+				var a = ApplicationEntity.createEntitySet('_ClickProcedureRefinement');
+				iacucQ.customAttributes.alternativeProceduresSearch = a;
+				?'setting alternative procedure search => '+iacucQ.customAttributes.alternativeProceduresSearch+'\n';
+			}
+
+			var ancReview = iacucQ.customAttributes.ancillaryReviews;
+			if(ancReview == null){
+				var a = ApplicationEntity.createEntitySet('_ancillaryReview');
+				iacucQ.customAttributes.ancillaryReviews = a;
+				?'setting ancillary reviews eset => '+iacucQ.customAttributes.ancillaryReviews+'\n';
+			}
+
+			var animalCount = iacucQ.customAttributes.animalCounts;
+			if(animalCount == null){
+				var a = ApplicationEntity.createEntitySet('_ClickAnimalCounts');
+				iacucQ.customAttributes.animalCounts = a;
+				?'setting animal counts eset => '+iacucQ.customAttributes.animalCounts+'\n';
+			}
+
+			var animalDispos = iacucQ.customAttributes.animalDisposition;
+			if(animalDispos == null){
+				var a = ApplicationEntity.createEntitySet('_clickAnimalDisposition');
+				iacucQ.customAttributes.animalDisposition = a;
+				?'setting animal disposition eset => '+animalDisposition+'\n';
+			}
+
+			var animalHousing = iacucQ.customAttributes.animalHousingLocationRoom;
+			if(animalHousing == null){
+				var a = ApplicationEntity.createEntitySet('_ClickNonVivariumHousingLocation');
+				iacucQ.customAttributes.animalHousingLocationRoom = a;
+				?'setting animal housing location room eset => '+iacucQ.customAttributes.animalHousingLocationRoom+'\n';
+			}
+
+			var appDeparture = iacucQ.customAttributes.approvedDepartures;
+			if(appDeparture == null){
+				var a = ApplicationEntity.createEntitySet('_ClickDeparture');
+				iacucQ.customAttributes.approvedDepartures = a;
+				?'setting approved departures eset => '+iacucQ.customAttributes.approvedDepartures+'\n';
+			}
+
+			var bgStains = iacucQ.customAttributes.backgroundStrains;
+			if(bgStains == null){
+				var a = ApplicationEntity.createEntitySet('_ClickBackgroundStrain');
+				iacucQ.customAttributes.backgroundStrains = a;
+				?'setting back ground strains eset => '+iacucQ.customAttributes.backgroundStrains+'\n';
+			}
+
+			var changeLogs = iacucQ.customAttributes.changeLog;
+			if(changeLogs == null){
+				var a = ApplicationEntity.createEntitySet('_ClickChangeLog');
+				iacucQ.customAttributes.changeLog = a;
+				?'setting change log eset => '+iacucQ.customAttributes.changeLog+'\n';
+			}
+
+			var desMemRev = iacucQ.customAttributes.designatedMemberReviews;
+			if(desMemRev == null){
+				var a = ApplicationEntity.createEntitySet('_ClickDesignatedMemberReview');
+				iacucQ.customAttributes.designatedMemberReviews = a;
+				?'setting designated member review eset => '+iacucQ.customAttributes.designatedMemberReviews+'\n';
+			}
+
 			var dupProcSearch = iacucQ.customAttributes.duplicateProceduresSearch;
 			if(dupProcSearch == null){
 				var a = ApplicationEntity.createEntitySet('_ClickProcedureRefinement');
@@ -1178,9 +1244,13 @@ if(subjectType == "Animal"){
 				?'created iacucQ.customAttributes =>'+c+'\n';
 			}
 
-			var projectSet = Project.createEntitySet();
-			iacucQ.projects = projectSet;
-			?'Created Project Set => '+iacucQ.projects+'\n';
+
+			var projectSet = iacucQ.projects;
+			if(projectSet == null){
+				var projectSet = Project.createEntitySet();
+				iacucQ.projects = projectSet;
+				?'Created Project Set => '+iacucQ.projects+'\n';
+			}
 
 		/*
 			1c. set required fields (owner, company, createdby, pi)
