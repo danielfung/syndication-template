@@ -490,7 +490,7 @@ else{
 			?'iacucQ.ID =>'+iacucQ.ID+'\n';
 
 		/*
-			1b. Register and initalize iacuc Submission
+			1b. Register/initalize iacuc Submission and create project eset
 		*/
 			iacucQ.registerEntity();
 			//iacucQ.initalize();
@@ -503,6 +503,9 @@ else{
 				?'created iacucQ.customAttributes =>'+c+'\n';
 			}
 
+			var projectSet = Project.createEntitySet();
+			iacucQ.projects = projectSet;
+			?'Created Project Set => '+iacucQ.projects+'\n';
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
@@ -1162,7 +1165,7 @@ if(subjectType == "Animal"){
 			?'iacucQ.ID =>'+iacucQ.ID+'\n';
 
 		/*
-			1b. Register and initalize iacuc Submission
+			1b. Register/initalize iacuc Submission, add Project eset
 		*/
 			iacucQ.registerEntity();
 			//iacucQ.initalize();
@@ -1178,7 +1181,7 @@ if(subjectType == "Animal"){
 			var projectSet = Project.createEntitySet();
 			iacucQ.projects = projectSet;
 			?'Created Project Set => '+iacucQ.projects+'\n';
-			
+
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
