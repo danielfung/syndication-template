@@ -125,7 +125,7 @@ var stepCreateOne = function (req, res, next) {
 var stepCreateTwo = function (req, res, next) {
   var store = req.params.store;
   store = store.toLowerCase();
-  logger.info("Store: "+store);
+  logger.info("Store: "+store +" Action: Create");
   logger.info(req.body);
   if(store == 'irb'){
     var i = irb.compiledHandleBars(req.body, req.preTemp);
@@ -209,16 +209,28 @@ var stepUpdateOne = function (req, res, next) {
 var stepUpdateTwo = function (req, res, next) {
   var store = req.params.store;
   store = store.toLowerCase();
-  logger.info("Store: "+store);
+  logger.info("Store: "+store +" Action: Update");
   logger.info(req.body);
   if(store == 'rnumber'){
-    res.send(store);
+      var i = rnumber.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      i = '{"script":"'+compiledScript+'"}'
+      res.send(i);
   }
   if(store == 'crms'){
-    res.send(store);
+    var i = crms.compiledHandleBars(req.body, req.preTemp);
+    var buf = new Buffer(i);
+    var compiledScript = buf.toString('base64');
+    i = '{"script":"'+compiledScript+'"}'
+    res.send(i);
   }
   if(store == 'dlar'){
-    res.send(store);
+      var i = dlar.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      i = '{"script":"'+compiledScript+'"}'
+      res.send(i);
   }
   next();
 };

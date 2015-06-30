@@ -122,8 +122,9 @@ if(iacucQ.count() > 0){
 		1b. check for isUsda(0 => if no animals isUSDA, else 1(a animal is usda))
 	*/
 
-	//check husbandary exceptions => first clear the set, then re-add each husbandary exceptions
-
+	/*
+		1c. check husbandary exceptions => first clear the set, then re-add each husbandary exceptions
+	*/
 
 }
 else{
