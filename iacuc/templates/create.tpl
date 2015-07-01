@@ -1890,17 +1890,131 @@ if(subjectType == "Animal"){
 				}
 		{{/if}}
 
+		/*
+			2f. add study team members to list and editors/readers
+		*/
+			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+			if(studyTeamMember == null){
+				var a = ApplicationEntity.createEntitySet('_StudyTeamMemberInfo');
+				iacucQ.customAttributes.studyTeamMembers = a;
+				?'setting studyTeamMembers eset => '+iacucQ.customAttributes.studyTeamMembers+'\n';
+			}
+			studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+
+		{{#if studyDetails.studyDepartmentalAdmin.userId}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.studyDepartmentalAdmin.userId}}'").elements();
+			if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added department admin to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added department admin to editors set => '+editors+'\n';
+					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMember.addElement(studyTeamMemInfo);
+					?'added department admin to study team mem info set => '+studyTeamMember+'\n';
+			}
+		{{/if}}
+
+		{{#each studyDetails.teamSubInvestigators}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added teamSubInvestigators to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added teamSubInvestigators to editors set => '+editors+'\n';
+					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMember.addElement(studyTeamMemInfo);
+					?'added teamSubInvestigators to study team mem info set => '+studyTeamMember+'\n';
+			}
+		{{/each}}
+
+		{{#each studyDetails.researchCoordinators}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{coordinator.userId}}'").elements();
+			if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added researchCoordinators to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added researchCoordinators to editors set => '+editors+'\n';
+					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMember.addElement(studyTeamMemInfo);
+					?'added researchCoordinators to study team mem info set => '+studyTeamMember+'\n';
+			}
+		{{/each}}
+
+
+		{{#each studyDetails.otherStudyStaff}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added otherStudyStaff to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added otherStudyStaff to editors set => '+editors+'\n';
+					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMember.addElement(studyTeamMemInfo);
+					?'added otherStudyStaff to study team mem info set => '+studyTeamMember+'\n';
+			}
+		{{/each}}
+
+		{{#each studyDetails.teamVolunteers}}
+		var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added teamVolunteers to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added teamVolunteers to editors set => '+editors+'\n';
+					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMember.addElement(studyTeamMemInfo);
+					?'added teamVolunteers to study team mem info set => '+studyTeamMember+'\n';
+			}
+		{{/each}}
+
+		{{#each studyDetails.teamCanNotEdit}}
+		var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added teamCanNotEdit to readers set => '+readers+'\n';
+					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMember.addElement(studyTeamMemInfo);
+					?'added teamCanNotEdit to study team mem info set => '+studyTeamMember+'\n';
+			}
+		{{/each}}
+
 		{{#if studyDetails}}
 			/*
-				2f. Add RNAV ID
+				2g. Add RNAV ID
 			*/
 				var rnavID = '{{id}}';
 				iacucQ.setQualifiedAttribute("customAttributes.rnavID", rnavID);
 				?'set rnavID =>'+rnavID+'\n';
 		{{/if}}
 
+
+
 		/*
-			2g. Log Create Activity
+			2h. Log Create Activity
 		*/
 
 		var createProtocolActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateProtocol", "_ClickIACUCSubmission");
