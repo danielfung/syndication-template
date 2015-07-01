@@ -417,6 +417,271 @@ if(draft.count() > 0)
 				}
 			}
 		}
+
+		/*
+			2f. create following esets :
+			alternativeProceduresSearch => _ClickProcedureRefinement --> created
+			ancillaryReviews => _ancillaryReview --> created
+			animalCounts => _ClickAnimalCounts --> created
+			animalDisposition => _clickAnimalDisposition --> created
+			animalHousingLocationRoom => _ClickNonVivariumHousingLocation --> created
+			approvedDepartures => _ClickDeparture --> created
+			backgroundStrains => _ClickBackgroundStrain --> created
+			changeLog => _ClickChangeLog --> created
+			designatedMemberReviews => _ClickDesignatedMemberReview --> created
+			duplicateProceduresSearch => _ClickProcedureRefinement --> created
+			editors => Person --> created
+			animalGroups => _ClickAnimalGroup --> created
+			externalProtocolTeamInformation => ?(Set of Document) - Type: Document --> created
+			financialInterests => ?(Set of Document) - Type: Document --> created
+			financiallyInterested => Person --> created
+			fundingSources => _ClickFundingSource --> created
+			guestList => Person --> created
+			guestListOrgs => Company --> created
+			historicalReviewerNotes => ?(Set of ReviewerNote) - Type: ReviewerNote --> created
+			lapses => _ClickLapse --> created
+			longTermNonVivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
+			piProxiesPerson => Person --> created
+			pendingDesignatedMemberReviewers => Person --> created
+			procedurePersonnel => _ClickProcedureTeam --> created
+			procedureTraining => _StudyTeamMemberInfo --> created
+			studyTeamMembers => _StudyTeamMemberInfo --> created
+			readers => Person --> created
+			relatedSafetyProtocols => _ClickRelatedSafetyProtocol --> created
+			setOfReviews => _review --> doesn't work!!
+			snapshots => ?(Set of Document) Type: Document --> created
+			supportDocuments => ?(Set of Document) Type: Document --> created
+			suspensions => _ClickSuspension --> created
+			tags => _ClickTag --> created
+			usedAnimalCounts => _ClickUsedAnimalCounts --> created
+			vivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
+		*/
+			var histReviewNote = iacucQ.customAttributes.historicalReviewerNotes;
+			if(histReviewNote == null){
+				var a = ApplicationEntity.createEntitySet('ReviewerNote');
+				iacucQ.customAttributes.historicalReviewerNotes = a;
+				?'setting historical reviewer notes eset => '+iacucQ.customAttributes.historicalReviewerNotes+'\n';
+			}
+
+			var externalTeamInfo = iacucQ.customAttributes.externalProtocolTeamInformation;
+			if(externalTeamInfo == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.externalProtocolTeamInformation = a;
+				?'setting external protocol team info eset => '+iacucQ.customAttributes.externalProtocolTeamInformation+'\n';
+			}
+
+			var finanInter = iacucQ.customAttributes.financialInterests;
+			if(finanInter == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.financialInterests = a;
+				?'setting financial interests eset => '+iacucQ.customAttributes.financialInterests+'\n';
+			}
+
+			var snapshot = iacucQ.customAttributes.snapshots;
+			if(snapshot == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.snapshots = a;
+				?'setting snapshots eset => '+iacucQ.customAttributes.snapshots+'\n';
+			}
+
+			var suppDoc = iacucQ.customAttributes.supportDocuments;
+			if(suppDoc == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.supportDocuments = a;
+				?'setting support document eset => '+iacucQ.customAttributes.supportDocuments+'\n';
+			}
+
+			var altProc = iacucQ.customAttributes.alternativeProceduresSearch;
+			if(altProc == null){
+				var a = ApplicationEntity.createEntitySet('_ClickProcedureRefinement');
+				iacucQ.customAttributes.alternativeProceduresSearch = a;
+				?'setting alternative procedure search => '+iacucQ.customAttributes.alternativeProceduresSearch+'\n';
+			}
+
+			var ancReview = iacucQ.customAttributes.ancillaryReviews;
+			if(ancReview == null){
+				var a = ApplicationEntity.createEntitySet('_ancillaryReview');
+				iacucQ.customAttributes.ancillaryReviews = a;
+				?'setting ancillary reviews eset => '+iacucQ.customAttributes.ancillaryReviews+'\n';
+			}
+
+			var animalCount = iacucQ.customAttributes.animalCounts;
+			if(animalCount == null){
+				var a = ApplicationEntity.createEntitySet('_ClickAnimalCounts');
+				iacucQ.customAttributes.animalCounts = a;
+				?'setting animal counts eset => '+iacucQ.customAttributes.animalCounts+'\n';
+			}
+
+			var animalDispos = iacucQ.customAttributes.animalDisposition;
+			if(animalDispos == null){
+				var a = ApplicationEntity.createEntitySet('_clickAnimalDisposition');
+				iacucQ.customAttributes.animalDisposition = a;
+				?'setting animal disposition eset => '+iacucQ.customAttributes.animalDisposition+'\n';
+			}
+
+			var animalHousing = iacucQ.customAttributes.animalHousingLocationRoom;
+			if(animalHousing == null){
+				var a = ApplicationEntity.createEntitySet('_ClickNonVivariumHousingLocation');
+				iacucQ.customAttributes.animalHousingLocationRoom = a;
+				?'setting animal housing location room eset => '+iacucQ.customAttributes.animalHousingLocationRoom+'\n';
+			}
+
+			var appDeparture = iacucQ.customAttributes.approvedDepartures;
+			if(appDeparture == null){
+				var a = ApplicationEntity.createEntitySet('_ClickDeparture');
+				iacucQ.customAttributes.approvedDepartures = a;
+				?'setting approved departures eset => '+iacucQ.customAttributes.approvedDepartures+'\n';
+			}
+
+			var bgStains = iacucQ.customAttributes.backgroundStrains;
+			if(bgStains == null){
+				var a = ApplicationEntity.createEntitySet('_ClickBackgroundStrain');
+				iacucQ.customAttributes.backgroundStrains = a;
+				?'setting back ground strains eset => '+iacucQ.customAttributes.backgroundStrains+'\n';
+			}
+
+			var changeLogs = iacucQ.customAttributes.changeLog;
+			if(changeLogs == null){
+				var a = ApplicationEntity.createEntitySet('_ClickChangeLog');
+				iacucQ.customAttributes.changeLog = a;
+				?'setting change log eset => '+iacucQ.customAttributes.changeLog+'\n';
+			}
+
+			var desMemRev = iacucQ.customAttributes.designatedMemberReviews;
+			if(desMemRev == null){
+				var a = ApplicationEntity.createEntitySet('_ClickDesignatedMemberReview');
+				iacucQ.customAttributes.designatedMemberReviews = a;
+				?'setting designated member review eset => '+iacucQ.customAttributes.designatedMemberReviews+'\n';
+			}
+
+			var dupProcSearch = iacucQ.customAttributes.duplicateProceduresSearch;
+			if(dupProcSearch == null){
+				var a = ApplicationEntity.createEntitySet('_ClickProcedureRefinement');
+				iacucQ.customAttributes.duplicateProceduresSearch = a;
+				?'setting duplicate procedures search eset => '+iacucQ.customAttributes.duplicateProceduresSearch+'\n';
+			}
+
+			var animalGroup = iacucQ.customAttributes.animalGroups;
+			if(animalGroup == null){
+				var a = ApplicationEntity.createEntitySet('_ClickAnimalGroup');
+				iacucQ.customAttributes.animalGroups = a;
+				?'setting animal groups eset => '+iacucQ.customAttributes.animalGroups+'\n';
+			}
+
+			var financialInterest = iacucQ.customAttributes.financiallyInterested;
+			if(financialInterest == null){
+				var a = ApplicationEntity.createEntitySet('Person');
+				iacucQ.customAttributes.financiallyInterested = a;
+				?'setting financiallyInterested eset => '+iacucQ.customAttributes.financiallyInterested+'\n';
+			}
+
+			var fundSources = iacucQ.customAttributes.fundingSources;
+			if(fundSources == null){
+				var a = ApplicationEntity.createEntitySet('_ClickFundingSource');
+				iacucQ.customAttributes.fundingSources = a;
+				?'setting funding sources eset => '+iacucQ.customAttributes.fundingSources+'\n';
+			}
+
+			var guestListsOrg = iacucQ.customAttributes.guestListOrgs;
+			if(guestListsOrg == null){
+				var a = ApplicationEntity.createEntitySet('Company');
+				iacucQ.customAttributes.guestListOrgs = a;
+				?'setting guest list organizations eset => '+iacucQ.customAttributes.guestListOrgs+'\n';
+			}
+
+			var lapse = iacucQ.customAttributes.lapses;
+			if(lapse == null){
+				var a = ApplicationEntity.createEntitySet('_ClickLapse');
+				iacucQ.customAttributes.lapses = a;
+				?'setting lapses eset => '+iacucQ.customAttributes.lapses+'\n';
+			}
+
+			var longTermVivHousing = iacucQ.customAttributes.longTermNonVivariumHousingLocations;
+			if(longTermVivHousing == null){
+				var a = ApplicationEntity.createEntitySet('_ClickNonVivariumHousingLocation');
+				iacucQ.customAttributes.longTermNonVivariumHousingLocations = a;
+				?'setting long term non viv housing eset => '+iacucQ.customAttributes.longTermNonVivariumHousingLocations+'\n';
+			}
+
+			var piProxies = iacucQ.customAttributes.piProxiesPerson;
+			if(piProxies == null){
+				var a = ApplicationEntity.createEntitySet('Person');
+				iacucQ.customAttributes.piProxiesPerson = a;
+				?'setting pi proxies eset => '+iacucQ.customAttributes.piProxiesPerson+'\n';
+			}
+
+			var pendDesMember = iacucQ.customAttributes.pendingDesignatedMemberReviewers;
+			if(pendDesMember == null){
+				var a = ApplicationEntity.createEntitySet('Person');
+				iacucQ.customAttributes.pendingDesignatedMemberReviewers = a;
+				?'setting pending designated member reviewer eset => '+iacucQ.customAttributes.pendingDesignatedMemberReviewers+'\n';
+			}
+
+			var procPersonnel = iacucQ.customAttributes.procedurePersonnel;
+			if(procPersonnel == null){
+				var a = ApplicationEntity.createEntitySet('_ClickProcedureTeam');
+				iacucQ.customAttributes.procedurePersonnel = a;
+				?'setting procedure personnel eset => '+iacucQ.customAttributes.procedurePersonnel+'\n';
+			}
+
+			var procTraining = iacucQ.customAttributes.procedureTraining;
+			if(procTraining == null){
+				var a = ApplicationEntity.createEntitySet('_StudyTeamMemberInfo');
+				iacucQ.customAttributes.procedureTraining = a;
+				?'setting procedureTraining eset => '+iacucQ.customAttributes.procedureTraining+'\n';
+			}
+
+			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+			if(studyTeamMember == null){
+				var a = ApplicationEntity.createEntitySet('_StudyTeamMemberInfo');
+				iacucQ.customAttributes.studyTeamMembers = a;
+				?'setting studyTeamMembers eset => '+iacucQ.customAttributes.studyTeamMembers+'\n';
+			}
+
+			var relatedSafetyProto = iacucQ.customAttributes.relatedSafetyProtocols;
+			if(relatedSafetyProto == null){
+				var a = ApplicationEntity.createEntitySet('_ClickRelatedSafetyProtocol');
+				iacucQ.customAttributes.relatedSafetyProtocols = a;
+				?'setting related safetly protocols eset => '+iacucQ.customAttributes.relatedSafetyProtocols+'\n';
+			}
+
+			/*
+			var setReview = iacucQ.customAttributes.setOfReviews;
+			if(setReview == null){
+				var a = ApplicationEntity.createEntitySet('_review');
+				iacucQ.customAttributes.setOfReviews = a;
+				?'setting set of reviews eset => '+iacucQ.customAttributes.setOfReviews+'\n';
+			}
+			*/
+
+			var suspension = iacucQ.customAttributes.suspensions;
+			if(suspension == null){
+				var a = ApplicationEntity.createEntitySet('_ClickSuspension');
+				iacucQ.customAttributes.suspensions = a;
+				?'setting suspensions eset => '+iacucQ.customAttributes.suspensions;
+			}
+
+			var tag = iacucQ.customAttributes.tags;
+			if(tag == null){
+				var a = ApplicationEntity.createEntitySet('_ClickTag');
+				iacucQ.customAttributes.tags = a;
+				?'setting tags eset => '+iacucQ.customAttributes.tags+'\n';
+			}
+
+			var usedAniCount = iacucQ.customAttributes.usedAnimalCounts;
+			if(usedAniCount == null){
+				var a = ApplicationEntity.createEntitySet('_ClickUsedAnimalCounts');
+				iacucQ.customAttributes.usedAnimalCounts = a;
+				?'setting used animal count eset => '+iacucQ.customAttributes.usedAnimalCounts+'\n';
+			}
+
+			var vivHousingLocation = iacucQ.customAttributes.vivariumHousingLocations;
+			if(vivHousingLocation == null){
+				var a = ApplicationEntity.createEntitySet('_ClickNonVivariumHousingLocation');
+				iacucQ.customAttributes.vivariumHousingLocations = a;
+				?'setting vivHousingLocation eset => '+iacucQ.customAttributes.vivariumHousingLocations+'\n';
+			}
+
 	}
 	else{
 		iacucQ = iacucQ.elements().item(1);
@@ -890,13 +1155,13 @@ else{
 			duplicateProceduresSearch => _ClickProcedureRefinement --> created
 			editors => Person --> created
 			animalGroups => _ClickAnimalGroup --> created
-			externalProtocolTeamInformation => ?(Set of Document)
-			financialInterests => ?(Set of Document)
+			externalProtocolTeamInformation => ?(Set of Document) - Type: Document --> created
+			financialInterests => ?(Set of Document) - Type: Document --> created
 			financiallyInterested => Person --> created
 			fundingSources => _ClickFundingSource --> created
 			guestList => Person --> created
 			guestListOrgs => Company --> created
-			historicalReviewerNotes => ?(Set of ReviewerNote)
+			historicalReviewerNotes => ?(Set of ReviewerNote) - Type: ReviewerNote --> created
 			lapses => _ClickLapse --> created
 			longTermNonVivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
 			piProxiesPerson => Person --> created
@@ -906,14 +1171,49 @@ else{
 			studyTeamMembers => _StudyTeamMemberInfo --> created
 			readers => Person --> created
 			relatedSafetyProtocols => _ClickRelatedSafetyProtocol --> created
-			setOfReviews => _review --> created
-			snapshots => ?(Set of Document)
-			supportDocuments => ?(Set of Document)
+			setOfReviews => _review --> doesn't work!!
+			snapshots => ?(Set of Document) Type: Document --> created
+			supportDocuments => ?(Set of Document) Type: Document --> created
 			suspensions => _ClickSuspension --> created
 			tags => _ClickTag --> created
 			usedAnimalCounts => _ClickUsedAnimalCounts --> created
 			vivariumHousingLocations => _ClickNonVivariumHousingLocation --> created
-		*/	
+		*/
+			var histReviewNote = iacucQ.customAttributes.historicalReviewerNotes;
+			if(histReviewNote == null){
+				var a = ApplicationEntity.createEntitySet('ReviewerNote');
+				iacucQ.customAttributes.historicalReviewerNotes = a;
+				?'setting historical reviewer notes eset => '+iacucQ.customAttributes.historicalReviewerNotes+'\n';
+			}
+
+			var externalTeamInfo = iacucQ.customAttributes.externalProtocolTeamInformation;
+			if(externalTeamInfo == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.externalProtocolTeamInformation = a;
+				?'setting external protocol team info eset => '+iacucQ.customAttributes.externalProtocolTeamInformation+'\n';
+			}
+
+			var finanInter = iacucQ.customAttributes.financialInterests;
+			if(finanInter == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.financialInterests = a;
+				?'setting financial interests eset => '+iacucQ.customAttributes.financialInterests+'\n';
+			}
+
+			var snapshot = iacucQ.customAttributes.snapshots;
+			if(snapshot == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.snapshots = a;
+				?'setting snapshots eset => '+iacucQ.customAttributes.snapshots+'\n';
+			}
+
+			var suppDoc = iacucQ.customAttributes.supportDocuments;
+			if(suppDoc == null){
+				var a = ApplicationEntity.createEntitySet('Document');
+				iacucQ.customAttributes.supportDocuments = a;
+				?'setting support document eset => '+iacucQ.customAttributes.supportDocuments+'\n';
+			}
+
 			var altProc = iacucQ.customAttributes.alternativeProceduresSearch;
 			if(altProc == null){
 				var a = ApplicationEntity.createEntitySet('_ClickProcedureRefinement');
@@ -939,7 +1239,7 @@ else{
 			if(animalDispos == null){
 				var a = ApplicationEntity.createEntitySet('_clickAnimalDisposition');
 				iacucQ.customAttributes.animalDisposition = a;
-				?'setting animal disposition eset => '+animalDisposition+'\n';
+				?'setting animal disposition eset => '+iacucQ.customAttributes.animalDisposition+'\n';
 			}
 
 			var animalHousing = iacucQ.customAttributes.animalHousingLocationRoom;
@@ -1009,7 +1309,7 @@ else{
 			if(guestListsOrg == null){
 				var a = ApplicationEntity.createEntitySet('Company');
 				iacucQ.customAttributes.guestListOrgs = a;
-				?'setting guest list organizations eset => '+acucQ.customAttributes.guestListOrgs+'\n';
+				?'setting guest list organizations eset => '+iacucQ.customAttributes.guestListOrgs+'\n';
 			}
 
 			var lapse = iacucQ.customAttributes.lapses;
@@ -1033,7 +1333,7 @@ else{
 				?'setting pi proxies eset => '+iacucQ.customAttributes.piProxiesPerson+'\n';
 			}
 
-			var pendDesMemmber = iacucQ.customAttributes.pendingDesignatedMemberReviewers;
+			var pendDesMember = iacucQ.customAttributes.pendingDesignatedMemberReviewers;
 			if(pendDesMember == null){
 				var a = ApplicationEntity.createEntitySet('Person');
 				iacucQ.customAttributes.pendingDesignatedMemberReviewers = a;
@@ -1068,12 +1368,14 @@ else{
 				?'setting related safetly protocols eset => '+iacucQ.customAttributes.relatedSafetyProtocols+'\n';
 			}
 
+			/*
 			var setReview = iacucQ.customAttributes.setOfReviews;
 			if(setReview == null){
 				var a = ApplicationEntity.createEntitySet('_review');
 				iacucQ.customAttributes.setOfReviews = a;
 				?'setting set of reviews eset => '+iacucQ.customAttributes.setOfReviews+'\n';
 			}
+			*/
 
 			var suspension = iacucQ.customAttributes.suspensions;
 			if(suspension == null){
@@ -1093,7 +1395,7 @@ else{
 			if(usedAniCount == null){
 				var a = ApplicationEntity.createEntitySet('_ClickUsedAnimalCounts');
 				iacucQ.customAttributes.usedAnimalCounts = a;
-				?'setting used animal count eset => '+iacucQ>customAttributes.usedAnimalCounts+'\n';
+				?'setting used animal count eset => '+iacucQ.customAttributes.usedAnimalCounts+'\n';
 			}
 
 			var vivHousingLocation = iacucQ.customAttributes.vivariumHousingLocations;
