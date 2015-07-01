@@ -239,6 +239,7 @@ if(draft.count() > 0)
 			var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
 			var status = iacucQ.status.ID;
 			var whichTemplate;
+			var createProtocolActivity;
 
 			if(submissionTypeName != null){
 				if(submissionTypeName == "New Protocol Application"){
@@ -755,7 +756,7 @@ else{
 			?'iacucQ.ID =>'+iacucQ.ID+'\n';
 
 		/*
-			1b. Register/initalize iacuc Submission and create project eset
+			1b. Register/initalize iacuc Submission and create project eset, log create activity
 		*/
 			iacucQ.registerEntity();
 			//iacucQ.initalize();
@@ -773,6 +774,12 @@ else{
 				var projectSet = Project.createEntitySet();
 				iacucQ.projects = projectSet;
 				?'Created Project Set => '+iacucQ.projects+'\n';
+			}
+
+			var createProtocolActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateProtocol", "_ClickIACUCSubmission");
+			if(createProtocolActivity != null){
+				iacucQ.logActivity(sch, createProtocolActivity, Person.getCurrentUser());
+				?'Logging create protocol activity => '+createProtocolActivity+'\n';
 			}
 		/*
 			1c. set required fields (owner, company, createdby, pi)
@@ -1852,6 +1859,17 @@ if(subjectType == "Animal"){
 				iacucQ.setQualifiedAttribute("customAttributes.rnavID", rnavID);
 				?'set rnavID =>'+rnavID+'\n';
 		{{/if}}
+
+		/*
+			2g. Log Create Activity
+		*/
+
+		var createProtocolActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateProtocol", "_ClickIACUCSubmission");
+		if(createProtocolActivity != null){
+			iacucQ.logActivity(sch, createProtocolActivity, Person.getCurrentUser());
+			?'Logging create protocol activity => '+createProtocolActivity+'\n';
+		}
+
 	}
 	else{
 		iacucQ = iacucQ.elements().item(1);
