@@ -1920,7 +1920,7 @@ if(subjectType == "Animal"){
 		{{/if}}
 
 		{{#each studyDetails.teamSubInvestigators}}
-			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{studyDetails.studyDepartmentalAdmin.userId}}'");
+			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
@@ -1938,7 +1938,7 @@ if(subjectType == "Animal"){
 		{{/each}}
 
 		{{#each studyDetails.researchCoordinators}}
-			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{studyDetails.studyDepartmentalAdmin.userId}}'");
+			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{coordinator.userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{coordinator.userId}}'").elements();
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
@@ -1957,7 +1957,7 @@ if(subjectType == "Animal"){
 
 
 		{{#each studyDetails.otherStudyStaff}}
-			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{studyDetails.studyDepartmentalAdmin.userId}}'");
+			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
@@ -1975,7 +1975,7 @@ if(subjectType == "Animal"){
 		{{/each}}
 
 		{{#each studyDetails.teamVolunteers}}
-			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{studyDetails.studyDepartmentalAdmin.userId}}'");
+			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
@@ -1993,8 +1993,9 @@ if(subjectType == "Animal"){
 		{{/each}}
 
 		{{#each studyDetails.teamCanNotEdit}}
-		var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
-			if(person.count() > 0){
+			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
 					?'added teamCanNotEdit to readers set => '+readers+'\n';
