@@ -619,7 +619,15 @@ if(submissionType == 'PROTOYYYY'){
 				}
 			{{/if}}
 
-
+		 	/*
+		 		2d. log create activity(_IACUC Study)
+		 	*/
+		 	var actTypeSet = getElements("ActivityTypeForID", "ID", "_IACUC Study_Created");
+			if(actTypeSet.count() > 0){
+			 	actTypeSet = actTypeSet(1);
+			 	iacucQ.logActivity(sch, actTypeSet, Person.getCurrentUser());
+			 	?'logging create activity => '+actTypeSet+'\n';
+			}
 
 		}
 		else{
