@@ -72,6 +72,8 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 				?'VA Hospital Location Eset Found => '+locationVaHospital+'\n';
 			}
 
+
+			var subInvestigator = rnumberQ.customAttriubtes.studyDetails.teamSubInvestigators;
  		}
 		else{
 			?'Error => {{id}} studyDetails is null \n';

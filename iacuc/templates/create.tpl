@@ -74,8 +74,10 @@ if(draft.count() > 0)
 					var department = person.customAttributes;
 					if(department != null){
 						department = person.customAttributes.department;
-						iacucQ.company = department;
-						?'iacucQ.company =>'+department+'\n';
+						if(department != null){
+							iacucQ.company = department;
+							?'iacucQ.company =>'+department+'\n';
+						}
 					}
 				}
 			{{/if}}
@@ -367,7 +369,24 @@ if(draft.count() > 0)
 			var person = Person.createEntitySet();
 			iacucQ.setQualifiedAttribute("customAttributes.editors", person);
 			?'editors set created => '+iacucQ.customAttributes.editors+'\n';
-		
+			
+			var readers = iacucQ.customAttributes.readers;
+			var editors = iacucQ.customAttributes.editors;
+
+			{{#if topaz.principalInvestigator.userId}}
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+				if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added PI to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added PI to editors set => '+editors+'\n';
+				}
+				else{
+					?'Cant Find PI => {{topaz.principalInvestigator.userId}} not found \n';
+				}
+			{{/if}}
+
 		{{#if topaz.protocolNumber}}
 			/*
 				2d. add protocol number
@@ -776,11 +795,6 @@ else{
 				?'Created Project Set => '+iacucQ.projects+'\n';
 			}
 
-			var createProtocolActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateProtocol", "_ClickIACUCSubmission");
-			if(createProtocolActivity != null){
-				iacucQ.logActivity(sch, createProtocolActivity, Person.getCurrentUser());
-				?'Logging create protocol activity => '+createProtocolActivity+'\n';
-			}
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
@@ -803,8 +817,10 @@ else{
 					var department = person.customAttributes;
 					if(department != null){
 						department = person.customAttributes.department;
-						iacucQ.company = department;
-						?'iacucQ.company =>'+department+'\n';
+						if(department != null){
+							iacucQ.company = department;
+							?'iacucQ.company =>'+department+'\n';
+						}
 					}
 				}
 			{{/if}}
@@ -1096,6 +1112,19 @@ else{
 			iacucQ.setQualifiedAttribute("customAttributes.editors", person);
 			?'editors set created => '+iacucQ.customAttributes.editors+'\n';
 
+			{{#if topaz.principalInvestigator.userId}}
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+				if(person.count() > 0){
+					person = person.item(1);
+					readers.addElement(person);
+					?'added PI to readers set => '+readers+'\n';
+					editors.addElement(person);
+					?'added PI to editors set => '+editors+'\n';
+				}
+				else{
+					?'Cant Find PI => {{topaz.principalInvestigator.userId}} not found \n';
+				}
+			{{/if}}
 		
 		{{#if topaz.protocolNumber}}
 			/*
@@ -1410,6 +1439,16 @@ else{
 				var a = ApplicationEntity.createEntitySet('_ClickNonVivariumHousingLocation');
 				iacucQ.customAttributes.vivariumHousingLocations = a;
 				?'setting vivHousingLocation eset => '+iacucQ.customAttributes.vivariumHousingLocations+'\n';
+			}
+
+
+			/*
+				log create activity
+			*/
+			var createProtocolActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateProtocol", "_ClickIACUCSubmission");
+			if(createProtocolActivity != null){
+				iacucQ.logActivity(sch, createProtocolActivity, Person.getCurrentUser());
+				?'Logging create protocol activity => '+createProtocolActivity+'\n';
 			}
 
 	}
