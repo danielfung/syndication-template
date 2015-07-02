@@ -159,16 +159,6 @@ if(draft.count() > 0)
 	        	}
 	        {{/if}}
 
-	        {{#if topaz.draftProtocol}}
-	        	var draft = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
-	        	if(draft.count() > 0){
-	        		draft = draft.elements().item(1);
-	        		iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", draft);
-	        		?'setting draftProtocol =>'+draft+'\n';
-	        	}
-
-	        {{/if}}
-
 	    /*
 	    	1e. set IACUC Settings
 	    */
@@ -391,7 +381,7 @@ if(draft.count() > 0)
 			/*
 				2d. add protocol number
 			*/
-				var protocolNumber = '{{topaz.protocolNumber.id}}';
+				var protocolNumber = '{{topaz.protocolNumber}}';
 				iacucQ.setQualifiedAttribute("customAttributes.protocolNumber", protocolNumber);
 				?'setting protocolNumber =>'+protocolNumber+'\n';
 		{{/if}}
@@ -1112,6 +1102,9 @@ else{
 			iacucQ.setQualifiedAttribute("customAttributes.editors", person);
 			?'editors set created => '+iacucQ.customAttributes.editors+'\n';
 
+			var readers = iacucQ.customAttributes.readers;
+			var editors = iacucQ.customAttributes.editors;
+
 			{{#if topaz.principalInvestigator.userId}}
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
 				if(person.count() > 0){
@@ -1130,7 +1123,7 @@ else{
 			/*
 				2d. add protocol number
 			*/
-				var protocolNumber = '{{topaz.protocolNumber.id}}';
+				var protocolNumber = '{{topaz.protocolNumber}}';
 				iacucQ.setQualifiedAttribute("customAttributes.protocolNumber", protocolNumber);
 				?'setting protocolNumber =>'+protocolNumber+'\n';
 		{{/if}}
@@ -1443,12 +1436,164 @@ else{
 
 
 			/*
-				log create activity
+				2g. log create activity
 			*/
 			var createProtocolActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateProtocol", "_ClickIACUCSubmission");
 			if(createProtocolActivity != null){
 				iacucQ.logActivity(sch, createProtocolActivity, Person.getCurrentUser());
 				?'Logging create protocol activity => '+createProtocolActivity+'\n';
+			}
+
+			/*
+				2h. add study team members
+			*/
+
+			var readers = iacucQ.customAttributes.readers;
+			var editors = iacucQ.customAttributes.editors;
+			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+
+			{{#if topaz.coInvestigators}}
+				var coInvestigatorSet = "{{topaz.coInvestigators}}";
+				var kerborosArray = new Array();
+				kerborosArray = coInvestigatorSet.split(",");
+				for( var i = 0; i<kerborosArray.length; i++){
+					var studyTeamMem = kerborosArray[i];
+					var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='"+studyTeamMem+"'");
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '"+studyTeamMem+"'").elements();
+					if(exists.count() == 0 && person.count() > 0){
+						person = person.item(1);
+						readers.addElement(person);
+						?'added teamSubInvestigators to readers set => '+readers+'\n';
+						editors.addElement(person);
+						?'added teamSubInvestigators to editors set => '+editors+'\n';
+						var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+						?'adding person to studyTeamMemInfo => '+person+'\n';
+						studyTeamMember.addElement(studyTeamMemInfo);
+						?'added teamSubInvestigators to study team mem info set => '+studyTeamMember+'\n';
+					}
+					else if(exists.count() > 0){
+						?'Person already exists => '+studyTeamMem+'\n';
+					}
+					else{
+						?'Person not found by kerboros id => '+studyTeamMem+'\n';
+					}
+				}
+			{{/if}}
+
+			{{#if topaz.associates}}
+				var associateSet = "{{topaz.associates}}";
+				var kerborosArray = new Array();
+				kerborosArray = associateSet.split(",");
+				for( var i = 0; i<kerborosArray.length; i++){
+					var studyTeamMem = kerborosArray[i];
+					var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='"+studyTeamMem+"'");
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '"+studyTeamMem+"'").elements();
+					if(exists.count() == 0 && person.count() > 0){
+						person = person.item(1);
+						readers.addElement(person);
+						?'added associates to readers set => '+readers+'\n';
+						editors.addElement(person);
+						?'added associates to editors set => '+editors+'\n';
+						var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+						?'adding person to studyTeamMemInfo => '+person+'\n';
+						studyTeamMember.addElement(studyTeamMemInfo);
+						?'added associates to study team mem info set => '+studyTeamMember+'\n';
+					}
+					else if(exists.count() > 0){
+						?'Person already exists => '+studyTeamMem+'\n';
+					}
+					else{
+						?'Person not found by kerboros id => '+studyTeamMem+'\n';
+					}
+				}
+			{{/if}}
+
+			/*
+				2i. Create DRAFT Protocol
+			*/
+
+			var newClone = wom.createTransientEntity('_ClickIACUCSubmission');
+			newClone.registerEntity();
+			newClone.setQualifiedAttribute("ID", _ClickIACUCSubmission.getID("_ClickIACUCSubmission"));
+			var today = new Date();
+			newClone.setQualifiedAttribute("dateModified",today);
+			newClone.setQualifiedAttribute("dateCreated",today);
+			var submissionTypeID = iacucQ.getQualifiedAttribute("customAttributes.typeOfSubmission.ID");
+			if (submissionTypeID == "PROTOYYYY") {
+				var draftState = wom.getEntityFromString("com.webridge.entity.Entity[OID[FD2459F62BE5EF4784A54A250997A3D2]]");
+				var draftSubmissionType = _SubmissionType.getResultSet("_SubmissionType").query("ID = 'DRAFTYYYY'").elements().item(1);
+				newClone.setQualifiedAttribute("customAttributes.typeOfSubmission", draftSubmissionType);
+				newClone.setQualifiedAttribute("status", draftState);
+				newClone.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
+				iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", newClone);
+
+				/*
+					create readers
+				*/
+					var person = Person.createEntitySet();
+					newClone.setQualifiedAttribute("customAttributes.readers", person );
+					?'readers set created=> '+newClone.customAttributes.readers+'\n';
+
+					var readerDraft = newClone.customAttributes.readers;
+					var readerMain = iacucQ.customAttributes.readers;
+
+				/*
+					create editors
+				*/
+					var person = Person.createEntitySet();
+					newClone.setQualifiedAttribute("customAttributes.editors", person);
+					?'editors set created => '+newClone.customAttributes.editors+'\n';
+
+					var editorDraft = newClone.customAttributes.editors;
+					var editorMain = iacucQ.customAttributes.editors;
+
+				/*
+					create studyTeamMembers
+				*/
+					var studyTeamMember = newClone.customAttributes.studyTeamMembers;
+					if(studyTeamMember == null){
+						var a = ApplicationEntity.createEntitySet('_StudyTeamMemberInfo');
+						newClone.customAttributes.studyTeamMembers = a;
+						?'setting studyTeamMembers eset => '+newClone.customAttributes.studyTeamMembers+'\n';
+					}
+
+					var studyTeamMemberDraft = newClone.customAttributes.studyTeamMembers;
+					var studyTeamMemberMain = iacucQ.customAttributes.studyTeamMembers;
+
+				/*
+					Copy items to draft
+				*/
+
+					for(var i = 1; i<=readerMain.count(); i++){
+							var item = readerMain.elements().item(i);
+							var copiedItem = EntityCloner.quickClone(item);
+							if(copiedItem){
+									readerDraft.addElement(copiedItem);
+									?'adding to readerDraft => '+copiedItem+'\n';
+							}
+					}
+
+					for(var i = 1; i<=editorMain.count(); i++){
+							var item = editorMain.elements().item(i);
+							var copiedItem = EntityCloner.quickClone(item);
+							if(copiedItem){
+									editorDraft.addElement(copiedItem);
+									?'adding to editorDraft => '+copiedItem+'\n';
+							}
+					}
+
+					for(var i = 1; i<=studyTeamMemberMain.count(); i++){
+							var item = studyTeamMemberMain.elements().item(i);
+							var copiedItem = EntityCloner.quickClone(item);
+							if(copiedItem){
+									studyTeamMemberDraft.addElement(copiedItem);
+									?'adding to studyTeamMemberDraft => '+copiedItem+'\n';
+							}
+					}
 			}
 
 	}
