@@ -181,7 +181,10 @@ if(draft.count() > 0)
 			var draftProtocol = iacucQ.getQualifiedAttribute("customAttributes.draftProtocol");
 			if(draftProtocol == null && parentSubmission.count() > 0){
 				parentSubmission = parentSubmission.elements().item(1);
-				iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", parentSubmission);
+				if(parentSubmission.customAttributes.draftProtocol){
+					var parentDraft = parentSubmission.customAttributes.draftProtocol;
+						iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", parentDraft);
+				}
 			}
 			?'draftProtocol =>'+iacucQ.customAttributes.draftProtocol +'\n';
 
@@ -1538,8 +1541,7 @@ else{
 					newClone.setQualifiedAttribute("customAttributes.readers", person );
 					?'readers set created=> '+newClone.customAttributes.readers+'\n';
 
-					var readerDraft = newClone.customAttributes.readers;
-					var readerMain = iacucQ.customAttributes.readers;
+					var readers = iacucQ.customAttributes.readers;
 
 				/*
 					create editors
@@ -1548,8 +1550,7 @@ else{
 					newClone.setQualifiedAttribute("customAttributes.editors", person);
 					?'editors set created => '+newClone.customAttributes.editors+'\n';
 
-					var editorDraft = newClone.customAttributes.editors;
-					var editorMain = iacucQ.customAttributes.editors;
+					var editors = iacucQ.customAttributes.editors;
 
 				/*
 					create studyTeamMembers
@@ -1561,39 +1562,7 @@ else{
 						?'setting studyTeamMembers eset => '+newClone.customAttributes.studyTeamMembers+'\n';
 					}
 
-					var studyTeamMemberDraft = newClone.customAttributes.studyTeamMembers;
-					var studyTeamMemberMain = iacucQ.customAttributes.studyTeamMembers;
-
-				/*
-					Copy items to draft
-				*/
-
-					for(var i = 1; i<=readerMain.count(); i++){
-							var item = readerMain.elements().item(i);
-							var copiedItem = EntityCloner.quickClone(item);
-							if(copiedItem){
-									readerDraft.addElement(copiedItem);
-									?'adding to readerDraft => '+copiedItem+'\n';
-							}
-					}
-
-					for(var i = 1; i<=editorMain.count(); i++){
-							var item = editorMain.elements().item(i);
-							var copiedItem = EntityCloner.quickClone(item);
-							if(copiedItem){
-									editorDraft.addElement(copiedItem);
-									?'adding to editorDraft => '+copiedItem+'\n';
-							}
-					}
-
-					for(var i = 1; i<=studyTeamMemberMain.count(); i++){
-							var item = studyTeamMemberMain.elements().item(i);
-							var copiedItem = EntityCloner.quickClone(item);
-							if(copiedItem){
-									studyTeamMemberDraft.addElement(copiedItem);
-									?'adding to studyTeamMemberDraft => '+copiedItem+'\n';
-							}
-					}
+					studyTeamMember = customAttributes.studyTeamMembers;
 			}
 
 	}
