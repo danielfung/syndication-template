@@ -1542,6 +1542,7 @@ else{
 					?'readers set created=> '+newClone.customAttributes.readers+'\n';
 
 					var readers = iacucQ.customAttributes.readers;
+					var draftReaders = newClone.customAttributes.readers;
 
 				/*
 					create editors
@@ -1551,6 +1552,7 @@ else{
 					?'editors set created => '+newClone.customAttributes.editors+'\n';
 
 					var editors = iacucQ.customAttributes.editors;
+					var draftEditors = newClone.customAttributes.editors;
 
 				/*
 					create studyTeamMembers
@@ -1562,7 +1564,29 @@ else{
 						?'setting studyTeamMembers eset => '+newClone.customAttributes.studyTeamMembers+'\n';
 					}
 
-					studyTeamMember = customAttributes.studyTeamMembers;
+					var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+					var draftStudyTeam = newClone.customAttributes.studyTeamMembers;
+
+					for(var i = 1; i<=readers.count(); i++){
+						var person = readers.elements().item(i);
+						draftReaders.addElement(person);
+						?'adding person to draft readers => '+person.userId+'\n';
+					}
+
+					for(var i = 1; i<=editors.count(); i++){
+						var person = editors.elements().item(i);
+						draftEditors.addElement(person);
+						?'adding person to draft editors => '+person.userId+'\n';
+
+					}
+
+					for(var i = 1; i<=studyTeamMember.count(); i++){
+						var studyTeamMem = studyTeamMember.elements().item(i);
+						var studyTeamMem_1 = EntityCloner.quickClone(studyTeamMem);
+						draftStudyTeam.addElement(studyTeamMem_1);
+						?'adding studyTEamMem to draft studyTeamMember => '+studyTeamMem_1+'\n';
+					}
+
 			}
 
 	}
