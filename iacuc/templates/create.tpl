@@ -1521,7 +1521,7 @@ else{
 
 			var newClone = wom.createTransientEntity('_ClickIACUCSubmission');
 			newClone.registerEntity();
-			newClone.setQualifiedAttribute("ID", _ClickIACUCSubmission.getID("_ClickIACUCSubmission"));
+			newClone.ID = _ClickIACUCSubmission.getID("_ClickIACUCSubmission");
 			var today = new Date();
 			newClone.setQualifiedAttribute("dateModified",today);
 			newClone.setQualifiedAttribute("dateCreated",today);
