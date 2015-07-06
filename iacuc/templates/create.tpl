@@ -173,16 +173,16 @@ if(draft.count() > 0)
 	    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
 	    	var parentSubmission = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
 			if(parentStudy == null && parentSubmission.count() > 0){
-				parentSubmission = parentSubmission.elements().item(1);
-				iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", parentSubmission);
+				var parentSubmission_1 = parentSubmission.elements().item(1);
+				iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", parentSubmission_1);
 			}
 			?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
 
 			var draftProtocol = iacucQ.getQualifiedAttribute("customAttributes.draftProtocol");
 			if(draftProtocol == null && parentSubmission.count() > 0){
-				parentSubmission = parentSubmission.elements().item(1);
-				if(parentSubmission.customAttributes.draftProtocol){
-					var parentDraft = parentSubmission.customAttributes.draftProtocol;
+				var parentSubmission_1 = parentSubmission.elements().item(1);
+				if(parentSubmission_1.customAttributes.draftProtocol){
+					var parentDraft = parentSubmission_1.customAttributes.draftProtocol;
 						iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", parentDraft);
 				}
 			}
@@ -1520,8 +1520,10 @@ else{
 			*/
 
 			var newClone = wom.createTransientEntity('_ClickIACUCSubmission');
-			newClone.registerEntity();
+			?'created Draft Protocol => '+newClone+'\n';
 			newClone.ID = _ClickIACUCSubmission.getID("_ClickIACUCSubmission");
+			?'draft ID => '+newClone.ID+'\n';
+			newClone.registerEntity();
 			var today = new Date();
 			newClone.setQualifiedAttribute("dateModified",today);
 			newClone.setQualifiedAttribute("dateCreated",today);
@@ -1529,6 +1531,8 @@ else{
 			if (submissionTypeID == "PROTOYYYY") {
 				var draftState = wom.getEntityFromString("com.webridge.entity.Entity[OID[FD2459F62BE5EF4784A54A250997A3D2]]");
 				var draftSubmissionType = _SubmissionType.getResultSet("_SubmissionType").query("ID = 'DRAFTYYYY'").elements().item(1);
+				?'Draft SubmissionType => '+draftSubmissionType+'\n';
+				?'Draft State => '+draftState+'\n';
 				newClone.setQualifiedAttribute("customAttributes.typeOfSubmission", draftSubmissionType);
 				newClone.setQualifiedAttribute("status", draftState);
 				newClone.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
@@ -1586,6 +1590,20 @@ else{
 						draftStudyTeam.addElement(studyTeamMem_1);
 						?'adding studyTEamMem to draft studyTeamMember => '+studyTeamMem_1+'\n';
 					}
+				/*
+					set ProtocolType
+				*/
+
+					{{#if topaz.protocolType}}
+			        	var protocolType = entityUtils.getObjectFromString('{{topaz.protocolType.oid}}');
+			        	newClone.setQualifiedAttribute("customAttributes.typeOfProtocol", protocolType);
+			        	?'setting ProtocolType =>'+protocolType+'\n';
+			        	var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+			        	if(submissionTypeName != 'New Protocol Application'){
+			        		iacucQ.setQualifiedAttribute("customAttributes.previousTypeOfProtocol", protocolType);
+			        		?'setting Previous ProtocolType =>'+protocolType+'\n';
+			        	}
+			        {{/if}}
 
 			}
 
