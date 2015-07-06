@@ -1618,6 +1618,22 @@ else{
 
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				
+				var reader = iacucQ.customAttributes.readers;
+				var editor = iacucQ.customAttributes.editors;
+				var draft = iacucQ.customAttributes.draftProtocol;
+				var draftReader;
+				var draftEditor;
+				if(draft != null){
+					draftReader = draft.customAttributes.readers;
+					draftEditor = draft.customAttributes.editors;
+				}
+
+				?'Main protcol readers eset => '+reader+'\n';
+				?'Main protcol editors eset => '+editor+'\n';
+				?'Draft protcol readers eset => '+draftReader+'\n';
+				?'Draft protcol editors eset => '+draftEditor+'\n';
+
+
 				if(investigator == null && person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
 					?'_StudyTeamMemberInfo =>'+studyTeamMember+'\n';
@@ -1625,6 +1641,22 @@ else{
 					person = person.item(1);
 					?'person adding as PI =>'+person+'\n';
 					studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					if(reader != null){
+						reader.addElement(person);
+						?'adding pi to readers list\n';
+					}
+					if(editor != null){
+						editor.addElement(person);
+						?'adding pi to editor list\n';
+					}
+					if(draftReader != null){
+						draftReader.addElement(person);
+						?'adding pi to draftReader list\n';
+					}
+					if(draftEditor != null){
+						draftEditor.addElement(person);
+						?'adding pi to draftEditor list\n';
+					}
 					var department = person.customAttributes;
 					if(department != null){
 						department = person.customAttributes.department;
