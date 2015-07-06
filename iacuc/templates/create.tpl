@@ -58,11 +58,11 @@ if(draft.count() > 0)
 			if createdBy not found --> default to Sys Admin
 			if PI not found --> leave empty
 		*/
-			{{#if topaz.principalInvestigator.userId}}
+			{{#if topaz.principalInvestigator}}
 				//topaz -> assigning PI to Study(IACUCQ)
 				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
 
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				
 				if(investigator == null && person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
@@ -102,18 +102,18 @@ if(draft.count() > 0)
 				}
 			{{/if}}
 
-			{{#if topaz.principalInvestigator.userId}}
+			{{#if topaz.principalInvestigator}}
 				//createdby => topaz.pi
 				var create = iacucQ.createdBy;
 				if(create == null){
-					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'");
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'");
 					if(person.count() > 0){
 						person = person.elements().item(1);
 						iacucQ.createdBy = person;
 						?'iacucQ.createdBy =>'+iacucQ.createdBy+'\n';
 					}
 					else{
-						?'Person Not Found =>topaz.principalInvestigator.userId\n';
+						?'Person Not Found =>topaz.principalInvestigator\n';
 						var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 						iacucQ.createdBy = person;
 						?'defaulting iacucQ.createdBy => administrator: '+iacucQ.createdBy+'\n';
@@ -366,8 +366,8 @@ if(draft.count() > 0)
 			var readers = iacucQ.customAttributes.readers;
 			var editors = iacucQ.customAttributes.editors;
 
-			{{#if topaz.principalInvestigator.userId}}
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+			{{#if topaz.principalInvestigator}}
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				if(person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -376,7 +376,7 @@ if(draft.count() > 0)
 					?'added PI to editors set => '+editors+'\n';
 				}
 				else{
-					?'Cant Find PI => {{topaz.principalInvestigator.userId}} not found \n';
+					?'Cant Find PI => {{topaz.principalInvestigator}} not found \n';
 				}
 			{{/if}}
 
@@ -700,11 +700,11 @@ if(draft.count() > 0)
 		iacucQ = iacucQ.elements().item(1);
 		?'iacucQ submission found =>'+iacucQ.ID+'\n';
 
-		{{#if topaz.principalInvestigator.userId}}
+		{{#if topaz.principalInvestigator}}
 				//update PI field
 				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
 
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				
 				if(investigator == null && person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
@@ -794,11 +794,11 @@ else{
 			if createdBy not found --> default to Sys Admin
 			if PI not found --> leave empty
 		*/
-			{{#if topaz.principalInvestigator.userId}}
+			{{#if topaz.principalInvestigator}}
 				//topaz -> assigning PI to Study(IACUCQ)
 				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
 
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				
 				if(investigator == null && person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
@@ -838,18 +838,18 @@ else{
 				}
 			{{/if}}
 
-			{{#if topaz.principalInvestigator.userId}}
+			{{#if topaz.principalInvestigator}}
 				//createdby => topaz.pi
 				var create = iacucQ.createdBy;
 				if(create == null){
-					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'");
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'");
 					if(person.count() > 0){
 						person = person.elements().item(1);
 						iacucQ.createdBy = person;
 						?'iacucQ.createdBy =>'+iacucQ.createdBy+'\n';
 					}
 					else{
-						?'Person Not Found =>topaz.principalInvestigator.userId\n';
+						?'Person Not Found =>topaz.principalInvestigator\n';
 						var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 						iacucQ.createdBy = person;
 						?'defaulting iacucQ.createdBy => administrator: '+iacucQ.createdBy+'\n';
@@ -1108,8 +1108,8 @@ else{
 			var readers = iacucQ.customAttributes.readers;
 			var editors = iacucQ.customAttributes.editors;
 
-			{{#if topaz.principalInvestigator.userId}}
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+			{{#if topaz.principalInvestigator}}
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				if(person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -1118,7 +1118,7 @@ else{
 					?'added PI to editors set => '+editors+'\n';
 				}
 				else{
-					?'Cant Find PI => {{topaz.principalInvestigator.userId}} not found \n';
+					?'Cant Find PI => {{topaz.principalInvestigator}} not found \n';
 				}
 			{{/if}}
 		
@@ -1612,11 +1612,11 @@ else{
 		iacucQ = iacucQ.elements().item(1);
 		?'iacucQ submission found =>'+iacucQ.ID+'\n';
 
-		{{#if topaz.principalInvestigator.userId}}
+		{{#if topaz.principalInvestigator}}
 				//update PI field
 				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
 
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator.userId}}'").elements();
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				
 				if(investigator == null && person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
@@ -1834,7 +1834,7 @@ if(subjectType == "Animal"){
 				}
 				else{
 					?'Person Not Found =>{{createdBy.userId}}\n';
-					?'Person Not Found =>topaz.principalInvestigator.userId\n';
+					?'Person Not Found =>topaz.principalInvestigator\n';
 					var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 					iacucQ.createdBy = person;
 					?'defaulting iacucQ.createdBy => administrator: '+iacucQ.createdBy+'\n';
