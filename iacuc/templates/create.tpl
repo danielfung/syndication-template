@@ -53,7 +53,7 @@ if(draft.count() > 0)
 			}
 
 		/*
-			1c. set required fields (owner, company, createdby, pi)
+			1c. set required fields (owner, company, createdby, pi, parentProject)
 			if company not found --> default to MCIT
 			if createdBy not found --> default to Sys Admin
 			if PI not found --> leave empty
@@ -138,6 +138,11 @@ if(draft.count() > 0)
 					?'Person Not Found =>{{createdBy.userId}}\n';
 				}
 			{{/if}}
+
+			if(draft != null){
+				iacucQ.parentProject = draft;
+				?'setting iacucQ.parentProject => '+iacucQ.parentProject+'\n';
+			}
 
 		/*
 			1d. set submissionType, typeofProtocol --> required fields
@@ -735,6 +740,14 @@ if(draft.count() > 0)
 				iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
 		        ?'setting iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
 	    {{/if}}
+
+	    var draft = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
+
+	    if(draft.count() > 0){
+	    	draft = draft.elements().item(1);
+			iacucQ.parentProject = draft;
+			?'setting iacucQ.parentProject => '+iacucQ.parentProject+'\n';
+		}
 	}
 
 	{{/if}}
@@ -1679,6 +1692,18 @@ else{
 				iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
 		        ?'setting iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
 	    {{/if}}
+
+	    /*
+			set irb status 
+		*/
+		{{#if topaz.projectStatus}}
+			var status = iacucQ.status;
+			if(status == null){
+				var statusOID = entityUtils.getObjectFromString('{{topaz.projectStatus.oid}}');
+				iacucQ.status = statusOID;
+				?'iacucQ.status =>'+statusOID+'\n';
+			}
+		{/if}}
 	}
 
 	{{/if}}
