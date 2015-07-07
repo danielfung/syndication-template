@@ -160,6 +160,15 @@ if(parentOrder.count() > 0){
 			?'create order.resourceContainer => '+order.resourceContainer+'\n';
 		}
 
+		/*
+			1g. set status
+		*/
+		{{#if topaz.status.oid}}
+			var status = entityUtils.getObjectFromString('{{topaz.status.oid}}');
+			topaz.status = status;
+		{{/if}}
+
+
 	}
 	else{
 		order = order.elements().item(1);
