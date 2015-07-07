@@ -130,16 +130,26 @@ if(submissionType == 'PROTOYYYY'){
 				{{/if}}
 
 			/*
-				1d. set irb status to Active
+				1d. set irb status to Active and take get status if data migration
 					set dateCreated/dateModified/date Approved(if avaliable);
-			*/
-				var status = iacucQ.status;
-				if(status == null){
-					//var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Pending Accounts'").elements().item(1);
-					var statusOID = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[5ABEF2B631731F4C9C9E665C2D0AF3AD]]');
-					iacucQ.status = statusOID;
-					?'iacucQ.status =>'+iacucQ.status.ID+'\n';
-				}
+			*/	
+				{{#if topaz.status.id}}
+					var status = iacucQ.status;
+					if(status == null){
+						//var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Pending Accounts'").elements().item(1);
+						var statusOID = entityUtils.getObjectFromString('{{topaz.status.id}}');
+						iacucQ.status = statusOID;
+						?'iacucQ.status =>'+iacucQ.status.ID+'\n';
+					}
+				{{else}}
+					var status = iacucQ.status;
+					if(status == null){
+						//var statusOID = ApplicationEntity.getResultSet('ProjectStatus').query("ID='Pending Accounts'").elements().item(1);
+						var statusOID = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[5ABEF2B631731F4C9C9E665C2D0AF3AD]]');
+						iacucQ.status = statusOID;
+						?'iacucQ.status =>'+iacucQ.status.ID+'\n';
+					}
+				{{/if}}
 
 				var dateCreate = iacucQ.dateCreated;
 				if(dateCreate == null){
@@ -180,10 +190,23 @@ if(submissionType == 'PROTOYYYY'){
 			*/
 				var parentOID = "com.webridge.entity.Entity[OID[CBE99B3EEC5F2F4590DDF42629347777]]";
 				theParent = EntityUtils.getObjectFromString(parentOID);
-				var wsTemplate = EntityUtils.getObjectFromString("com.webridge.entity.Entity[OID[75AD149ED07BB7419E39441D9AFBC84B]]");
+				var current_status = iaccuQ.status.ID;
+				var wsTemplate;
+
+				if(current_status == 'Active'){
+					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL00000046");
+				}
+				else if(current_status == 'Closed' || current_status == 'Suspended' || current_status == 'Expired'){
+					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL8D1B0D98771CBCF");
+				}
+				else{
+					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL00000047");
+				}
+
 				var resourceContainer = iacucQ.resourceContainer;
 				if(resourceContainer == null){
 					if(wsTemplate != null && theParent != null){
+						wsTemplate = wsTemplate.item(1);
 						iacucQ.createWorkspace(theParent, wsTemplate);
 						?'iacucQ.resourceContainer =>'+iacucQ.resourceContainer+'\n';
 						?'iacucQ.resourceContainer.template =>'+iacucQ.resourceContainer.template+'\n';
