@@ -43,7 +43,7 @@ if(cageCard.count() == 0){
 					var company = person.customAttributes.academicDepartment;
 					if(company == null){
 						company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
-						?'defaulting to MCIT, person's academicDepartment is null\n';
+						?'defaulting to MCIT, persons academicDepartment is null\n';
 					}
 					cageCard.company = company;
 					?'setting company =>'+cageCard.company+'\n';
@@ -58,7 +58,7 @@ if(cageCard.count() == 0){
 					var company = person.customAttributes.academicDepartment;
 					if(company == null){
 						company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
-						?'defaulting to MCIT, person's academicDepartment is null\n';
+						?'defaulting to MCIT, persons academicDepartment is null\n';
 					}
 					cageCard.company = company;
 					?'setting company =>'+cageCard.company+'\n';
@@ -74,7 +74,7 @@ if(cageCard.count() == 0){
 			var company = person.customAttributes.academicDepartment;
 			if(company == null){
 				company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
-				?'defaulting to MCIT, person's academicDepartment is null\n';
+				?'defaulting to MCIT, persons academicDepartment is null\n';
 			}
 			cageCard.company = company;
 			?'setting company =>'+cageCard.company+'\n';

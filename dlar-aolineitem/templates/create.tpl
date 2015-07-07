@@ -54,7 +54,11 @@ if(parentOrder.count() > 0){
 						person = person.elements().item(1);
 						order.createdBy = person;
 						?'order.createdBy =>'+order.createdBy+'\n';
-						var company = person.employer;
+						var company = person.customAttributes.academicDepartment;
+						if(company == null){
+							company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+							?'defaulting to MCIT, persons academicDepartment is null\n';
+						}
 						order.company = company;
 						?'setting company =>'+order.company+'\n';
 						order.owner = person;
@@ -65,7 +69,11 @@ if(parentOrder.count() > 0){
 						var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 						order.createdBy = person;
 						?'defaulting order.createdBy => administrator: '+order.createdBy+'\n';
-						var company = person.employer;
+						var company = person.customAttributes.academicDepartment;
+						if(company == null){
+							company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+							?'defaulting to MCIT, persons academicDepartment is null\n';
+						}
 						order.company = company;
 						?'setting company =>'+order.company+'\n';
 						order.owner = person;
@@ -77,7 +85,11 @@ if(parentOrder.count() > 0){
 				var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 				order.createdBy = person;
 				?'defaulting order.createdBy => administrator: '+order.createdBy+'\n';
-				var company = person.employer;
+				var company = person.customAttributes.academicDepartment;
+				if(company == null){
+					company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+					?'defaulting to MCIT, persons academicDepartment is null\n';
+				}
 				order.company = company;
 				?'setting company =>'+order.company+'\n';
 				order.owner = person;
@@ -107,10 +119,11 @@ if(parentOrder.count() > 0){
 					?'order.customAttributes.order=>'+order.customAttributes.order+'\n';
 					order.parentProject = aot;
 					?'order.parentProject =>'+order.parentProject+'\n';
-					var order = aot.customAttributes.orderLineItems;
-					if(order == null){
+					var parentOrderSet = aot.customAttributes.orderLineItems;
+					if(parentOrderSet == null){
 						var c = ApplicationEntity.createEntitySet("_OrderLineItem");
-
+						aot.customAttributes.orderLineItems = c;
+						?'setting animal order line item eset => '+c+'\n';
 						aot.customAttributes.orderLineItems.addElement(order);
 						?'add to animal order transfer set=>'+aot.ID+'\n';
 					}
@@ -123,6 +136,29 @@ if(parentOrder.count() > 0){
 				 	?'AOT =>{{topaz.parentProject.id}} not found\n';
 				}
 		{{/if}}
+
+		/*
+			1e. set quantityRequested = 0;
+		*/
+
+			order.customAttributes.quantityRequested=0;
+			?'order.quantityRequested => 0\n';
+
+		/*
+			1f. set resourceContainer
+		*/
+
+		var template = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[901FCED9C7F29F4D9E5C32F80A586943]]');
+		var theParent;
+		var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{topaz.parentProject.id}}'");
+		if(aot.count() > 0){
+			aot = aot.elements().item(1);
+			theParent = aot.resourceContainer;
+		}
+		if(theParent != null){
+			order.createWorkspace(theParent, template);
+			?'create order.resourceContainer => '+order.resourceContainer+'\n';
+		}
 
 	}
 	else{
