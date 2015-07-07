@@ -1,5 +1,6 @@
 {{#if protocolNumber}}
 	var iacuc_id = "{{protocolNumber}}";
+	iacuc_id = iacuc_id.split('-')[0];
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
