@@ -93,6 +93,10 @@ if(parentProtocol.count() > 0){
 					animalOrder.status = status;
 					?'animalOrder.status =>'+animalOrder.status+'\n';
 				}
+			{{else}}
+				var status = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[9AAD1CB03DAD994F8B2FAA891378047C]]');
+				animalOrder.status = status;
+				?'defaulting animalOrder.status =>'+animalOrder.status+'\n';
 			{{/if}}
 
 			var dateCreate = animalOrder.dateCreated;
@@ -154,20 +158,22 @@ if(parentProtocol.count() > 0){
 			animalOrder.name = "{{name}}";
 			?'setting animalOrder name =>'+animalOrder.name+'\n';
 
-		{{#if topaz.parentProject}}
+		{{#if topaz.parentProject.id}}
 			/*
 				1g. set parentProject to IACUC Study, or else line item smart form won't work
+				    set customAttributes.iacucStudy to IACUC Study
 			*/
 				var parentIACUC = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
 				if(parentIACUC.count() > 0){
 					parentIACUC = parentIACUC.elements().item(1);
 					animalOrder.parentProject = parentIACUC;
 					?'animalOrder.parentProject =>'+animalOrder.parentProject+'\n';
-
+					animalOrder.setQualifiedAttribute("customAttributes.iacucStudy", parentIACUC);
+					?'setting animalOrder.customAttributes.iacucStudy => '+animalOrder.customAttributes.iacucStudy+'\n';
 				}
 		{{/if}}
 
-		{{#if vendor}}
+		{{#if vendor.name}}
 			/*
 				1h. set vendor
 			*/
