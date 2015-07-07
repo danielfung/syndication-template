@@ -1,5 +1,5 @@
-{{#if topaz.id}}
-	var animalOrder_id ="{{topaz.id}}";
+{{#if id}}
+	var animalOrder_id ="{{id}}";
 	?'animal order ID for data migration => '+animalOrder_id+'\n';
 {{else}}
 	var animalOrder_id = _AnimalOrderTransfer.getID();

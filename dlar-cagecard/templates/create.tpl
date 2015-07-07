@@ -1,8 +1,8 @@
-{{#if topaz.id}}
-	var cageCard_id ="{{topaz.id}}";
+{{#if id}}
+	var cageCard_id ="{{id}}";
 	?'cage card ID for data migration => '+cageCard_id+'\n';
 {{else}}
-	ar cageCard_id = _CageCard.getID();
+	var cageCard_id = _CageCard.getID();
 {{/if}}
 
 ?'CAGE CARD ID =>'+cageCard_id+'\n';
