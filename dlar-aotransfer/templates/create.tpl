@@ -1,7 +1,8 @@
-{{#if _uid}}
-	var animalOrder_id = _AnimalOrderTransfer.getID();
+{{#if topaz.id}}
+	var animalOrder_id ="{{topaz.id}}";
+	?'animal order ID for data migration => '+animalOrder_id+'\n';
 {{else}}
-	var animalOrder_id ="{{this.id}}";
+	var animalOrder_id = _AnimalOrderTransfer.getID();
 {{/if}}
 
 ?'IACUC ID =>'+animalOrder_id+'\n';
@@ -9,7 +10,7 @@ var iacuc;
 var animalOrder = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='"+animalOrder_id+"'");
 ?'animalOrder.count() =>'+animalOrder.count()+'\n';
 
-var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{parentProject.id}}'");
+var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
 
 if(parentProtocol.count() > 0){
 	/*
@@ -46,7 +47,11 @@ if(parentProtocol.count() > 0){
 						person = person.elements().item(1);
 						animalOrder.createdBy = person;
 						?'animalOrder.createdBy =>'+animalOrder.createdBy+'\n';
-						var company = person.employer;
+						var company = person.customAttributes.academicDepartment;
+						if(company == null){
+							company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+							?'defaulting to MCIT, person's academicDepartment is null\n';
+						}
 						animalOrder.company = company;
 						?'animalOrder.company =>'+animalOrder.company+'\n';
 					}
@@ -55,7 +60,10 @@ if(parentProtocol.count() > 0){
 						var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 						animalOrder.createdBy = person;
 						?'defaulting animalOrder.createdBy => administrator: '+animalOrder.createdBy+'\n';
-						var company = person.employer;
+						var company = person.customAttributes.academicDepartment;
+						if(company == null){
+							company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+						}
 						animalOrder.company = company;
 						?'animalOrder.company =>'+animalOrder.company+'\n';
 					}
@@ -64,10 +72,12 @@ if(parentProtocol.count() > 0){
 				var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 				animalOrder.createdBy = person;
 				?'defaulting animalOrder.createdBy => administrator: '+animalOrder.createdBy+'\n';
-				var company = person.employer;
+				var company = person.customAttributes.academicDepartment;
+				if(company == null){
+					company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+				}
 				animalOrder.company = company;
 				?'animalOrder.company =>'+animalOrder.company+'\n';
-
 			{{/if}}
 
 
@@ -76,10 +86,10 @@ if(parentProtocol.count() > 0){
 				set dateCreated/dateModified/date Approved(if avaliable);
 				set customAttributes;
 		*/
-			{{#if status}}
+			{{#if topaz.status}}
 				var status = animalOrder.status;
 				if(status == null){
-					var status = entityUtils.getObjectFromString('{{status.oid}}');
+					var status = entityUtils.getObjectFromString('{{topaz.status.oid}}');
 					animalOrder.status = status;
 					?'animalOrder.status =>'+animalOrder.status+'\n';
 				}
@@ -101,10 +111,22 @@ if(parentProtocol.count() > 0){
 		*/
 
 			var wsTemplate;
-			var parent = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{parentProject.id}}'");
-			var parentContainer = parent.resourceContainer;
+			var parent = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
+			var parentContainer;
 			var status = animalOrder.status;
 			var resourceContainer = animalOrder.resourceContainer;
+			var defaultContainer = "com.webridge.entity.Entity[OID[CBE99B3EEC5F2F4590DDF42629347777]]";
+
+			if(parent.count() > 0){
+				parent = parent.elements().item(1);
+				parentContainer = parent.resourceContainer;
+				?'parentContainer => '+parentContainer+'\n';
+			}
+			else{
+				parentContainer = EntityUtils.getObjectFromString(defaultContainer);
+				?'default container => '+parentContainer+'\n';
+			}
+
 			if(status != null){
 				if(status.ID == "Pre-Submission" || status.ID == "Cancel" || status.ID == "Fiscal Review"){
 					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL4896DF6E19400").item(1);
@@ -116,8 +138,8 @@ if(parentProtocol.count() > 0){
 			}
 
 			if(resourceContainer == null){
-				if(wsTemplate != null && theParent != null){
-					animalOrder.createWorkspace(theParent, wsTemplate);
+				if(wsTemplate != null && parentContainer != null){
+					animalOrder.createWorkspace(parentContainer, wsTemplate);
 					?'animalOrder.resourceContainer =>'+animalOrder.resourceContainer+'\n';
 					?'animalOrder.resourceContainer.template =>'+animalOrder.resourceContainer.template+'\n';
 				}
@@ -132,11 +154,11 @@ if(parentProtocol.count() > 0){
 			animalOrder.name = "{{name}}";
 			?'setting animalOrder name =>'+animalOrder.name+'\n';
 
-		{{#if parentProject}}
+		{{#if topaz.parentProject}}
 			/*
 				1g. set parentProject to IACUC Study, or else line item smart form won't work
 			*/
-				var parentIACUC = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{parentProject.id}}'");
+				var parentIACUC = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
 				if(parentIACUC.count() > 0){
 					parentIACUC = parentIACUC.elements().item(1);
 					animalOrder.parentProject = parentIACUC;
@@ -177,5 +199,5 @@ if(parentProtocol.count() > 0){
 	}
 }
 else{
-	?'ERROR: Animal Order Transfer, Parent Protocol Missing => {{parentProject.id}}\n';
+	?'ERROR: Animal Order Transfer, Parent Protocol Missing => {{topaz.parentProject.id}}\n';
 }

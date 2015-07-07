@@ -1,7 +1,8 @@
-{{#if _uid}}
-	var order_id = _OrderLineItem.getID();
+{{#if topaz.id}}
+	var order_id ="{{topaz.id}}";
+	?'animal order line item ID for data migration => '+order_id+'\n';
 {{else}}
-	var order_id ="{{this.id}}";
+	var order_id = _OrderLineItem.getID();
 {{/if}}
 
 ?'IACUC ID =>'+order_id+'\n';
@@ -9,12 +10,12 @@ var iacuc;
 var order = ApplicationEntity.getResultSet('_OrderLineItem').query("ID='"+order_id+"'");
 ?'order.count() =>'+order.count()+'\n';
 
-var parentOrder = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{parentProject.id}}'");
+var parentOrder = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{topaz.parentProject.id}}'");
 
 /*
 	Check: If parent order does not exist, then return ERROR message
 */
-if(parentProtocol.count() > 0){
+if(parentOrder.count() > 0){
 
 	/*
 		1. Create Animal Order Line Item if it doesn't exist.
@@ -46,42 +47,41 @@ if(parentProtocol.count() > 0){
 		*/
 			//createdby
 			{{#if createdBy.userId}}
-				var create = cageCard.createdBy;
+				var create = order.createdBy;
 				if(create == null){
 					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{createdBy.userId}}'");
 					if(person.count() > 0){
 						person = person.elements().item(1);
-						cageCard.createdBy = person;
-						?'cageCard.createdBy =>'+cageCard.createdBy+'\n';
+						order.createdBy = person;
+						?'order.createdBy =>'+order.createdBy+'\n';
 						var company = person.employer;
-						cageCard.company = company;
-						?'setting company =>'+cageCard.company+'\n';
-						cageCard.owner = person;
-						?'setting cageCard.owner =>'+person+'\n';
+						order.company = company;
+						?'setting company =>'+order.company+'\n';
+						order.owner = person;
+						?'setting order.owner =>'+person+'\n';
 					}
 					else{
 						?'Person Not Found =>{{createdBy.userId}}\n';
 						var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
-						cageCard.createdBy = person;
-						?'defaulting cageCard.createdBy => administrator: '+cageCard.createdBy+'\n';
+						order.createdBy = person;
+						?'defaulting order.createdBy => administrator: '+order.createdBy+'\n';
 						var company = person.employer;
-						cageCard.company = company;
-						?'setting company =>'+cageCard.company+'\n';
-						cageCard.owner = person;
-						?'setting cageCard.owner =>'+person+'\n';
+						order.company = company;
+						?'setting company =>'+order.company+'\n';
+						order.owner = person;
+						?'setting order.owner =>'+person+'\n';
 
 					}
 				}
 			{{else}}
 				var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
-				cageCard.createdBy = person;
-				?'defaulting cageCard.createdBy => administrator: '+cageCard.createdBy+'\n';
+				order.createdBy = person;
+				?'defaulting order.createdBy => administrator: '+order.createdBy+'\n';
 				var company = person.employer;
-				cageCard.company = company;
-				?'setting company =>'+cageCard.company+'\n';
-				cageCard.owner = person;
-				?'setting cageCard.owner =>'+person+'\n';
-
+				order.company = company;
+				?'setting company =>'+order.company+'\n';
+				order.owner = person;
+				?'setting order.owner =>'+person+'\n';
 			{{/if}}
 
 
@@ -90,18 +90,18 @@ if(parentProtocol.count() > 0){
 			1d. set dates(created/modified)
 		*/
 			var currentDate = new Date();
-			cageCard.dateCreated=currentDate;
-			?'dateCreated =>'+cageCard.dateCreated+'\n';
-			cageCard.dateModified=currentDate;
-			?'dateModified =>'+cageCard.dateModified+'\n';
+			order.dateCreated=currentDate;
+			?'dateCreated =>'+order.dateCreated+'\n';
+			order.dateModified=currentDate;
+			?'dateModified =>'+order.dateModified+'\n';
 		
-		{{#if parentProject}}
+		{{#if topaz.parentProject.id}}
 			/*
 				1e. set parentProject and order to the _AnimalOrderTransfer that owns it
 			*/
-				var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{parentProject.id}}'");
+				var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{topaz.parentProject.id}}'");
 				if(aot.count() > 0){
-					?'AOT Found =>{{parentProject.id}}\n';
+					?'AOT Found =>{{topaz.parentProject.id}}\n';
 					aot = aot.elements().item(1);
 					order.setQualifiedAttribute("customAttributes.order", aot );
 					?'order.customAttributes.order=>'+order.customAttributes.order+'\n';
@@ -120,7 +120,7 @@ if(parentProtocol.count() > 0){
 					}
 				}
 				else{
-				 	?'AOT =>{{parentProject.id}} not found\n';
+				 	?'AOT =>{{topaz.parentProject.id}} not found\n';
 				}
 		{{/if}}
 
@@ -132,5 +132,5 @@ if(parentProtocol.count() > 0){
 	}
 }
 else{
-	?'ERROR: Animal Order Line Item, parentProtocol not found => {{parentOrder.id}}\n';
+	?'ERROR: Animal Order Line Item, animal order transfer not found => {{topaz.parentOrder.id}}\n';
 }

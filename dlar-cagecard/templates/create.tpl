@@ -1,14 +1,15 @@
-{{#if _uid}}
-	var cageCard_id = _CageCard.getID();
+{{#if topaz.id}}
+	var cageCard_id ="{{topaz.id}}";
+	?'cage card ID for data migration => '+cageCard_id+'\n';
 {{else}}
-	var cageCard_id ="{{this.id}}";
+	ar cageCard_id = _CageCard.getID();
 {{/if}}
 
 ?'CAGE CARD ID =>'+cageCard_id+'\n';
 var cageCard = ApplicationEntity.getResultSet('_CageCard').query("ID='"+cageCard_id+"'");
 ?'cageCard.count() =>'+cageCard.count()+'\n';
 
-var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{parentProject.id}}'");
+var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
 
 if(parentProtocol.count() > 0){
 /*
@@ -39,7 +40,11 @@ if(cageCard.count() == 0){
 					person = person.elements().item(1);
 					cageCard.createdBy = person;
 					?'cageCard.createdBy =>'+cageCard.createdBy+'\n';
-					var company = person.employer;
+					var company = person.customAttributes.academicDepartment;
+					if(company == null){
+						company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+						?'defaulting to MCIT, person's academicDepartment is null\n';
+					}
 					cageCard.company = company;
 					?'setting company =>'+cageCard.company+'\n';
 					cageCard.owner = person;
@@ -50,7 +55,11 @@ if(cageCard.count() == 0){
 					var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 					cageCard.createdBy = person;
 					?'defaulting cageCard.createdBy => administrator: '+cageCard.createdBy+'\n';
-					var company = person.employer;
+					var company = person.customAttributes.academicDepartment;
+					if(company == null){
+						company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+						?'defaulting to MCIT, person's academicDepartment is null\n';
+					}
 					cageCard.company = company;
 					?'setting company =>'+cageCard.company+'\n';
 					cageCard.owner = person;
@@ -62,7 +71,11 @@ if(cageCard.count() == 0){
 			var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
 			cageCard.createdBy = person;
 			?'defaulting cageCard.createdBy => administrator: '+cageCard.createdBy+'\n';
-			var company = person.employer;
+			var company = person.customAttributes.academicDepartment;
+			if(company == null){
+				company = ApplicationEntity.getResultSet("Company").query("name = 'MCIT'").elements().item(1);
+				?'defaulting to MCIT, person's academicDepartment is null\n';
+			}
 			cageCard.company = company;
 			?'setting company =>'+cageCard.company+'\n';
 			cageCard.owner = person;
@@ -83,9 +96,14 @@ if(cageCard.count() == 0){
 	/*
 		1d. set parent Protocol;
 	*/
-		parentProtocol = parentProtocol.elements().item(1);
-		cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol);
-		?'setting cageCard.parentProtocol =>'+cageCard.customAttributes.IACUCProtocol+'\n';
+		{{#if topaz.parentProtocol.id}}
+			var parentProtocol_1 = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
+			if(parentProtocol_1.count() > 0){
+				parentProtocol_1 = parentProtocol_1.elements().item(1);
+				cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol_1);
+				?'setting cageCard.parentProtocol =>'+cageCard.customAttributes.IACUCProtocol+'\n';
+			}
+		{{/if}}
 
 }
 else{
@@ -95,5 +113,5 @@ else{
 }
 }
 else{
-	?'Error: Parent Protocol Not Found, ID=>{{parentProject.id}}\n';
+	?'Error: Parent Protocol Not Found, ID=>{{topaz.parentProject.id}}\n';
 }
