@@ -189,7 +189,7 @@ if(submissionType == 'PROTOYYYY'){
 			*/
 				var parentOID = "com.webridge.entity.Entity[OID[CBE99B3EEC5F2F4590DDF42629347777]]";
 				theParent = EntityUtils.getObjectFromString(parentOID);
-				var current_status = iaccuQ.status.ID;
+				var current_status = iacucQ.status.ID;
 				var wsTemplate;
 
 				if(current_status == 'Active'){
