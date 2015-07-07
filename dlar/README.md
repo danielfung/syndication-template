@@ -17,3 +17,11 @@ facilityBuilding => Building - will be found by Building Name
  ```
 protocolNumber => ID
  ```
+
+ 4. DATA MIGRATION(DLAR)
+
+ ```
+Items Needed To Be Added To JSON:
+topaz.status.id -> will use this as the status otherwise default to Pending Account Status
+topaz.id -> will use this as ID
+ ```
