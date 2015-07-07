@@ -714,6 +714,15 @@ if(draft.count() > 0)
 			?'setting iacucQ.parentProject => '+iacucQ.parentProject+'\n';
 		}
 
+		{{#if topaz.projectStatus}}
+				var status = iacucQ.status;
+				if(status == null){
+					var statusOID = entityUtils.getObjectFromString('{{topaz.projectStatus.oid}}');
+					iacucQ.status = statusOID;
+					?'iacucQ.status =>'+statusOID+'\n';
+				}
+		{{/if}}
+
 		{{#if topaz.principalInvestigator}}
 				//update PI field
 				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");

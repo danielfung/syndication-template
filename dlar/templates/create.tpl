@@ -1,7 +1,13 @@
 {{#if protocolNumber}}
 	var iacuc_id = "{{protocolNumber}}";
+	?'ID for syndication => '+iacuc_id+'\n';
 {{else}}
 	var iacuc_id ="{{this.id}}";
+{{/if}}
+
+{{#if topaz.id}}
+	var iacuc_id ="{{topaz.id}}";
+	?'ID for data migration => '+iacuc_id+'\n';
 {{/if}}
 
 var status = '{{status}}';
