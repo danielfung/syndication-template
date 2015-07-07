@@ -17,3 +17,18 @@ facilityBuilding => Building - will be found by Building Name
  ```
 protocolNumber => ID
  ```
+
+4a. DATA MIGRATION: IACUC STUDY ORIGINAL Sample JSON Format:
+ ```
+{
+ "id":"TEST12345:ORIGINAL",
+ "name":"TESTING IACUC STUDY",
+ "topaz":{"protocolNumber":{"id":"1234156"},
+ 		  "principalInvestigator":{"userId":"test01"},
+ 		  "projectStatus":{"oid":"com.webridge.entity.Entity[OID[123456789qwerty]]"},
+ 		  "protocolType":{"oid":"com.webridge.entity.Entity[OID[123456789qwerty]]"},
+ 		  "submissionType":{"oid":"com.webridge.entity.Entity[OID[123456789qwerty]]"}
+ 		  }
+ }
+
+ ```
