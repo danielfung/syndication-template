@@ -105,6 +105,14 @@ if(cageCard.count() == 0){
 			}
 		{{/if}}
 
+	/*
+		1e. set status
+	*/
+		{{#if topaz.status}}
+			var status = entityUtils.getObjectFromString('{{topaz.status.id}}');
+			cageCard.status = status;
+			?'setting cageCard status => '+cageCard.status+'\n';
+		{{/if}}
 }
 else{
 	cageCard = cageCard.elements().item(1);

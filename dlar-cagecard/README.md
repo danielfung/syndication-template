@@ -7,7 +7,8 @@
  "name":"TESTING CAGE CARD",
  "topaz":{
  		  "parentProject":{"id":"TZ:1234156"},
- 		  "createdBy":{"userId":"test01"}
+ 		  "createdBy":{"userId":"test01"},
+ 		  "status":{"id":"com.entity[OID[123132123]"}
  		 }
  }
 
