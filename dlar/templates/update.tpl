@@ -120,7 +120,7 @@ if(iacucQ.count() > 0){
 	{{/if}}
 
 	/*
-		1b. check for isUsda(0 => if no animals isUSDA, else 1(a animal is usda))
+		1b. check for isUSDA(0 => if no animals isUSDA, else 1(a animal is usda))
 	*/
 
 	/*
@@ -205,9 +205,6 @@ if(iacucQ.count() > 0){
 				}
 			}
 		}
-
-
-
 	{{/each}}
 }
 else{
