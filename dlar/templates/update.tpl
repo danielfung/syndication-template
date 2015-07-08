@@ -127,6 +127,88 @@ if(iacucQ.count() > 0){
 		1c. check husbandary exceptions => first clear the set, then re-add each husbandary exceptions
 	*/
 
+	/*
+		1d. update number of animal(approved) counts
+	*/
+
+	var animalCount = 0;
+
+	{{#each animalGroups}}
+		animalCount += {{numberOfAnimals}};
+	{{/each}}
+
+	iacucQ.customAttributes._attribute71 = animalCount;
+	?'setting total Number of animals for iacucQ=>'+animalCount+'\n';
+
+
+	{{#each animalCounts}}
+
+		var aCount = {{actualNumberOfAnimals}};
+
+		if(aCount > 0){
+			var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+			if(animalGroupSet == null){
+				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
+				?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
+			}
+		}
+
+		var a = "{{speciesPainCat}}";
+		var partsArray = a.split('-');
+		var species = partsArray[0];
+		species = species.replace(" ", "");
+		var painCategory = partsArray[1];
+		var painCategory_1;
+		var usda = partsArray[2];
+		usda = usda.replace(/^.+:/,'');
+		usda = usda.replace(/\s/g,"");
+
+		if(painCategory == painCategoryB){
+			painCategory_1 = "B";
+		}
+		else if(painCategory == painCategoryC){
+			painCategory_1 = "C";
+		}
+		else if(painCategory == painCategoryD){
+			painCategory_1 = "D";
+		}
+		else if(painCategory == painCategoryE){
+			painCategory_1 = "E";
+		}
+		else{
+			?'painCategoryNotFound=>'+painCategory+'\n';
+		}
+
+		if(painCategory_1 != null){
+
+		}
+		var protoGroupName = species + ' {{painCategory.category}}';
+		var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='"+species+"'");
+		if(usda == "yes" || usda == "Yes"){
+			exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=true");
+		}
+		else{
+			exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=false");
+		}
+
+		exists = exists.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+protoGroupName+"'");
+
+		if(exists.count() > 0){
+			for(var i = 1; i<=exists.count(); i++){
+				var newAnimalCount = {{actualNumberOfAnimals}};
+				var item = exists.elements().item(i);
+				var currentAnimalCount = item.customAttributes._ProtocolGroup.customAttributes.approved;
+				if(currentANimalCount != animalCount){
+					?'Protocol Group => '+item+' count is different\n';
+					item.customAttributes._ProtocolGroup.customAttributes.approved = newAnimalCount;
+					?'setting new animal count => '+newAnimalCount+'\n';
+				}
+			}
+		}
+
+
+
+	{{/each}}
 }
 else{
 	?'DLAR(IACUC Study) Not Found => '+iacuc_id+'\n';
