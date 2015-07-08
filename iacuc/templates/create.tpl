@@ -1635,6 +1635,14 @@ else{
 			        	}
 			        {{/if}}
 
+			     /*
+			     	set ProtocolNumber
+			     */
+			     	var mainProtocolNumber = iacucQ.customAttributes.protocolNumber;
+			     	if(mainProtocolNumber != null){
+			     		newClone.customAttributes.protocolNumber = mainProtocolNumber;
+			     		?'setting protocolNumber for draft study => '+newClone.customAttributes.protocolNumber+'\n';
+			     	}
 			}
 
 	}
