@@ -1709,6 +1709,18 @@ else{
 				iacucQ.setQualifiedAttribute("customAttributes.typeOfSubmission", submissionType);
 		        ?'setting iacucQ.customAttributes.typeOfSubmission =>'+submissionType+'\n';
 	    {{/if}}
+
+	    var studyTeam = iacucQ.customAttributes.studyTeamMembers;
+	    if(studyTeam.count() > 0){
+	    	for(var i = 1; i<=studyTeam.count(); i++){
+	    		var studyTeamMemb = studyTeam.elements().item(i);
+	    		if(studyTeamMemb.customAttributes.canEditProtocol == null){
+	    			var canEdit = true;
+	    			studyTeamMemb.customAttributes.canEditProtocol = canEdit;
+	    			?'adding canEditProtocol to studyTeamMember => '+studyTeamMemb+'\n';
+	    		}
+	    	}
+	    }
 	}
 
 	{{/if}}
@@ -2142,7 +2154,7 @@ if(subjectType == "Animal"){
 			}
 		{{/if}}
 		*/
-		
+
 		{{#each studyDetails.teamSubInvestigators}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
