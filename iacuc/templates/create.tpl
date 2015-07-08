@@ -1477,10 +1477,12 @@ else{
 			var readers = iacucQ.customAttributes.readers;
 			var editors = iacucQ.customAttributes.editors;
 			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+			var canEdit;
 
 			{{#if topaz.coInvestigators}}
 				var coInvestigatorSet = "{{topaz.coInvestigators}}";
 				var kerborosArray = new Array();
+				canEdit = true;
 				kerborosArray = coInvestigatorSet.split(",");
 				for( var i = 0; i<kerborosArray.length; i++){
 					var studyTeamMem = kerborosArray[i];
@@ -1496,6 +1498,8 @@ else{
 						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 						?'adding person to studyTeamMemInfo => '+person+'\n';
+						studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+						?'Can Edit Protocol => True\n';
 						studyTeamMember.addElement(studyTeamMemInfo);
 						?'added teamSubInvestigators to study team mem info set => '+studyTeamMember+'\n';
 					}
@@ -1512,6 +1516,7 @@ else{
 				var associateSet = "{{topaz.associates}}";
 				var kerborosArray = new Array();
 				kerborosArray = associateSet.split(",");
+				canEdit = true;
 				for( var i = 0; i<kerborosArray.length; i++){
 					var studyTeamMem = kerborosArray[i];
 					var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='"+studyTeamMem+"'");
@@ -1526,6 +1531,8 @@ else{
 						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 						?'adding person to studyTeamMemInfo => '+person+'\n';
+						studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+						?'Can Edit Protocol => True\n';
 						studyTeamMember.addElement(studyTeamMemInfo);
 						?'added associates to study team mem info set => '+studyTeamMember+'\n';
 					}
@@ -2103,6 +2110,7 @@ if(subjectType == "Animal"){
 
 		/*
 			2f. add study team members to list and editors/readers
+			--> Loredana => Study Department Administrator should not come over to iacuc.
 		*/
 			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
 			if(studyTeamMember == null){
@@ -2111,10 +2119,12 @@ if(subjectType == "Animal"){
 				?'setting studyTeamMembers eset => '+iacucQ.customAttributes.studyTeamMembers+'\n';
 			}
 			studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
-
+			var canEdit;
+		/*
 		{{#if studyDetails.studyDepartmentalAdmin.userId}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{studyDetails.studyDepartmentalAdmin.userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.studyDepartmentalAdmin.userId}}'").elements();
+			canEdit = true;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -2125,14 +2135,18 @@ if(subjectType == "Animal"){
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+					?'Can Edit Protocol => True\n';
 					studyTeamMember.addElement(studyTeamMemInfo);
 					?'added department admin to study team mem info set => '+studyTeamMember+'\n';
 			}
 		{{/if}}
-
+		*/
+		
 		{{#each studyDetails.teamSubInvestigators}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			canEdit = true;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -2143,6 +2157,8 @@ if(subjectType == "Animal"){
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+					?'Can Edit Protocol => True\n';
 					studyTeamMember.addElement(studyTeamMemInfo);
 					?'added teamSubInvestigators to study team mem info set => '+studyTeamMember+'\n';
 			}
@@ -2151,6 +2167,7 @@ if(subjectType == "Animal"){
 		{{#each studyDetails.researchCoordinators}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{coordinator.userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{coordinator.userId}}'").elements();
+			canEdit = true;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -2161,6 +2178,8 @@ if(subjectType == "Animal"){
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+					?'Can Edit Protocol => True\n';
 					studyTeamMember.addElement(studyTeamMemInfo);
 					?'added researchCoordinators to study team mem info set => '+studyTeamMember+'\n';
 			}
@@ -2170,6 +2189,7 @@ if(subjectType == "Animal"){
 		{{#each studyDetails.otherStudyStaff}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			canEdit = true;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -2180,6 +2200,8 @@ if(subjectType == "Animal"){
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+					?'Can Edit Protocol => True\n';
 					studyTeamMember.addElement(studyTeamMemInfo);
 					?'added otherStudyStaff to study team mem info set => '+studyTeamMember+'\n';
 			}
@@ -2188,6 +2210,7 @@ if(subjectType == "Animal"){
 		{{#each studyDetails.teamVolunteers}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			canEdit = true;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -2198,6 +2221,8 @@ if(subjectType == "Animal"){
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+					?'Can Edit Protocol => True\n';
 					studyTeamMember.addElement(studyTeamMemInfo);
 					?'added teamVolunteers to study team mem info set => '+studyTeamMember+'\n';
 			}
@@ -2206,6 +2231,7 @@ if(subjectType == "Animal"){
 		{{#each studyDetails.teamCanNotEdit}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{userId}}'").elements();
+			canEdit = false;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
 					readers.addElement(person);
@@ -2214,6 +2240,8 @@ if(subjectType == "Animal"){
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					?'adding person to studyTeamMemInfo => '+person+'\n';
+					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+					?'Can Edit Protocol => False\n';
 					studyTeamMember.addElement(studyTeamMemInfo);
 					?'added teamCanNotEdit to study team mem info set => '+studyTeamMember+'\n';
 			}
