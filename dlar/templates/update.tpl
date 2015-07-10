@@ -1,6 +1,6 @@
 {{#if protocolNumber}}
 	var iacuc_id = "{{protocolNumber}}";
-	iacuc_id = iacuc_id.split('-')[0];
+	//iacuc_id = iacuc_id.split('-')[0];
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
@@ -133,13 +133,12 @@ if(iacucQ.count() > 0){
 
 	var animalCount = 0;
 
-	{{#each animalGroups}}
-		animalCount += {{numberOfAnimals}};
+	{{#each animalCounts}}
+		animalCount += {{actualNumberOfAnimals}};
 	{{/each}}
 
 	iacucQ.customAttributes._attribute71 = animalCount;
 	?'setting total Number of animals for iacucQ=>'+animalCount+'\n';
-
 
 	{{#each animalCounts}}
 

@@ -1,5 +1,6 @@
 {{#if protocolNumber}}
 	var iacuc_id = "{{protocolNumber}}";
+	iacuc_id = iacuc_id.split('-')[0];
 	?'ID for syndication => '+iacuc_id+'\n';
 {{else}}
 	var iacuc_id ="{{this.id}}";
@@ -222,9 +223,14 @@ if(submissionType == 'PROTOYYYY'){
 				?'setting iacucQ name =>'+iacucQ.name+'\n';
 
 				var animalCount = 0;
+				/*
+					{{#each animalGroups}}
+						animalCount += {{numberOfAnimals}};
+					{{/each}}
+				*/
 
-				{{#each animalGroups}}
-					animalCount += {{numberOfAnimals}};
+				{{#each animalCounts}}
+					animalCount += {{actualNumberOfAnimals}};
 				{{/each}}
 
 
