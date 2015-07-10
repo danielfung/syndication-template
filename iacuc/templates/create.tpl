@@ -330,7 +330,7 @@ if(draft.count() > 0)
 		/*
 			1i. set name, shortDescription, longTitle
 		*/	
-			var putName = "{{name}}"+"_{{this.id}}";
+			var putName = "{{name}}";
 			iacucQ.name = putName;
 			?'setting iacucQ name =>'+iacucQ.name+'\n';
 			{{#if studyDetails.longTitle}}
