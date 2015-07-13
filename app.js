@@ -67,28 +67,36 @@ var dlarCompliedUpdateTemplate = handlebars.compile(rawUpdateDlarTemplate);
   HandleBars partials
 */
 var rawPartialCreateIacucOrigAmendTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-amend-datamigration-create.tpl', {encoding:'utf8'});
-handlebars.registerPartial("dataMigrationIacucOrigAmendCreate", rawPartialCreateIacucOrigAmendTemplate);
+var rawPartialCreateIacucPreCompileOrigAmendTemplate = handlebars.compile(rawPartialCreateIacucOrigAmendTemplate);
+handlebars.registerPartial("dataMigrationIacucOrigAmendCreate", rawPartialCreateIacucPreCompileOrigAmendTemplate);
 
 var rawPartialUpdateIacucOrigAmendTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-amend-datamigration-update.tpl', {encoding:'utf8'});
-handlebars.registerPartial("dataMigrationIacucOrigAmendUpdate", rawPartialUpdateIacucOrigAmendTemplate);
+var rawPartialUpdateIacucPreCompileOrigAmendTemplate = handlebars.compile(rawPartialUpdateIacucOrigAmendTemplate);
+handlebars.registerPartial("dataMigrationIacucOrigAmendUpdate", rawPartialUpdateIacucPreCompileOrigAmendTemplate);
 
 var rawPartialCreateIacucOrigTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-datamigration-create.tpl', {encoding:'utf8'});
-handlebars.registerPartial("dataMigrationIacucOrigCreate", rawPartialCreateIacucOrigTemplate);
+var rawPartialCreateIacucPreCompileOrigTemplate = handlebars.compile(rawPartialCreateIacucOrigTemplate);
+handlebars.registerPartial("dataMigrationIacucOrigCreate", rawPartialCreateIacucPreCompileOrigTemplate);
 
 var rawPartialUpdateIacucOrigTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-datamigration-update.tpl', {encoding:'utf8'});
-handlebars.registerPartial("dataMigrationIacucOrigUpdate", rawPartialUpdateIacucOrigTemplate);
+var rawPartialUpdateIacucPreCompileOrigTemplate = handlebars.compile(rawPartialUpdateIacucOrigTemplate);
+handlebars.registerPartial("dataMigrationIacucOrigUpdate", rawPartialUpdateIacucPreCompileOrigTemplate);
 
 var rawPartialIacucOrigTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-integration-create.tpl', {encoding:'utf8'});
-handlebars.registerPartial("integrationIacucOrigCreate", rawPartialIacucOrigTemplate);
+var rawPartialIacucPreCompileOrigTemplate = handlebars.compile(rawPartialIacucOrigTemplate);
+handlebars.registerPartial("integrationIacucOrigCreate", rawPartialIacucPreCompileOrigTemplate);
 
 var rawPartialIacucOrigCopyTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-integration-create-existing.tpl', {encoding:'utf8'});
-handlebars.registerPartial("integrationIacucOrigCreateExisting", rawPartialIacucOrigCopyTemplate);
+var rawPartialIacucPreCompileOrigCopyTemplate = handlebars.compile(rawPartialIacucOrigCopyTemplate);
+handlebars.registerPartial("integrationIacucOrigCreateExisting", rawPartialIacucPreCompileOrigCopyTemplate);
 
 var rawPartialDlarOrigCreateTemplate = fs.readFileSync(__dirname+'/dlar/templates/dlar-orig-integration-create.tpl', {encoding:'utf8'});
-handlebars.registerPartial("integrationDlarOrigCreate", rawPartialDlarOrigCreateTemplate);
+var rawDlarPartialPreCompileCreateTemplate = handlebars.compile(rawPartialDlarOrigCreateTemplate);
+handlebars.registerPartial("integrationDlarOrigCreate", rawDlarPartialPreCompileCreateTemplate);
 
 var rawPartialDlarOrigUpdateTemplate = fs.readFileSync(__dirname+'/dlar/templates/dlar-orig-integration-update.tpl', {encoding:'utf8'});
-handlebars.registerPartial("integrationDlarOrigUpdate", rawPartialDlarOrigUpdateTemplate);
+var rawDlarPartialPreCompileUpdateTemplate = handlebars.compile(rawPartialDlarOrigUpdateTemplate);
+handlebars.registerPartial("integrationDlarOrigUpdate", rawDlarPartialPreCompileUpdateTemplate);
 
 
 
