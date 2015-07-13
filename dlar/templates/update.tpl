@@ -30,7 +30,6 @@ if(iacucQ.count() > 0){
 		?'removing all protocolTeamMembers and readding from eset => '+protocolTeamMembers+'\n';;
 	}
 
-
 	{{#each studyTeamMembers}}
 		{{#if studyTeamMember.userId}}
 
@@ -74,7 +73,6 @@ if(iacucQ.count() > 0){
 				?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
 
 			}
-
 		{{/if}}
 	{{/each}}
 
@@ -120,8 +118,30 @@ if(iacucQ.count() > 0){
 	{{/if}}
 
 	/*
-		1b. check for isUSDA(0 => if no animals isUSDA, else 1(a animal is usda))
+		1b. update approval/expiration date
 	*/
+
+	{{#if approvalDate}}
+		var date = "{{approvalDate}}";
+		var dateArray = date.split('-');
+		var day = dateArray[2].substring(0,2);
+		var month = dateArray[1] - 1;
+		var year = dateArray[0];
+		var a = new Date(year, month, day);
+		iacucQ.setQualifiedAttribute("customAttributes._attribute6", a);
+		?'iacucQ.customAttributes._attribute6(Date Approved) =>'+a+'\n';
+	{{/if}}
+
+	{{#if finalExpirationDate}}
+		var date = "{{finalExpirationDate}}";
+		var dateArray = date.split('-');
+		var day = dateArray[2].substring(0,2);
+		var month = dateArray[1] - 1;
+		var year = dateArray[0];
+		var a = new Date(year, month, day);
+		iacucQ.customAttributes._attribute10 = a;
+		?'iacucQ.customAttributes._attribute10(Date Expiration) =>'+a+'\n';
+	{{/if}}
 
 	/*
 		1c. check husbandary exceptions => first clear the set, then re-add each husbandary exceptions
@@ -141,7 +161,6 @@ if(iacucQ.count() > 0){
 	?'setting total Number of animals for iacucQ=>'+animalCount+'\n';
 
 	{{#each animalCounts}}
-
 		var aCount = {{actualNumberOfAnimals}};
 
 		if(aCount > 0){
@@ -152,6 +171,7 @@ if(iacucQ.count() > 0){
 			}
 		}
 
+		var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
 		var a = "{{speciesPainCat}}";
 		var partsArray = a.split('-');
 		var species = partsArray[0];
@@ -179,31 +199,91 @@ if(iacucQ.count() > 0){
 		}
 
 		if(painCategory_1 != null){
+			var protoGroupName = species + ' {{painCategory.category}}';
+			var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='"+species+"'");
+			if(usda == "yes" || usda == "Yes"){
+				exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=true");
+			}
+			else{
+				exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=false");
+			}
 
-		}
-		var protoGroupName = species + ' {{painCategory.category}}';
-		var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='"+species+"'");
-		if(usda == "yes" || usda == "Yes"){
-			exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=true");
-		}
-		else{
-			exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=false");
-		}
+			exists = exists.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+protoGroupName+"'");
+			exists = exists.query("customAttributes._ProtocolGroup.customAttributes.usdaPainCategory.customAttributes.Category='"+painCategory_1+"'");
+			?'Does Animal Exist in Set => '+exists.count()+'\n';
 
-		exists = exists.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+protoGroupName+"'");
-
-		if(exists.count() > 0){
-			for(var i = 1; i<=exists.count(); i++){
-				var newAnimalCount = {{actualNumberOfAnimals}};
-				var item = exists.elements().item(i);
-				var currentAnimalCount = item.customAttributes._ProtocolGroup.customAttributes.approved;
-				if(currentANimalCount != animalCount){
-					?'Protocol Group => '+item+' count is different\n';
-					item.customAttributes._ProtocolGroup.customAttributes.approved = newAnimalCount;
-					?'setting new animal count => '+newAnimalCount+'\n';
+			if(exists.count() > 0){
+				for(var i = 1; i<=exists.count(); i++){
+					var newAnimalCount = {{actualNumberOfAnimals}};
+					var item = exists.elements().item(i);
+					var currentAnimalCount = item.customAttributes._ProtocolGroup.customAttributes.approved;
+					if(currentANimalCount != animalCount){
+						?'Protocol Group => '+item+' count is different\n';
+						item.customAttributes._ProtocolGroup.customAttributes.approved = newAnimalCount;
+						?'setting new animal count => '+newAnimalCount+'\n';
+					}
 				}
 			}
+			else{
+				?'Can't find animal in animal group =>'+species+'\n';
+					var animalGroup = _IS_AnimalGroup.createEntity();
+					var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
+					var clickPainCategory = ApplicationEntity.getResultSet('_ClickPainCategory').query("customAttributes.Category = '"+painCategory_1+"'");
+					if(clickPainCategory.count() > 0){
+						clickPainCategory = clickPainCategory.elements().item(1);
+						selAnimalGroup.setQualifiedAttribute('customAttributes.usdaPainCategory', clickPainCategory);
+						?'setting selAnimalGroup.customAttributes.usdaPainCategory =>'+clickPainCategory+'\n';
+					}
+
+					var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+					if(usda == "yes" || usda == "Yes"){
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+					}
+					else{
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+					}
+					if(clickSpecies.count() > 0){
+						clickSpecies = clickSpecies.elements().item(1);
+						selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
+						speciesAdminSet.addElement(clickSpecies);
+						?'adding clickSpeices to speciesAdminSet =>'+clickSpecies+'\n';
+						?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
+					}
+					else{
+						?'Cant find animal =>'+species+' usda =>'+usda+'\n';
+					}
+					selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
+					?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
+
+					var protoGroupName = species + ' {{painCategory.category}}';
+					selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
+					?'set protocolGroup name =>'+protoGroupName+'\n';
+
+
+					animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
+					animalGroupSet.addElement(animalGroup);
+					?'adding eset animalGroupSet => '+animalGroup+'\n';
+					groupAdminSet.addElement(selAnimalGroup);
+					?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
+			}
 		}
+	{{/each}}
+
+	/*
+		1e. Housing update
+	*/
+	var housingSet = iacucQ.customAttributes.SF_AnimalHousing;
+	if(housingSet == null){
+		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
+		?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
+	}
+	{{#each animalHousingLocationRoom}}
+		var room = ApplicationEntity.getResultSet('_Facility').query("name='{{facilityRoom.name}}'");
+		{{#if facilityRoom.facilityRoomCustomExtension.floor}}
+			 room = room.query("customAttributes.floor.name='{{facilityRoom.facilityRoomCustomExtension.floor}}'");
+		{{/if}}
+		room = room.query("customAttributes.building.name='{{facilityRoom.building.name}}'");
+		room = room.query("customAttributes._attribute2='Room'");
 	{{/each}}
 }
 else{

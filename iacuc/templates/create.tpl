@@ -702,6 +702,32 @@ if(draft.count() > 0)
 				?'setting vivHousingLocation eset => '+iacucQ.customAttributes.vivariumHousingLocations+'\n';
 			}
 
+		/*
+			2f. setting approvalDate/finalExpirationDate
+		*/
+			{{#if topaz.approvalDate}}
+				var date = "{{topaz.approvalDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.customAttributes.approvalDate = a;
+				?'setting approvalDate => '+iacucQ.customAttributes.approvalDate+'\n';
+			{{/if}}
+
+			{{#if topaz.expirationDate}}
+				var date = "{{topaz.expirationDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.customAttributes.finalExpirationDate = a;
+				?'setting finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+
+			{{/if}}
+
 	}
 	else{
 		iacucQ = iacucQ.elements().item(1);
@@ -768,6 +794,29 @@ if(draft.count() > 0)
 					draftProtocol.customAttributes.protocolNumber = protocolNumber;
 					?'updating draftProtocol.protocolNumber => '+protocolNumber+'\n';
 				}
+		{{/if}}
+
+		{{#if topaz.approvalDate}}
+			var date = "{{topaz.approvalDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			iacucQ.customAttributes.approvalDate = a;
+			?'setting approvalDate => '+iacucQ.customAttributes.approvalDate+'\n';
+		{{/if}}
+
+		{{#if topaz.expirationDate}}
+			var date = "{{topaz.expirationDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			iacucQ.customAttributes.finalExpirationDate = a;
+			?'setting finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+
 		{{/if}}
 	}
 
@@ -1556,8 +1605,35 @@ else{
 				}
 			{{/if}}
 
+
 			/*
-				2i. Create DRAFT Protocol
+				2i. setting approvalDate/finalExpirationDate on original
+			*/
+			{{#if topaz.approvalDate}}
+				var date = "{{topaz.approvalDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.customAttributes.approvalDate = a;
+				?'setting approvalDate => '+iacucQ.customAttributes.approvalDate+'\n';
+			{{/if}}
+
+			{{#if topaz.expirationDate}}
+				var date = "{{topaz.expirationDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.customAttributes.finalExpirationDate = a;
+				?'setting finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+
+			{{/if}}
+
+			/*
+				2j. Create DRAFT Protocol
 			*/
 
 			var newClone = wom.createTransientEntity('_ClickIACUCSubmission');
@@ -1654,6 +1730,33 @@ else{
 			     		newClone.customAttributes.protocolNumber = mainProtocolNumber;
 			     		?'setting protocolNumber for draft study => '+newClone.customAttributes.protocolNumber+'\n';
 			     	}
+
+			    /*
+			    	set approval/FinalExpirationDate in draft
+			    */
+
+			    {{#if topaz.approvalDate}}
+					var date = "{{topaz.approvalDate}}";
+					var dateArray = date.split('-');
+					var day = dateArray[2].substring(0,2);
+					var month = dateArray[1] - 1;
+					var year = dateArray[0];
+					var a = new Date(year, month, day);
+					newClone.customAttributes.approvalDate = a;
+					?'setting approvalDate => '+newClone.customAttributes.approvalDate+'\n';
+				{{/if}}
+
+				{{#if topaz.expirationDate}}
+					var date = "{{topaz.expirationDate}}";
+					var dateArray = date.split('-');
+					var day = dateArray[2].substring(0,2);
+					var month = dateArray[1] - 1;
+					var year = dateArray[0];
+					var a = new Date(year, month, day);
+					newClone.customAttributes.finalExpirationDate = a;
+					?'setting finalExpirationDate => '+newClone.customAttributes.finalExpirationDate+'\n';
+
+				{{/if}}
 			}
 
 	}
@@ -1849,30 +1952,31 @@ else{
 			}
 		{{/if}}
 
+	    {{#if topaz.approvalDate}}
+			var date = "{{topaz.approvalDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			draftProtocol.customAttributes.approvalDate = a;
+			?'setting draft approvalDate => '+draftProtocol.customAttributes.approvalDate+'\n';
+			iacucQ.customAttributes.approvalDate = a;
+			?'setting orig approvalDate => '+iacucQ.customAttributes.approvalDate+'\n';
+		{{/if}}
 
-	    var studyTeam = iacucQ.customAttributes.studyTeamMembers;
-	    if(studyTeam.count() > 0){
-	    	for(var i = 1; i<=studyTeam.count(); i++){
-	    		var studyTeamMemb = studyTeam.elements().item(i);
-	    		if(studyTeamMemb.customAttributes.canEditProtocol == null){
-	    			var canEdit = true;
-	    			studyTeamMemb.customAttributes.canEditProtocol = canEdit;
-	    			?'adding canEditProtocol to parent studyTeamMember => '+studyTeamMemb+'\n';
-	    		}
-	    	}
-	    }
-
-	   	var studyTeam = draft.customAttributes.studyTeamMembers;
-	    if(studyTeam.count() > 0){
-	    	for(var i = 1; i<=studyTeam.count(); i++){
-	    		var studyTeamMemb = studyTeam.elements().item(i);
-	    		if(studyTeamMemb.customAttributes.canEditProtocol == null){
-	    			var canEdit = true;
-	    			studyTeamMemb.customAttributes.canEditProtocol = canEdit;
-	    			?'adding canEditProtocol to draft studyTeamMember => '+studyTeamMemb+'\n';
-	    		}
-	    	}
-	    }
+		{{#if topaz.expirationDate}}
+			var date = "{{topaz.expirationDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			draftProtocol.customAttributes.finalExpirationDate = a;
+			?'setting draft finalExpirationDate => '+draftProtocol.customAttributes.finalExpirationDate+'\n';
+			iacucQ.customAttributes.finalExpirationDate = a;
+			?'setting orig finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+		{{/if}}
 
 
 	}
