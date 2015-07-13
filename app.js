@@ -84,6 +84,9 @@ handlebars.registerPartial("integrationIacucOrigCreate", rawPartialIacucOrigTemp
 var rawPartialIacucOrigCopyTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-integration-create-existing.tpl', {encoding:'utf8'});
 handlebars.registerPartial("integrationIacucOrigCreateExisting", rawPartialIacucOrigCopyTemplate);
 
+var rawPartialDlarOrigCreateTemplate = fs.readFileSync(__dirname+'/dlar/templates/dlar-orig-integration-create.tpl', {encoding:'utf8'});
+handlebars.registerPartial("integrationDlarOrigCreate", rawPartialDlarOrigCreateTemplate);
+
 
 
 /*
