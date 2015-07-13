@@ -64,6 +64,29 @@ var rawUpdateDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/update.tp
 var dlarCompliedUpdateTemplate = handlebars.compile(rawUpdateDlarTemplate);
 
 /*
+  HandleBars partials
+*/
+var rawPartialCreateIacucOrigAmendTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-amend-datamigration-create.tpl', {encoding:'utf8'});
+handlebars.registerPartial("dataMigrationIacucOrigAmendCreate", rawPartialCreateIacucOrigAmendTemplate);
+
+var rawPartialUpdateIacucOrigAmendTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-amend-datamigration-update.tpl', {encoding:'utf8'});
+handlebars.registerPartial("dataMigrationIacucOrigAmendUpdate", rawPartialUpdateIacucOrigAmendTemplate);
+
+var rawPartialCreateIacucOrigTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-datamigration-create.tpl', {encoding:'utf8'});
+handlebars.registerPartial("dataMigrationIacucOrigCreate", rawPartialCreateIacucOrigTemplate);
+
+var rawPartialUpdateIacucOrigTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-datamigration-update.tpl', {encoding:'utf8'});
+handlebars.registerPartial("dataMigrationIacucOrigUpdate", rawPartialUpdateIacucOrigTemplate);
+
+var rawPartialIacucOrigTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-integration-create.tpl', {encoding:'utf8'});
+handlebars.registerPartial("integrationIacucOrigCreate", rawPartialIacucOrigTemplate);
+
+var rawPartialIacucOrigCopyTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-integration-create-existing.tpl', {encoding:'utf8'});
+handlebars.registerPartial("integrationIacucOrigCreateExisting", rawPartialIacucOrigCopyTemplate);
+
+
+
+/*
   https://www.npmjs.com/package/body-parser --> Added limit because of Error: request entity too large
 */
 logger.debug("Overriding 'Express' logger");
