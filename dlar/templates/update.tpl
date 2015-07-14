@@ -160,6 +160,12 @@ if(iacucQ.count() > 0){
 	iacucQ.customAttributes._attribute71 = animalCount;
 	?'setting total Number of animals for iacucQ=>'+animalCount+'\n';
 
+	var painCategoryB = 'Pain Category B';
+	var painCategoryC = 'Pain Category C';
+	var painCategoryD = 'Pain Category D';
+	var painCategoryE = 'Pain Category E';
+	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+
 	{{#each animalCounts}}
 		var aCount = {{actualNumberOfAnimals}};
 
@@ -171,16 +177,11 @@ if(iacucQ.count() > 0){
 			}
 		}
 
-		var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
-		var a = "{{speciesPainCat}}";
-		var partsArray = a.split('-');
-		var species = partsArray[0];
+		var species = "{{species.commonName}}";
 		species = species.replace(" ", "");
-		var painCategory = partsArray[1];
+		var painCategory = "{{painCategory.category}}";
+		var usda = "{{species.isUSDASpecies}}";
 		var painCategory_1;
-		var usda = partsArray[2];
-		usda = usda.replace(/^.+:/,'');
-		usda = usda.replace(/\s/g,"");
 
 		if(painCategory == painCategoryB){
 			painCategory_1 = "B";
