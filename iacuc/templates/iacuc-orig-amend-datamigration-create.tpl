@@ -717,4 +717,43 @@
 		var statusID = iacucQ.status.ID;
 		iacucQ.setQualifiedAttribute("globalAttributes.clickProjectStatusAsString",statusID);
 		?'setting inbox study status id => '+iacucQ.globalAttributes.clickProjectStatusAsString+'\n';
+
+		/*
+			2h. add logging activity for amends/renewals
+		*/
+
+		var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+		var logActivity;
+		if(submissionTypeName == "Triennial Review"){
+	        var createTriennialReviewActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateTriennialReview", "_ClickIACUCSubmission");
+	        if(createTriennialReviewActivity == null) {
+	            ?"Create Triennial Review activity not found\n";
+	        }
+	        else{
+	        	iacucQ.logActivity(sch, createTriennialReviewActivity, Person.getCurrentUser());
+	        }
+		}
+		else if(submissionTypeName == "Annual Review"){
+	        var createAnnualReviewActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateAnnualReview", "_ClickIACUCSubmission");
+	        if(createAnnualReviewActivity == null) {
+	            ?"Create Annual Review activity not found\n";
+	        }
+	        else{
+	        	iacucQ.logActivity(sch, createAnnualReviewActivity, Person.getCurrentUser());
+	        }
+		}
+		else if(submissionTypeName == "Amendment"){
+			var createAmendmentActivity = ActivityType.getActivityType("_ClickIACUCSubmission_CreateAmendment", "_ClickIACUCSubmission");
+	        if(createAmendmentActivity == null) {
+	           ?"Create amendment activity not found\n";
+	        }
+	        else{
+	        	iacucQ.logActivity(sch, createAmendmentActivity, Person.getCurrentUser());
+	        }
+		}
+		else{
+			?'Not Renewal or amendment => don't log anything\n';
+		}
+
+
 			//END HERE
