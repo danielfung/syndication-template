@@ -214,3 +214,14 @@
 			iacucQ.customAttributes.finalExpirationDate = a;
 			?'setting orig finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
 		{{/if}}
+
+		{{#if topaz.effectiveDate}}
+			var date = "{{topaz.effectiveDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			iacucQ.customAttributes.effectiveDate = a;
+			?'setting orig effectiveDate => '+iacucQ.customAttributes.effectiveDate+'\n';
+		{{/if}}

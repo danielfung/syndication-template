@@ -765,7 +765,7 @@
 
 
 			/*
-				2i. setting approvalDate/finalExpirationDate on original, status ID as string in inbox
+				2i. setting approvalDate/finalExpirationDate/effectiveDate on original, status ID as string in inbox
 			*/
 			{{#if topaz.approvalDate}}
 				var date = "{{topaz.approvalDate}}";
@@ -789,6 +789,18 @@
 				?'setting finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
 
 			{{/if}}
+
+			{{#if topaz.effectiveDate}}
+				var date = "{{topaz.effectiveDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.customAttributes.effectiveDate = a;
+				?'setting effectiveDate => '+iacucQ.customAttributes.effectiveDate+'\n';
+
+			{{/if}}			
 
 			var statusID = iacucQ.status.ID;
 			iacucQ.setQualifiedAttribute("globalAttributes.clickProjectStatusAsString",statusID);
@@ -905,7 +917,7 @@
 					var year = dateArray[0];
 					var a = new Date(year, month, day);
 					newClone.customAttributes.approvalDate = a;
-					?'setting approvalDate => '+newClone.customAttributes.approvalDate+'\n';
+					?'setting draft approvalDate => '+newClone.customAttributes.approvalDate+'\n';
 				{{/if}}
 
 				{{#if topaz.expirationDate}}
@@ -916,7 +928,19 @@
 					var year = dateArray[0];
 					var a = new Date(year, month, day);
 					newClone.customAttributes.finalExpirationDate = a;
-					?'setting finalExpirationDate => '+newClone.customAttributes.finalExpirationDate+'\n';
+					?'setting draft finalExpirationDate => '+newClone.customAttributes.finalExpirationDate+'\n';
+
+				{{/if}}
+
+				{{#if topaz.effectiveDate}}
+					var date = "{{topaz.effectiveDate}}";
+					var dateArray = date.split('-');
+					var day = dateArray[2].substring(0,2);
+					var month = dateArray[1] - 1;
+					var year = dateArray[0];
+					var a = new Date(year, month, day);
+					newClone.customAttributes.effectiveDate = a;
+					?'setting draft effectiveDate => '+newClone.customAttributes.effectiveDate+'\n';
 
 				{{/if}}
 			}
