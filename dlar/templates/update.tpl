@@ -1,13 +1,13 @@
 {{#if protocolNumber}}
 	var iacuc_id = "{{protocolNumber}}";
-	//iacuc_id = iacuc_id.split('-')[0];
+	var find = iacuc_id.split('-')[0];
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
 
 ?'DLAR ID =>'+iacuc_id+'\n';
 
-var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
+var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+find+"%'");
 ?'iacucQ.count => '+iacucQ.count()+'\n';
 if(iacucQ.count() > 0){
 	iacucQ = iacucQ.elements().item(1);
