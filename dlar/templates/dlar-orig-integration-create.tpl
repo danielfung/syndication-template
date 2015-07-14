@@ -262,10 +262,16 @@
 				var groupAdminSet = iacucQ.customAttributes.groups;
 				var housingAdminSet = iacucQ.customAttributes.housingFacilities;
 
+				var painCategoryB = 'Pain Category B';
+				var painCategoryC = 'Pain Category C';
+				var painCategoryD = 'Pain Category D';
+				var painCategoryE = 'Pain Category E';
+				/*
 				var painCategoryB = ' Pain Category B ';
 				var painCategoryC = ' Pain Category C ';
 				var painCategoryD = ' Pain Category D ';
 				var painCategoryE = ' Pain Category E ';
+				*/
 				var speciesArray = [];
 				{{#each animalGroups}}
 					speciesArray.push({"species":"{{species.commonName}}", "name":"{{name}}"});
@@ -281,9 +287,8 @@
 						iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
 						?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
 					}
-
-					var a = "{{speciesPainCat}}";
-					if(a.length > 0){
+						/*
+						var a = "{{speciesPainCat}}";
 						var partsArray = a.split('-');
 						var species = partsArray[0];
 						species = species.replace(" ", "");
@@ -292,6 +297,14 @@
 						var usda = partsArray[2];
 						usda = usda.replace(/^.+:/,'');
 						usda = usda.replace(/\s/g,"");
+						*/
+
+						var species = "{{species.commonName}}";
+						species = species.replace(" ", "");
+						var painCategory = "{{painCategory.category}}";
+						var usda = "{{species.isUSDASpecies}}";
+						var painCategory_1;
+
 
 						var animalGroup = _IS_AnimalGroup.createEntity();
 						var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
@@ -322,7 +335,7 @@
 							}
 
 							var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
-							if(usda == "yes" || usda == "Yes"){
+							if(usda == "yes" || usda == "Yes" || usda == "1"){
 								clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
 							}
 							else{
@@ -373,7 +386,6 @@
 							groupAdminSet.addElement(selAnimalGroup);
 							?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
 						}
-					}
 			    }
 			{{/each}}
 
