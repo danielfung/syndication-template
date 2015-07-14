@@ -9,7 +9,7 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 			?'iacucQ.ID =>'+iacucQ.ID+'\n';
 
 		/*
-			1b. Register/initalize iacuc Submission, add Project eset
+			1b. Register/initalize iacuc Submission, add Project/contact eset
 		*/
 			iacucQ.registerEntity();
 			//iacucQ.initalize();
@@ -30,6 +30,15 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 				?'Created Project Set => '+iacucQ.projects+'\n';
 			}
 
+			var contacts = iacucQ.contacts;
+			if(contacts == null){
+				var personSet = Person.createEntitySet();
+				iacucQ.contacts = personSet;
+				?'created contacts set =>'+iacucQ.contacts+'\n';
+			}
+
+			var contactsSet = iacucQ.contacts;
+
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
@@ -49,6 +58,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					iacucQ.setQualifiedAttribute("customAttributes.investigator", studyTeamMember);
 					person = person.item(1);
 					?'person adding as PI =>'+person+'\n';
+					contactsSet.addElement(person);
+					?'adding person to contacts list\n';
 					studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					var department = person.customAttributes;
 					if(department != null){
@@ -305,7 +316,6 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 			2e. add people readers/editors
 			example: PI
 		*/
-
 		{{#if studyDetails.principalInvestigator}}
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.principalInvestigator.userId}}'").elements();
 				if(person.count() > 0){
@@ -324,6 +334,7 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 			2f. add study team members to list and editors/readers
 			--> Loredana => Study Department Administrator should not come over to iacuc.
 		*/
+			var contactsSet = iacucQ.contacts;
 			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
 			if(studyTeamMember == null){
 				var a = ApplicationEntity.createEntitySet('_StudyTeamMemberInfo');
@@ -343,6 +354,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					?'added department admin to readers set => '+readers+'\n';
 					editors.addElement(person);
 					?'added department admin to editors set => '+editors+'\n';
+					contactsSet.addElement(person);
+					?'added department admin to contacts set => '+contactsSet+'\n';
 					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
@@ -365,6 +378,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					?'added teamSubInvestigators to readers set => '+readers+'\n';
 					editors.addElement(person);
 					?'added teamSubInvestigators to editors set => '+editors+'\n';
+					contactsSet.addElement(person);
+					?'added teamSubInvestigators to contacts set => '+contactsSet+'\n';
 					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
@@ -386,6 +401,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					?'added researchCoordinators to readers set => '+readers+'\n';
 					editors.addElement(person);
 					?'added researchCoordinators to editors set => '+editors+'\n';
+					contactsSet.addElement(person);
+					?'added researchCoordinators to contacts set => '+contactsSet+'\n';
 					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
@@ -408,6 +425,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					?'added otherStudyStaff to readers set => '+readers+'\n';
 					editors.addElement(person);
 					?'added otherStudyStaff to editors set => '+editors+'\n';
+					contactsSet.addElement(person);
+					?'added otherStudyStaff to contacts set => '+contactsSet+'\n';
 					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
@@ -429,6 +448,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					?'added teamVolunteers to readers set => '+readers+'\n';
 					editors.addElement(person);
 					?'added teamVolunteers to editors set => '+editors+'\n';
+					contactsSet.addElement(person);
+					?'added teamVolunteers to contacts set => '+contactsSet+'\n';
 					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
@@ -448,6 +469,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					person = person.item(1);
 					readers.addElement(person);
 					?'added teamCanNotEdit to readers set => '+readers+'\n';
+					contactsSet.addElement(person);
+					?'added teamCanNotEdit to contacts set => '+contactsSet+'\n';
 					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
