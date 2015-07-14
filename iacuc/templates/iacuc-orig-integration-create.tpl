@@ -32,8 +32,7 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 
 			var contacts = iacucQ.contacts;
 			if(contacts == null){
-				var personSet = Person.createEntitySet();
-				iacucQ.contacts = personSet;
+				iacucQ.contacts = Person.createEntitySet();
 				?'created contacts set =>'+iacucQ.contacts+'\n';
 			}
 
