@@ -23,18 +23,27 @@ if(draft.count() > 0)
 {
 	draft = draft.elements().item(1);
 	{{#if topaz.submissionType.oid}}
-	{{#if topaz.protocolType.oid}}
-	/*
-		1. Create iacuc Submission if it doesn't exist.
-	*/
-	if(iacucQ.count() == 0){
-		{{> dataMigrationIacucOrigAmendCreate}}
-	}
-	else{
-		{{> dataMigrationIacucOrigAmendUpdate}}
-	}
-
-	{{/if}}
+		{{#if topaz.protocolType.oid}}
+		/*
+			1. Create iacuc Submission if it doesn't exist.
+		*/
+		if(iacucQ.count() == 0){
+			{{> dataMigrationIacucOrigAmendCreate}}
+		}
+		else{
+			{{> dataMigrationIacucOrigAmendUpdate}}
+		}
+		{{else}}
+			?'Error=> Missing protocolType\n';
+			?'IACUC ID => {{ID}}\n';
+			?'protocolType => {{topaz.protocolType.oid}}\n';
+			?'submissionType => {{topaz.submissionType.oid}}\n';
+		{{/if}}
+	{{else}}
+		?'Error=> Missing submissionType\n';
+		?'IACUC ID => {{ID}}\n';
+		?'protocolType => {{topaz.protocolType.oid}}\n';
+		?'submissionType => {{topaz.submissionType.oid}}\n';
 	{{/if}}
 }
 else{
@@ -45,23 +54,32 @@ else{
 }
 
 {{else}}
-{{#if topaz.submissionType.oid}}
-{{#if topaz.protocolType.oid}}
-/*
-	NO DRAFT PROTOCOL IN JSON
-*/
-	/*
-		1. Create iacuc Submission if it doesn't exist.
-	*/
-	if(iacucQ.count() == 0){
-		{{> dataMigrationIacucOrigCreate}}
+	{{#if topaz.submissionType.oid}}
+		{{#if topaz.protocolType.oid}}
+		/*
+			NO DRAFT PROTOCOL IN JSON
+		*/
+			/*
+				1. Create iacuc Submission if it doesn't exist.
+			*/
+			if(iacucQ.count() == 0){
+				{{> dataMigrationIacucOrigCreate}}
 
-	}
-	else{
-		{{> dataMigrationIacucOrigUpdate}}
-	}
-
-	{{/if}}
+			}
+			else{
+				{{> dataMigrationIacucOrigUpdate}}
+			}
+		{{else}}
+			?'Error=> Missing protocolType\n';
+			?'IACUC ID => {{ID}}\n';
+			?'protocolType => {{topaz.protocolType.oid}}\n';
+			?'submissionType => {{topaz.submissionType.oid}}\n';
+		{{/if}}
+	{{else}}
+		?'Error=> Missing submissionType\n';
+		?'IACUC ID => {{ID}}\n';
+		?'protocolType => {{topaz.protocolType.oid}}\n';
+		?'submissionType => {{topaz.submissionType.oid}}\n';
 	{{/if}}
 {{/if}}
 
