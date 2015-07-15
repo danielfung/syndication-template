@@ -355,6 +355,8 @@
 
 							selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
 							?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
+							selAnimalGroup.customAttributes.available = {{actualNumberOfAnimals}};
+							?'set number of avaliable for this animal =>{{actualNumberOfAnimals}}\n';
 
 							/*
 							for(var i=0; i<speciesArray.length; i++){
@@ -597,7 +599,7 @@
 				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalSource',animalSource)
 				?'create eset iacucQ.customAttributes.SF_AnimalSource=>'+animalSource+'\n';
 			}
-			/*
+			
 				//Sandy => 07/15/15 => Animal Source's do not need to be populated.
 				var animalSource = _IS_AnimalSource.createEntity();
 				var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
@@ -625,7 +627,7 @@
 
 				animalSourceSet.addElement(animalSource);
 				?'adding Animal Source to source set => '+animalSource+'\n';
-			*/
+			
 			{{#if id}}
 				/*
 					2c. Set assignNumber(IACUC ID=>(example)PROTO201500001)
