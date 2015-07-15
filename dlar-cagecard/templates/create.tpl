@@ -1,6 +1,8 @@
 {{#if id}}
 	var cageCard_id ="{{id}}";
 	?'cage card ID for data migration => '+cageCard_id+'\n';
+	var parentProtocolID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
+	?'parentProtocolID => '+parentOrderID+'\n';
 {{else}}
 	var cageCard_id = _CageCard.getID();
 {{/if}}
@@ -9,7 +11,7 @@
 var cageCard = ApplicationEntity.getResultSet('_CageCard').query("ID='"+cageCard_id+"'");
 ?'cageCard.count() =>'+cageCard.count()+'\n';
 
-var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
+var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
 
 if(parentProtocol.count() > 0){
 /*
@@ -97,7 +99,7 @@ if(cageCard.count() == 0){
 		1d. set parent Protocol;
 	*/
 		{{#if topaz.parentProtocol.id}}
-			var parentProtocol_1 = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
+			var parentProtocol_1 = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
 			if(parentProtocol_1.count() > 0){
 				parentProtocol_1 = parentProtocol_1.elements().item(1);
 				cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol_1);
@@ -121,5 +123,5 @@ else{
 }
 }
 else{
-	?'Error: Parent Protocol Not Found, ID=>{{topaz.parentProject.id}}\n';
+	?'Error: Parent Protocol Not Found, ID=>'+parentProtocolID+'\n';
 }

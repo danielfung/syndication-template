@@ -1,6 +1,8 @@
 {{#if id}}
 	var animalOrder_id ="{{id}}";
 	?'animal order ID for data migration => '+animalOrder_id+'\n';
+	var parentProtocolID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
+	?'parentProtocolID => '+parentOrderID+'\n';
 {{else}}
 	var animalOrder_id = _AnimalOrderTransfer.getID();
 {{/if}}
@@ -10,7 +12,7 @@ var iacuc;
 var animalOrder = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='"+animalOrder_id+"'");
 ?'animalOrder.count() =>'+animalOrder.count()+'\n';
 
-var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
+var parentProtocol = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
 
 if(parentProtocol.count() > 0){
 	/*
@@ -115,7 +117,7 @@ if(parentProtocol.count() > 0){
 		*/
 
 			var wsTemplate;
-			var parent = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
+			var parent = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
 			var parentContainer;
 			var status = animalOrder.status;
 			var resourceContainer = animalOrder.resourceContainer;
@@ -158,20 +160,20 @@ if(parentProtocol.count() > 0){
 			animalOrder.name = "{{name}}";
 			?'setting animalOrder name =>'+animalOrder.name+'\n';
 
-		{{#if topaz.parentProject.id}}
-			/*
-				1g. set parentProject to IACUC Study, or else line item smart form won't work
-				    set customAttributes.iacucStudy to IACUC Study
-			*/
-				var parentIACUC = ApplicationEntity.getResultSet('_IACUC Study').query("ID='{{topaz.parentProject.id}}'");
-				if(parentIACUC.count() > 0){
-					parentIACUC = parentIACUC.elements().item(1);
-					animalOrder.parentProject = parentIACUC;
-					?'animalOrder.parentProject =>'+animalOrder.parentProject+'\n';
-					animalOrder.setQualifiedAttribute("customAttributes.iacucStudy", parentIACUC);
-					?'setting animalOrder.customAttributes.iacucStudy => '+animalOrder.customAttributes.iacucStudy+'\n';
-				}
-		{{/if}}
+		
+		/*
+			1g. set parentProject to IACUC Study, or else line item smart form won't work
+			    set customAttributes.iacucStudy to IACUC Study
+		*/
+			var parentIACUC = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
+			if(parentIACUC.count() > 0){
+				parentIACUC = parentIACUC.elements().item(1);
+				animalOrder.parentProject = parentIACUC;
+				?'animalOrder.parentProject =>'+animalOrder.parentProject+'\n';
+				animalOrder.setQualifiedAttribute("customAttributes.iacucStudy", parentIACUC);
+				?'setting animalOrder.customAttributes.iacucStudy => '+animalOrder.customAttributes.iacucStudy+'\n';
+			}
+	
 
 		{{#if vendor.name}}
 			/*
@@ -205,5 +207,6 @@ if(parentProtocol.count() > 0){
 	}
 }
 else{
-	?'ERROR: Animal Order Transfer, Parent Protocol Missing => {{topaz.parentProject.id}}\n';
+	?'ERROR: Animal Order Transfer, Parent Protocol Missing => '+parentProtocolID+'\n';
+	?'Current ID => {{id}}\n';
 }

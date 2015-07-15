@@ -1,6 +1,8 @@
 {{#if id}}
 	var order_id ="{{id}}";
 	?'animal order line item ID for data migration => '+order_id+'\n';
+	var parentOrderID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
+	?'parentOrderID => '+parentOrderID+'\n';
 {{else}}
 	var order_id = _OrderLineItem.getID();
 {{/if}}
@@ -10,7 +12,7 @@ var iacuc;
 var order = ApplicationEntity.getResultSet('_OrderLineItem').query("ID='"+order_id+"'");
 ?'order.count() =>'+order.count()+'\n';
 
-var parentOrder = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{topaz.parentProject.id}}'");
+var parentOrder = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='"+parentOrderID+"'");
 
 /*
 	Check: If parent order does not exist, then return ERROR message
@@ -107,35 +109,35 @@ if(parentOrder.count() > 0){
 			order.dateModified=currentDate;
 			?'dateModified =>'+order.dateModified+'\n';
 		
-		{{#if topaz.parentProject.id}}
-			/*
-				1e. set parentProject and order to the _AnimalOrderTransfer that owns it
-			*/
-				var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{topaz.parentProject.id}}'");
-				if(aot.count() > 0){
-					?'AOT Found =>{{topaz.parentProject.id}}\n';
-					aot = aot.elements().item(1);
-					order.setQualifiedAttribute("customAttributes.order", aot );
-					?'order.customAttributes.order=>'+order.customAttributes.order+'\n';
-					order.parentProject = aot;
-					?'order.parentProject =>'+order.parentProject+'\n';
-					var parentOrderSet = aot.customAttributes.orderLineItems;
-					if(parentOrderSet == null){
-						var c = ApplicationEntity.createEntitySet("_OrderLineItem");
-						aot.customAttributes.orderLineItems = c;
-						?'setting animal order line item eset => '+c+'\n';
-						aot.customAttributes.orderLineItems.addElement(order);
-						?'add to animal order transfer set=>'+aot.ID+'\n';
-					}
-					else{
-						aot.customAttributes.orderLineItems.addElement(order);
-						?'add to animal order transfer set=>'+aot.ID+'\n';
-					}
+
+		/*
+			1e. set parentProject and order to the _AnimalOrderTransfer that owns it
+		*/
+			var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='"+parentOrderID+"'");
+			if(aot.count() > 0){
+				?'AOT Found =>{{topaz.parentProject.id}}\n';
+				aot = aot.elements().item(1);
+				order.setQualifiedAttribute("customAttributes.order", aot );
+				?'order.customAttributes.order=>'+order.customAttributes.order+'\n';
+				order.parentProject = aot;
+				?'order.parentProject =>'+order.parentProject+'\n';
+				var parentOrderSet = aot.customAttributes.orderLineItems;
+				if(parentOrderSet == null){
+					var c = ApplicationEntity.createEntitySet("_OrderLineItem");
+					aot.customAttributes.orderLineItems = c;
+					?'setting animal order line item eset => '+c+'\n';
+					aot.customAttributes.orderLineItems.addElement(order);
+					?'add to animal order transfer set=>'+aot.ID+'\n';
 				}
 				else{
-				 	?'AOT =>{{topaz.parentProject.id}} not found\n';
+					aot.customAttributes.orderLineItems.addElement(order);
+					?'add to animal order transfer set=>'+aot.ID+'\n';
 				}
-		{{/if}}
+			}
+			else{
+			 	?'AOT =>{{topaz.parentProject.id}} not found\n';
+			}
+	
 
 		/*
 			1e. set quantityRequested = 0;
@@ -177,5 +179,6 @@ if(parentOrder.count() > 0){
 	}
 }
 else{
-	?'ERROR: Animal Order Line Item, animal order transfer not found => {{topaz.parentOrder.id}}\n';
+	?'ERROR: Animal Order Line Item, animal order transfer not found => '+parentOrderID+'\n';
+	?'Current ID => {{id}}\n';
 }
