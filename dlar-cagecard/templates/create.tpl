@@ -98,14 +98,13 @@ if(cageCard.count() == 0){
 	/*
 		1d. set parent Protocol;
 	*/
-		{{#if topaz.parentProtocol.id}}
-			var parentProtocol_1 = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
-			if(parentProtocol_1.count() > 0){
-				parentProtocol_1 = parentProtocol_1.elements().item(1);
-				cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol_1);
-				?'setting cageCard.parentProtocol =>'+cageCard.customAttributes.IACUCProtocol+'\n';
-			}
-		{{/if}}
+
+		var parentProtocol_1 = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
+		if(parentProtocol_1.count() > 0){
+			parentProtocol_1 = parentProtocol_1.elements().item(1);
+			cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol_1);
+			?'setting cageCard.parentProtocol =>'+cageCard.customAttributes.IACUCProtocol+'\n';
+		}
 
 	/*
 		1e. set status

@@ -3,10 +3,13 @@
 1a. DATA MIGRATION: DLAR Animal Order Transfer Sample JSON Format:
  ```
 {
- "id":"TZ:12345:12345:AOT",
+ ID Format: ProtocolNumber:AOTID
+ ParentProtocol: Protocol Number
+ CreatedBy: If null => default to administrator
+
+ "id":"12345-01::AOTID",
  "name":"TESTING ANIMAL ORDER TRANSFER",
  "topaz":{
- 		  "parentProject":{"id":"TZ:1234156"},
  		  "createdBy":{"userId":"test01"},
  		  "status":{"oid":"com.webridge[OID[1839208109238]]"},
  		  "vendor":{"name":"vendorName"},
