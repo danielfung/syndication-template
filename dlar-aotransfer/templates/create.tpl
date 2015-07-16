@@ -175,7 +175,7 @@ if(parentProtocol.count() > 0){
 			}
 	
 
-		{{#if vendor.name}}
+		{{#if animalVendor.name}}
 			/*
 				1h. set vendor
 			*/
@@ -199,6 +199,147 @@ if(parentProtocol.count() > 0){
 
 		{{/if}}
 
+		{{#if approvedDate}}
+			/*
+				2a. set approved date
+			*/
+				var date = "{{approvedDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				animalOrder.customAttributes.approvedDate = a;
+				?'setting approvedDate => '+animalOrder.customAttributes.approvedDate+'\n';
+		{{/if}}
+
+		{{#if dateSentToVendor}}
+			/*
+				2b. set date sent to vendor
+			*/
+				var date = "{{dateSentToVendor}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				animalOrder.customAttributes.dateSentToVendor = a;
+				?'setting dateSentToVendor => '+animalOrder.customAttributes.dateSentToVendor+'\n';
+		{{/if}}
+
+		{{#if orderContact.userId}}
+			/*
+				2c. set order contact
+			*/
+
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{orderContact.userId}}'");
+			if(person.count() > 0){
+				person = person.elements().item(1);
+				animalOrder.customAttributes.orderContact = person;
+				?'setting order contact => '+person+'\n';
+			}
+		{{/if}}
+
+		/*
+			2d. create esets => species, orderLineItem, facilityReviewers
+		*/
+
+		var animalSet = animalOrder.customAttributes.species;
+		var orderLineItemSet = animalOrder.customAttributes.orderLineItems;
+		var facReviewerSet = animalOrder.customAttributes.facilityReviewers;
+
+		if(animalSet == null){
+			animalOrder.customAttributes.species = _IACUC-Species.createEntitySet();
+			animalSet = animalOrder.customAttributes.species;
+			?'animalOrder.customAttributes.species eset created => '+animalSet+'\n';
+		}
+
+		if(orderLineItemSet == null){
+			animalOrder.customAttributes.orderLineItems = _OrderLineItem.createEntitySet();
+			orderLineItemSet = animalOrder.customAttributes.orderLineItems;
+			?'animalOrder.customAttributes.orderLineItems eset created => '+orderLineItemSet+'\n';
+		}
+
+		if(facReviewerSet == null){
+			animalOrder.customAttributes.facilityReviewers = Person.createEntitySet();
+			facReviewerSet = animalOrder.customAttributes.facilityReviewers;
+			?'animalOrder.customAttributes.facilityReviewers eset created => '+facReviewerSet+'\n';
+		}
+
+
+		{{#each species}}
+			/*
+				2d. set species
+			*/
+		{{/each}}
+
+		{{#if standingOrderQuantity}}
+			/*
+				2e. set standingOrderQuantity
+			*/
+			animalOrder.customAttributes.standingOrderQuantity = {{standingOrderQuantity}};
+			?'setting animalOrder.customAttributes.standingOrderQuantity => '+animalOrder.customAttributes.standingOrderQuantity+'\n';
+		{{/if}}
+
+		{{#if totalAnimals}}
+			/*
+				2f. set totalAnimals
+			*/
+			animalOrder.customAttributes.totalAnimals = {{totalAnimals}};
+			?'setting animalOrder.customAttributes.totalAnimals => '+animalOrder.customAttributes.totalAnimals+'\n';
+		{{/if}}
+
+		/*
+			3a. set legacy info 
+		*/
+		var legacy = animalOrder.customAttributes.legacyAnimalOrderInfo;
+		if(legacy == null){
+			animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntitySet();
+			?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
+		}
+
+		{{#if legacyAnimalOrderInfo.createDate}}
+			/*
+				3b. set legacyInfo.createDate
+			*/
+			var date = "{{legacyAnimalOrderInfo.createDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			animalOrder.customAttributes.legacyAnimalOrderInfo.setQualifiedAttribute("customAttributes.createDate", a);
+			?'setting legacyAnimalOrderInfo.createDate => '+animalOrder.customAttributes.dateSentToVendor+'\n';
+		{{/if}}
+
+
+		{{#if legacyAnimalOrderInfo.legacyOrderNumber}}
+			/*
+				3c. set legacyInfo.legacyOrderNumber
+			*/
+			var legacyOrderNum = "{{legacyAnimalOrderInfo.legacyOrderNumber}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.legacyOrderNumber = legacyOrderNum;
+			?'setting legacyOrderNumber => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.legacyOrderNumber+'\n';
+		{{/if}}
+
+
+		{{#if legacyAnimalOrderInfo.species}}
+			/*
+				3d. set legacyInfo.species
+			*/
+			var legacySpecies = "{{legacyAnimalOrderInfo.species}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.species = legacySpecies;
+			?'setting species => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.species+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.animalVendor}}
+			/*
+				3e. set legacyInfo.vendor
+			*/
+			var legacyVendor = "{{legacyAnimalOrderInfo.animalVendor}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor = legacyVendor;
+			?'setting vendor => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor+'\n';
+		{{/if}}
 	}
 	else{
 		animalOrder = animalOrder.elements().item(1);
