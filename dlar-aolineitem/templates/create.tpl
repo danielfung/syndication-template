@@ -140,11 +140,15 @@ if(parentOrder.count() > 0){
 	
 
 		/*
-			1e. set quantityRequested = 0;
+			1e. set quantityRequested = 0 if not given;
 		*/
-
-			order.customAttributes.quantityRequested=0;
-			?'order.quantityRequested => 0\n';
+			{{#if quantityRequested}}
+				order.customAttributes.quantityRequested= {{quantityRequested}};
+				?'order.quantityRequested =>'+order.customAttributes.quantityRequested+'\n';
+			{{else}}
+				order.customAttributes.quantityRequested=0;
+				?'order.quantityRequested => 0\n';
+			{{/if}}
 
 		/*
 			1f. set resourceContainer
@@ -170,6 +174,15 @@ if(parentOrder.count() > 0){
 			topaz.status = status;
 		{{/if}}
 
+
+		/*
+			2a. set age
+		*/
+
+		{{#if age}}
+			order.customAttributes.age = "{{age}}";
+			?'setting orderLineItem.age => '+order.customAttributes.age+'\n';
+		{{/if}}
 
 	}
 	else{

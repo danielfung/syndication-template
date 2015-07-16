@@ -90,6 +90,69 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 	if(rnumberQ.count() > 0){
 		rnumberQ = rnumberQ.elements().item(1);
 		?'RN Study Found => '+rnumberQ.ID+'\n';
+		var canEdit = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
+		var cantEdit = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
+
+		canEdit.removeAllElements();
+		cantEdit.removeAllElements();
+
+		canEdit = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
+		cantEdit = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
+
+		{{#each studyTeamMembers}}
+			{{#if studyTeamMember.userId}}
+
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyTeamMember.userId}}'");
+				if(person.count() > 0){
+					person = person.elements().item(1);
+					contactSet.addElement(person);
+					?'added person to contact set =>'+person+'\n';
+
+					var canEditProtocol = "{{canEditProtocol}}";
+					var rnumberCanEditProtocol;
+
+					if(canEditProtocol == "1"){
+						rnumberCanEditProtocol = true;
+						canEdit.addElement(person);
+						?'person can edit => '+person+'\n';
+					}
+					else{
+						rnumberCanEditProtocol = false;
+						cantEdit.addElement(person);
+						?'person cant edit => '+person+'\n';
+					}	
+
+				}
+
+			{{/if}}
+		{{/each}}
+
+		{{#if investigator.studyTeamMember.userId}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
+			if(person.count() > 0){
+				person = person.item(1);
+				var canEditProtocol = "{{canEditProtocol}}";
+				var rnumberCanEditProtocol;
+
+				if(canEditProtocol == "1"){
+					rnumberCanEditProtocol = true;
+					rnumberQ.customAttributes.studyDetails.customAttriubtes.principalInvestigator = person;
+					?'setting person as PI => '+person+'\n';
+				}
+				else{
+					rnumberCanEditProtocol = false;
+				}
+			}
+			else{
+				?'Investigator not found => {{investigator.studyTeamMember.userId}}\n';
+			}
+
+		{{/if}}
+
+		rnumberQ.updateReadersAndEditors();
+		?'running updateReadersAndEditors\n';
+		rnumberQ.updateContacts(null);
+		?'updating contacts\n';
 
 	}
 	else{
