@@ -88,10 +88,10 @@ if(parentProtocol.count() > 0){
 				set dateCreated/dateModified/date Approved(if avaliable);
 				set customAttributes;
 		*/
-			{{#if topaz.status}}
+			{{#if status.oid}}
 				var status = animalOrder.status;
 				if(status == null){
-					var status = entityUtils.getObjectFromString('{{topaz.status.oid}}');
+					var status = entityUtils.getObjectFromString('{{status.oid}}');
 					animalOrder.status = status;
 					?'animalOrder.status =>'+animalOrder.status+'\n';
 				}
@@ -175,21 +175,19 @@ if(parentProtocol.count() > 0){
 			}
 	
 
-		{{#if animalVendor.name}}
+		{{#if animalVendor.oid}}
 			/*
 				1h. set vendor
 			*/
-
-			var ven = ApplicationEntity.getResultSet('_Vendor').query("name='{{vendor.name}}'");
-			if(ven.count() > 0){
-				ven = ven.elements().item(1);
+			var ven = entityUtils.getObjectFromString('{{animalVendor.oid}}');
+			if(ven){
 				animalOrder.customAttributes.animalVendor = ven;
 				?'animalOrder.customAttributes.animalVendor =>'+animalOrder.customAttributes.animalVendor+'\n';
 			}
 
 		{{/if}}
 
-		{{#if requestType}}
+		{{#if requestType.oid}}
 			/*
 				1i. set requestType example: Export, Transfer, Animal Order
 			*/
@@ -227,12 +225,12 @@ if(parentProtocol.count() > 0){
 				?'setting dateSentToVendor => '+animalOrder.customAttributes.dateSentToVendor+'\n';
 		{{/if}}
 
-		{{#if orderContact.userId}}
+		{{#if orderContact}}
 			/*
 				2c. set order contact
 			*/
 
-			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{orderContact.userId}}'");
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{orderContact}}'");
 			if(person.count() > 0){
 				person = person.elements().item(1);
 				animalOrder.customAttributes.orderContact = person;
@@ -339,6 +337,15 @@ if(parentProtocol.count() > 0){
 			var legacyVendor = "{{legacyAnimalOrderInfo.animalVendor}}";
 			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor = legacyVendor;
 			?'setting vendor => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.order}}
+			/*
+				3e. set legacyInfo.order
+			*/
+			var legacyOrder = "{{legacyAnimalOrderInfo.order}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.order = legacyOrder;
+			?'setting order => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.order+'\n';
 		{{/if}}
 	}
 	else{
