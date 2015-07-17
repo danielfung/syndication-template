@@ -109,8 +109,8 @@ if(cageCard.count() == 0){
 	/*
 		1e. set status
 	*/
-		{{#if topaz.status}}
-			var status = entityUtils.getObjectFromString('{{topaz.status.id}}');
+		{{#if status.oid}}
+			var status = entityUtils.getObjectFromString('{{status.oid}}');
 			cageCard.status = status;
 			?'setting cageCard status => '+cageCard.status+'\n';
 		{{/if}}

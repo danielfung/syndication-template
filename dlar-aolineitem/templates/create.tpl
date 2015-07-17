@@ -115,8 +115,8 @@ if(parentOrder.count() > 0){
 		*/
 			var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='"+parentOrderID+"'");
 			if(aot.count() > 0){
-				?'AOT Found =>{{topaz.parentProject.id}}\n';
 				aot = aot.elements().item(1);
+				?'AOT Found =>'+aot.ID+'\n';
 				order.setQualifiedAttribute("customAttributes.order", aot );
 				?'order.customAttributes.order=>'+order.customAttributes.order+'\n';
 				order.parentProject = aot;
@@ -135,7 +135,7 @@ if(parentOrder.count() > 0){
 				}
 			}
 			else{
-			 	?'AOT =>{{topaz.parentProject.id}} not found\n';
+			 	?'AOT => '+parentOrderID+' not found\n';
 			}
 	
 
@@ -156,7 +156,7 @@ if(parentOrder.count() > 0){
 
 			var template = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[901FCED9C7F29F4D9E5C32F80A586943]]');
 			var theParent;
-			var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='{{topaz.parentProject.id}}'");
+			var aot = ApplicationEntity.getResultSet('_AnimalOrderTransfer').query("ID='"+parentOrderID+"'");
 			if(aot.count() > 0){
 				aot = aot.elements().item(1);
 				theParent = aot.resourceContainer;
@@ -165,13 +165,16 @@ if(parentOrder.count() > 0){
 				order.createWorkspace(theParent, template);
 				?'create order.resourceContainer => '+order.resourceContainer+'\n';
 			}
+			else{
+				?'resourceContainer not found for parent => '+parentOrderID+'\n';
+			}
 
 		/*
 			1g. set status
 		*/
-		{{#if topaz.status.oid}}
-			var status = entityUtils.getObjectFromString('{{topaz.status.oid}}');
-			topaz.status = status;
+		{{#if status.oid}}
+			var status = entityUtils.getObjectFromString('{{status.oid}}');
+			status = status;
 		{{/if}}
 
 
