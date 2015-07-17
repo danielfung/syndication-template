@@ -492,7 +492,14 @@ if(parentProtocol.count() > 0){
 			?'setting vendorQualityFlag => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendorQualityFlag+'\n';
 		{{/if}}	
 
-
+		{{#if legacyAnimalOrderInfo.creator}}
+			/*
+				3w. set legacyInfo.creator
+			*/
+			var legacyCreator = "{{legacyAnimalOrderInfo.creator}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.creator = legacyCreator;
+			?'setting creator => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.creator+'\n';
+		{{/if}}			
 	}
 	else{
 		animalOrder = animalOrder.elements().item(1);
