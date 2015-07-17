@@ -7,14 +7,29 @@
  ParentProtocol: Protocol Number
  CreatedBy: If null => default to administrator
 
- "id":"12345-01::AOTID",
- "name":"TESTING ANIMAL ORDER TRANSFER",
- "topaz":{
- 		  "createdBy":{"userId":"test01"},
- 		  "status":{"oid":"com.webridge[OID[1839208109238]]"},
- 		  "vendor":{"name":"vendorName"},
- 		  "requestType":{"oid":"com.webridge[OID[123910932]]"}
- 		 }
- }
+ {
+    id: String,
+    animalOrderId: String,
+    protocolId: String,
+    approvedDate: String, 
+    dateSentToVendor: String,
+    requestType: { oid: String },
+    status: { oid: String },
+    orderContact: String,
+    standingOrderQuantity: Number
+    totalAnimals: Number,
+    species: [{oid: String}],
+    animalVendor: {oid: String},
+    legacyAnimalOrderInfo: {
+      createDate: String,  
+      legacyOrderNumber: String,
+      order: String,
+      orderContact: String,
+      requisition: String
+      species: String,
+      status: String,
+      animalVendor: String 
+    }
+
 
  ```

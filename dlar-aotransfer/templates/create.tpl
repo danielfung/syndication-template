@@ -293,7 +293,7 @@ if(parentProtocol.count() > 0){
 		*/
 		var legacy = animalOrder.customAttributes.legacyAnimalOrderInfo;
 		if(legacy == null){
-			animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntitySet();
+			animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntity();
 			?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
 		}
 
@@ -384,7 +384,113 @@ if(parentProtocol.count() > 0){
 			?'setting vendor => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor+'\n';
 		{{/if}}
 
+		{{#if legacyAnimalOrderInfo.billOrder}}
+			/*
+				3k. set legacyInfo.billOrder
+			*/
+			var legacyBillOrder = "{{legacyAnimalOrderInfo.billOrder}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.billOrder = legacyBillOrder;
+			?'setting billOrder => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.billOrder+'\n';
+		{{/if}}
 
+		{{#if legacyAnimalOrderInfo.confirmationNumber}}
+			/*
+				3l. set legacyInfo.confirmationNumber
+			*/
+			var legacyConfNumber = "{{legacyAnimalOrderInfo.confirmationNumber}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.confirmationNumber = legacyConfNumber;
+			?'setting confirmationNumber => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.confirmationNumber+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.department}}
+			/*
+				3m. set legacyInfo.department
+			*/
+			var legacyDepartment = "{{legacyAnimalOrderInfo.department}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.department = legacyDepartment;
+			?'setting department => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.department+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.orderType}}
+			/*
+				3n. set legacyInfo.orderType
+			*/
+			var legacyOrderType = "{{legacyAnimalOrderInfo.orderType}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.orderType = legacyOrderType;
+			?'setting orderType => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.orderType+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.pI}}
+			/*
+				3o. set legacyInfo.pI
+			*/
+			var legacyPI = "{{legacyAnimalOrderInfo.pI}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.pI = legacyPI;
+			?'setting pI => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.pI+'\n';
+		{{/if}}	
+
+		{{#if legacyAnimalOrderInfo.pONumber}}
+			/*
+				3p. set legacyInfo.pONumber
+			*/
+			var legacyPONum = "{{legacyAnimalOrderInfo.pONumber}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.pONumber = legacyPONum;
+			?'setting pONumber => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.pONumber+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.protocolSegment}}
+			/*
+				3q. set legacyInfo.protocolSegment
+			*/
+			var legacyProtocolSeg = "{{legacyAnimalOrderInfo.protocolSegment}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.protocolSegment = legacyProtocolSeg;
+			?'setting protocolSegment => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.protocolSegment+'\n';
+		{{/if}}	
+
+		{{#if legacyAnimalOrderInfo.request}}
+			/*
+				3r. set legacyInfo.request
+			*/
+			var legacyRequest = "{{legacyAnimalOrderInfo.request}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.request = legacyRequest;
+			?'setting request => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.request+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.requester}}
+			/*
+				3s. set legacyInfo.requester
+			*/
+			var legacyRequester = "{{legacyAnimalOrderInfo.requester}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.requester = legacyRequester;
+			?'setting requester => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.requester+'\n';
+		{{/if}}	
+
+		{{#if legacyAnimalOrderInfo.requesterPhone}}
+			/*
+				3t. set legacyInfo.requesterPhone
+			*/
+			var legacyRequesterPhone = "{{legacyAnimalOrderInfo.requesterPhone}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.requesterPhone = legacyRequesterPhone;
+			?'setting requesterPhone => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.requesterPhone+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.study}}
+			/*
+				3u. set legacyInfo.study
+			*/
+			var legacyStudy = "{{legacyAnimalOrderInfo.study}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.study = legacyStudy;
+			?'setting study => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.study+'\n';
+		{{/if}}	
+
+		{{#if legacyAnimalOrderInfo.vendorQualityFlag}}
+			/*
+				3v. set legacyInfo.vendorQualityFlag
+			*/
+			var legacyVendorFlag = "{{legacyAnimalOrderInfo.vendorQualityFlag}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendorQualityFlag = legacyVendorFlag;
+			?'setting vendorQualityFlag => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendorQualityFlag+'\n';
+		{{/if}}	
 
 
 	}
