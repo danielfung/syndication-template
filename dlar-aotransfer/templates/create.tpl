@@ -265,10 +265,17 @@ if(parentProtocol.count() > 0){
 		}
 
 
-		{{#each species}}
+		{{#if species}}
 			/*
 				2d. set species
 			*/
+			var animal = entityUtils.getObjectFromString('{{species}}');
+			animalSet.addElement(animal);
+		{{/if}}
+
+		{{#each species}}
+			var animal = entityUtils.getObjectFromString('{{species}}');
+			animalSet.addElement(animal);
 		{{/each}}
 
 		{{#if standingOrderQuantity}}
