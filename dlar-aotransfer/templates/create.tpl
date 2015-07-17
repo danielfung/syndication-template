@@ -375,11 +375,11 @@ if(parentProtocol.count() > 0){
 			?'setting status => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.status+'\n';
 		{{/if}}
 
-		{{#if legacyAnimalOrderInfo.animalVendor}}
+		{{#if legacyAnimalOrderInfo.vendor}}
 			/*
 				3j. set legacyInfo.vendor
 			*/
-			var legacyVendor = "{{legacyAnimalOrderInfo.animalVendor}}";
+			var legacyVendor = "{{legacyAnimalOrderInfo.vendor}}";
 			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor = legacyVendor;
 			?'setting vendor => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor+'\n';
 		{{/if}}
