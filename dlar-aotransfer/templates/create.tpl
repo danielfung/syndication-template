@@ -264,17 +264,11 @@ if(parentProtocol.count() > 0){
 			?'animalOrder.customAttributes.facilityReviewers eset created => '+facReviewerSet+'\n';
 		}
 
-
-		{{#if species}}
-			/*
-				2d. set species
-			*/
-			var animal = entityUtils.getObjectFromString('{{species}}');
-			animalSet.addElement(animal);
-		{{/if}}
-
+		/*
+			2d. set species
+		*/
 		{{#each species}}
-			var animal = entityUtils.getObjectFromString('{{species}}');
+			var animal = entityUtils.getObjectFromString('{{oid}}');
 			animalSet.addElement(animal);
 		{{/each}}
 
@@ -353,6 +347,15 @@ if(parentProtocol.count() > 0){
 			var legacyOrder = "{{legacyAnimalOrderInfo.order}}";
 			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.order = legacyOrder;
 			?'setting order => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.order+'\n';
+		{{/if}}
+
+		{{#if legacyAnimalOrderInfo.requisition}}
+			/*
+				3f. set legacyInfo.requisition
+			*/
+			var legacyRequisition = "{{legacyAnimalOrderInfo.requisition}}";
+			animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.requisition = legacyRequisition;
+			?'setting requisition => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.requisition+'\n';
 		{{/if}}
 	}
 	else{
