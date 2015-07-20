@@ -85,7 +85,7 @@ if(parentProtocol.count() > 0){
 			var name = "Animal Order - ";
 			name += name +animalOrder_id;
 			animalOrder.name = name;
-			?'setting animal Order name => 'animalOrder.name+'\n';
+			?'setting animal Order name => '+animalOrder.name+'\n';
 
 
 		/*
@@ -192,11 +192,11 @@ if(parentProtocol.count() > 0){
 
 		{{/if}}
 
-		{{#if requestType}}
+		{{#if requestType.oid}}
 			/*
 				1i. set requestType example: Export, Transfer, Animal Order
 			*/
-			var result = entityUtils.getObjectFromString('{{requestType}}');
+			var result = entityUtils.getObjectFromString('{{requestType.oid}}');
 			animalOrder.customAttributes.requestType = result;
 			?'animalOrder.customAttributes.requestType =>'+animalOrder.customAttributes.requestType+'\n';
 
@@ -252,7 +252,8 @@ if(parentProtocol.count() > 0){
 		var facReviewerSet = animalOrder.customAttributes.facilityReviewers;
 
 		if(animalSet == null){
-			animalOrder.customAttributes.species = _IACUC-Species.createEntitySet();
+			var animalSpecieSet = ApplicationEntity.createEntitySet("_IACUC-Species");
+			animalOrder.customAttributes.species = animalSpecieSet;
 			animalSet = animalOrder.customAttributes.species;
 			?'animalOrder.customAttributes.species eset created => '+animalSet+'\n';
 		}
