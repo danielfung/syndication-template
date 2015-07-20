@@ -252,7 +252,7 @@ if(parentProtocol.count() > 0){
 		var facReviewerSet = animalOrder.customAttributes.facilityReviewers;
 
 		if(animalSet == null){
-			animalOrder.customAttributes.species =  ApplicationEntity.createEntitySet("_IACUC-Species");;
+			animalOrder.customAttributes.species =  ApplicationEntity.createEntitySet("_IACUC-Species");
 			animalSet = animalOrder.customAttributes.species;
 			?'animalOrder.customAttributes.species eset created => '+animalSet+'\n';
 		}
