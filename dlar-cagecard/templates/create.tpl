@@ -2,7 +2,7 @@
 	var cageCard_id ="{{id}}";
 	?'cage card ID for data migration => '+cageCard_id+'\n';
 	var parentProtocolID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
-	?'parentProtocolID => '+parentOrderID+'\n';
+	?'parentProtocolID => '+parentProtocolID+'\n';
 {{else}}
 	var cageCard_id = _CageCard.getID();
 {{/if}}

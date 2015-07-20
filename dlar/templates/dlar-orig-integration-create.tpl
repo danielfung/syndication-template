@@ -145,7 +145,7 @@
 				{{/if}}
 
 				/*
-				** 07-20-2015 => Sandy => DLAR wants the annual review submission date
+				** 07-20-2015 => Sandy => DLAR wants the annual expiration date
 				{{#if finalExpirationDate}}
 					var date = "{{finalExpirationDate}}";
 					var dateArray = date.split('-');
@@ -158,8 +158,8 @@
 				{{/if}}
 				*/
 
-				{{#if dueDateForNextReviewSubmission}}
-					var date = "{{dueDateForNextReviewSubmission}}";
+				{{#if annualExpirationDate}}
+					var date = "{{annualExpirationDate}}";
 					var dateArray = date.split('-');
 					var day = dateArray[2].substring(0,2);
 					var month = dateArray[1] - 1;
@@ -314,7 +314,7 @@
 						*/
 
 						var species = "{{species.commonName}}";
-						species = species.replace(" ", "");
+						//species = species.replace(" ", "");
 						var painCategory = "{{painCategory.category}}";
 						var usda = "{{species.isUSDASpecies}}";
 						var painCategory_1;
