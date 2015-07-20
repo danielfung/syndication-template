@@ -313,7 +313,7 @@ if(parentProtocol.count() > 0){
 			var year = dateArray[0];
 			var a = new Date(year, month, day);
 			animalOrder.customAttributes.legacyAnimalOrderInfo.setQualifiedAttribute("customAttributes.createDate", a);
-			?'setting legacyAnimalOrderInfo.createDate => '+animalOrder.customAttributes.dateSentToVendor+'\n';
+			?'setting legacyAnimalOrderInfo.createDate => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.createDate+'\n';
 		{{/if}}
 
 
@@ -349,7 +349,7 @@ if(parentProtocol.count() > 0){
 				3f. set legacyInfo.protocol
 			*/
 			var legacyProtocol = "{{legacyAnimalOrderInfo.protocol}}";
-			animalOrder.customAttributes.legacyAnimalOrderInfo.setQualifiedAttribute("customAttributes.protoco", legacyProtocol);
+			animalOrder.customAttributes.legacyAnimalOrderInfo.setQualifiedAttribute("customAttributes.protocol", legacyProtocol);
 			?'setting protocol => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.protocol+'\n';
 		{{/if}}
 
@@ -385,7 +385,7 @@ if(parentProtocol.count() > 0){
 				3j. set legacyInfo.vendor
 			*/
 			var legacyVendor = "{{legacyAnimalOrderInfo.vendor}}";
-			animalOrder.customAttributes.legacyAnimalOrderInfo.setQualifiedAttribute("customAttributes.vendo",  legacyVendor);
+			animalOrder.customAttributes.legacyAnimalOrderInfo.setQualifiedAttribute("customAttributes.vendor",  legacyVendor);
 			?'setting vendor => '+animalOrder.customAttributes.legacyAnimalOrderInfo.customAttributes.vendor+'\n';
 		{{/if}}
 
