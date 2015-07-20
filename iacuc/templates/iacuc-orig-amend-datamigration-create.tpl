@@ -752,7 +752,7 @@
 	        }
 		}
 		else{
-			?'Not Renewal or amendment => don't log anything\n';
+			?'Not Renewal or amendment => dont log anything\n';
 		}
 
 
