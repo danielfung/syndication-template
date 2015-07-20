@@ -2,7 +2,7 @@
 	var animalOrder_id ="{{id}}";
 	?'animal order ID for data migration => '+animalOrder_id+'\n';
 	var parentProtocolID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
-	?'parentProtocolID => '+parentOrderID+'\n';
+	?'parentProtocolID => '+parentProtocolID+'\n';
 {{else}}
 	var animalOrder_id = _AnimalOrderTransfer.getID();
 {{/if}}
