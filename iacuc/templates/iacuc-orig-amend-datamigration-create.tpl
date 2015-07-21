@@ -755,5 +755,126 @@
 			?'Not Renewal or amendment => dont log anything\n';
 		}
 
+		if(submissionTypeName == "Amendment"){
+			var readers = iacucQ.customAttributes.readers;
+			var editors = iacucQ.customAttributes.editors;
+			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+			var canEdit;
 
-			//END HERE
+			{{#if topaz.coInvestigators}}
+				var coInvestigatorSet = "{{topaz.coInvestigators}}";
+				var kerborosArray = new Array();
+				canEdit = true;
+				kerborosArray = coInvestigatorSet.split(",");
+				for( var i = 0; i<kerborosArray.length; i++){
+					var studyTeamMem = kerborosArray[i];
+					var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='"+studyTeamMem+"'");
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '"+studyTeamMem+"'").elements();
+					if(exists.count() == 0 && person.count() > 0){
+						person = person.item(1);
+						readers.addElement(person);
+						?'added teamSubInvestigators to readers set => '+readers+'\n';
+						editors.addElement(person);
+						?'added teamSubInvestigators to editors set => '+editors+'\n';
+						var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+						?'adding person to studyTeamMemInfo => '+person+'\n';
+						studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+						?'Can Edit Protocol => True\n';
+						studyTeamMember.addElement(studyTeamMemInfo);
+						?'added teamSubInvestigators to study team mem info set => '+studyTeamMember+'\n';
+					}
+					else if(exists.count() > 0){
+						?'Person already exists => '+studyTeamMem+'\n';
+					}
+					else{
+						?'Person not found by kerboros id => '+studyTeamMem+'\n';
+					}
+				}
+			{{/if}}
+
+			{{#if topaz.associates}}
+				var associateSet = "{{topaz.associates}}";
+				var kerborosArray = new Array();
+				kerborosArray = associateSet.split(",");
+				canEdit = true;
+				for( var i = 0; i<kerborosArray.length; i++){
+					var studyTeamMem = kerborosArray[i];
+					var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='"+studyTeamMem+"'");
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '"+studyTeamMem+"'").elements();
+					if(exists.count() == 0 && person.count() > 0){
+						person = person.item(1);
+						readers.addElement(person);
+						?'added associates to readers set => '+readers+'\n';
+						editors.addElement(person);
+						?'added associates to editors set => '+editors+'\n';
+						var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
+						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
+						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+						?'adding person to studyTeamMemInfo => '+person+'\n';
+						studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
+						?'Can Edit Protocol => True\n';
+						studyTeamMember.addElement(studyTeamMemInfo);
+						?'added associates to study team mem info set => '+studyTeamMember+'\n';
+					}
+					else if(exists.count() > 0){
+						?'Person already exists => '+studyTeamMem+'\n';
+					}
+					else{
+						?'Person not found by kerboros id => '+studyTeamMem+'\n';
+					}
+				}
+			{{/if}}
+
+			var draft = iacucQ.customAttributes.draftProtocol;
+			var readers = iacucQ.customAttributes.readers;
+			var draftReaders = draft.customAttributes.readers;
+			var editors = iacucQ.customAttributes.editors;
+			var draftEditors = draft.customAttributes.editors;
+			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+			var draftStudyTeam = draft.customAttributes.studyTeamMembers;
+
+			if(draftStudyTeam != null){
+				draftStudyTeam.removeAllElements();
+				draftStudyTeam = draft.customAttributes.studyTeamMembers; 
+			}
+
+			if(draftReaders != null){
+				draftReaders.removeAllElements();
+				draftReaders = draft.customAttributes.readers; 
+			}
+			
+			if(draftEditors != null){
+				draftEditors.removeAllElements();
+				draftEditors = draft.customAttributes.editors; 
+			}
+			
+			
+			for(var i = 1; i<=readers.count(); i++){
+				var person = readers.elements().item(i);
+				draftReaders.addElement(person);
+				?'adding person to draft readers => '+person.userId+'\n';
+			}
+
+			for(var i = 1; i<=editors.count(); i++){
+				var person = editors.elements().item(i);
+				draftEditors.addElement(person);
+				?'adding person to draft editors => '+person.userId+'\n';
+
+			}
+
+			for(var i = 1; i<=studyTeamMember.count(); i++){
+				var studyTeamMem = studyTeamMember.elements().item(i);
+				var studyTeamMem_1 = EntityCloner.quickClone(studyTeamMem);
+				draftStudyTeam.addElement(studyTeamMem_1);
+				?'adding studyTEamMem to draft studyTeamMember => '+studyTeamMem_1+'\n';
+			}
+
+			var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
+			if(investigator != null){
+				var invest = EntityCloner.quickClone(investigator);
+				draft.setQualifiedAttribute("customAttributes.investigator", invest);
+				?'adding Invest to draft investigator => '+invest+'\n';				
+			}
+		}
