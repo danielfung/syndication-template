@@ -178,13 +178,13 @@
 				var wsTemplate;
 
 				if(current_status == 'Active'){
-					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL00000046");
+					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL00000047");
 				}
 				else if(current_status == 'Closed' || current_status == 'Suspended' || current_status == 'Expired'){
 					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL8D1B0D98771CBCF");
 				}
 				else{
-					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL00000047");
+					wsTemplate = ContainerTemplate.getElements("ContainerTemplateForID", "ID", "TMPL00000046");
 				}
 
 				var resourceContainer = iacucQ.resourceContainer;
