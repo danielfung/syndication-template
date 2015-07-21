@@ -206,6 +206,7 @@
 	var painCategoryE = 'Pain Category E';
 	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
 	var groupAdminSet = iacucQ.customAttributes.groups;
+	var speciesAdminSet = iacucQ.customAttributes._attribute32;
 	var speciesArrayNew = [];
 	var speciesArrayOrig = [];
 	var speciesArrayNotFound = [];
@@ -323,7 +324,7 @@
 						}
 
 						var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
-						if(usda == "yes" || usda == "Yes"){
+						if(usda == "yes" || usda == "Yes" || usda = "1"){
 							clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
 						}
 						else{
@@ -341,6 +342,8 @@
 						}
 						selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
 						?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
+						selAnimalGroup.customAttributes.available = {{actualNumberOfAnimals}};
+						?'set number of avaliable for this animal =>{{actualNumberOfAnimals}}\n';
 
 						var protoGroupName = species + ' {{painCategory.category}}';
 						selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
