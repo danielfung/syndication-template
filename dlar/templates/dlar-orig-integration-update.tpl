@@ -205,18 +205,27 @@
 	var painCategoryD = 'Pain Category D';
 	var painCategoryE = 'Pain Category E';
 	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	var groupAdminSet = iacucQ.customAttributes.groups;
+
+	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	if(animalGroupSet == null){
+		var animalGroup = _IS_AnimalGroup.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
+		?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
+		animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	}
+
+	if(groupAdminSet == null){
+		var group = _IS_SEL_AnimalGroup.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.groups', group);
+		?'create eset iacucQ.customAttributes.groups=>'+group+'\n';
+		groupAdminSet = iacucQ.customAttributes.groups;
+	}
 
 	{{#each animalCounts}}
 		var aCount = {{actualNumberOfAnimals}};
 
 		if(aCount > 0){
-			var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
-			if(animalGroupSet == null){
-				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
-				?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
-			}
-			
-
 			var species = "{{species.commonName}}";
 			//species = species.replace(" ", "");
 			var painCategory = "{{painCategory.category}}";
@@ -282,7 +291,7 @@
 					}
 				}
 				else{
-					?'Can't find animal in animal group =>'+species+'\n';
+					?'Cant find animal in animal group =>'+species+'\n';
 						var animalGroup = _IS_AnimalGroup.createEntity();
 						var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
 						var clickPainCategory = ApplicationEntity.getResultSet('_ClickPainCategory').query("customAttributes.Category = '"+painCategory_1+"'");
