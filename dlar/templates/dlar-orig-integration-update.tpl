@@ -206,6 +206,9 @@
 	var painCategoryE = 'Pain Category E';
 	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
 	var groupAdminSet = iacucQ.customAttributes.groups;
+	var speciesArrayNew = [];
+	var speciesArrayOrig = [];
+	var speciesArrayNotFound = [];
 
 	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
 	if(animalGroupSet == null){
@@ -213,6 +216,12 @@
 		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
 		?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
 		animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	}
+	else{
+		for(var i = 1; i<=animalGroupSet.count(); i++){
+			var name = animalGroupSet.elements().item(i).customAttributes._ProtocolGroup.customAttributes._ProtocolGroup;
+			speciesArrayOrig.push({"species":name});
+		}
 	}
 
 	if(groupAdminSet == null){
@@ -247,6 +256,9 @@
 			else{
 				?'painCategoryNotFound=>'+painCategory+'\n';
 			}
+
+			var protoGroupName_1 = species + ' {{painCategory.category}}';
+			speciesArrayNew.push({"species":protoGroupName_1});
 
 			if(painCategory_1 != null){
 				var protoGroupName = species + ' {{painCategory.category}}';
@@ -344,3 +356,31 @@
 			}
 		}
 	{{/each}}
+
+for(var i=0; i<speciesArrayOrig.length; i++) {
+   var exists = false;
+   var origArrayItem = speciesArrayOrig[i].species;
+   for(var j=0; j<speciesArrayNew.length; j++){
+       var newArrayItem = speciesArrayNew[j].species;
+       if(origArrayItem == newArrayItem){
+         exists = true;
+       }  
+   }
+   if(exists == false){
+      var item = speciesArrayOrig[i].species;
+      speciesArrayNotFound.push({"species":item});
+      var exists = animalGroupSet.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+item+"'");
+	   if(exists.count() > 0){
+	   		var item_1 = exists.elements().item(i);
+	   		?'animalGroupItem => '+item_1+'\n';
+	   		item_1.customAttributes._ProtocolGroup.customAttributes.approved = 0;
+	   		?'setting approved animal count => 0\n';
+			item_1.customAttributes._ProtocolGroup.customAttributes.available = 0;
+			?'setting available animal count => 0\n';
+	   }
+	   else{
+	   	?'species not found => '+item+'\n';
+	   }
+   }
+}
+
