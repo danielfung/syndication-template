@@ -251,7 +251,7 @@
 			if(painCategory_1 != null){
 				var protoGroupName = species + ' {{painCategory.category}}';
 				var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='"+species+"'");
-				if(usda == "yes" || usda == "Yes"){
+				if(usda == "yes" || usda == "Yes" || usda == "1"){
 					exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=true");
 				}
 				else{
@@ -282,6 +282,15 @@
 							var newAvaliable = newAnimalCount - totalOrderUsed;
 							item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
 							?'setting new animal count(available) => '+newAvaliable+'\n';
+						}
+						else if(currentAnimalAvaliable != newAnimalCount && totalOrderUsed == 0){
+							?'Protocol Group => '+item+' no animal used or on order\n';
+							var newAvaliable = newAnimalCount;
+							item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
+							?'setting new animal count(available) => '+newAvaliable+'\n';
+						}
+						else if(currentAnimalAvaliable == newAnimalCount){
+							?'Protocol Group => '+item+' avaliable count is same\n';
 						}
 						else{
 							?'Protocol Group => '+item+' count is different and there less animal avaliable\n';
