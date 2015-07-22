@@ -397,11 +397,12 @@ iacucQ.calculateTotals();
 /*
 	Locations Update
 */
-
+	
 	/*
 		1e. Housing update, remove all animal housing then readd
 	*/
 	var housingSet = iacucQ.customAttributes.SF_AnimalHousing;
+	var housingAdminSet = iacucQ.customAttributes.housingFacilities;
 	if(housingSet == null){
 		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
 		?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
