@@ -374,7 +374,7 @@ for(var i=0; i<speciesArrayOrig.length; i++) {
       speciesArrayNotFound.push({"species":item});
       var exists = animalGroupSet.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+item+"'");
 	   if(exists.count() > 0){
-	   		var item_1 = exists.elements().item(i);
+	   		var item_1 = exists.elements().item(1);
 	   		?'animalGroupItem not longer used in IACUC => '+item_1+'\n';
 	   		item_1.customAttributes._ProtocolGroup.customAttributes.approved = 0;
 	   		?'setting approved animal count => 0\n';
