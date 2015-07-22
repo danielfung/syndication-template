@@ -315,7 +315,7 @@
 				else{
 					?'Cant find animal in animal group =>'+species+'\n';
 						var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
-						if(usda == "yes" || usda == "Yes" || usda = "1"){
+						if(usda == "yes" || usda == "Yes" || usda == "1"){
 							clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
 						}
 						else{

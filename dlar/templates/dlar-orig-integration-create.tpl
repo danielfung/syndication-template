@@ -678,3 +678,9 @@
 			/*
 				2g. list of substances(unique list)
 			*/
+
+			/*
+				2h. recalculate totals
+			*/
+			iacucQ.calculateTotals();
+			?'recalculating total animal counts\n';
