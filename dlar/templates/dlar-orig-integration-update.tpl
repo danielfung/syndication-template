@@ -314,15 +314,6 @@
 				}
 				else{
 					?'Cant find animal in animal group =>'+species+'\n';
-						var animalGroup = _IS_AnimalGroup.createEntity();
-						var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
-						var clickPainCategory = ApplicationEntity.getResultSet('_ClickPainCategory').query("customAttributes.Category = '"+painCategory_1+"'");
-						if(clickPainCategory.count() > 0){
-							clickPainCategory = clickPainCategory.elements().item(1);
-							selAnimalGroup.setQualifiedAttribute('customAttributes.usdaPainCategory', clickPainCategory);
-							?'setting selAnimalGroup.customAttributes.usdaPainCategory =>'+clickPainCategory+'\n';
-						}
-
 						var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
 						if(usda == "yes" || usda == "Yes" || usda = "1"){
 							clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
@@ -331,61 +322,73 @@
 							clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
 						}
 						if(clickSpecies.count() > 0){
-							clickSpecies = clickSpecies.elements().item(1);
-							selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
-							speciesAdminSet.addElement(clickSpecies);
-							?'adding clickSpeices to speciesAdminSet =>'+clickSpecies+'\n';
-							?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
-						}
-						else{
-							?'Cant find animal =>'+species+' usda =>'+usda+'\n';
-						}
-						selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
-						?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
-						selAnimalGroup.customAttributes.available = {{actualNumberOfAnimals}};
-						?'set number of avaliable for this animal =>{{actualNumberOfAnimals}}\n';
-
-						var protoGroupName = species + ' {{painCategory.category}}';
-						selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
-						?'set protocolGroup name =>'+protoGroupName+'\n';
+							var animalGroup = _IS_AnimalGroup.createEntity();
+							var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
+							var clickPainCategory = ApplicationEntity.getResultSet('_ClickPainCategory').query("customAttributes.Category = '"+painCategory_1+"'");
+							if(clickPainCategory.count() > 0){
+								clickPainCategory = clickPainCategory.elements().item(1);
+								selAnimalGroup.setQualifiedAttribute('customAttributes.usdaPainCategory', clickPainCategory);
+								?'setting selAnimalGroup.customAttributes.usdaPainCategory =>'+clickPainCategory+'\n';
+							}
 
 
-						animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
-						animalGroupSet.addElement(animalGroup);
-						?'adding eset animalGroupSet => '+animalGroup+'\n';
-						groupAdminSet.addElement(selAnimalGroup);
-						?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
+								clickSpecies = clickSpecies.elements().item(1);
+								selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
+								speciesAdminSet.addElement(clickSpecies);
+								?'adding clickSpeices to speciesAdminSet =>'+clickSpecies+'\n';
+								?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
+
+								selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
+								?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
+								selAnimalGroup.customAttributes.available = {{actualNumberOfAnimals}};
+								?'set number of avaliable for this animal =>{{actualNumberOfAnimals}}\n';
+
+								var protoGroupName = species + ' {{painCategory.category}}';
+								selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
+								?'set protocolGroup name =>'+protoGroupName+'\n';
+
+
+								animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
+								animalGroupSet.addElement(animalGroup);
+								?'adding eset animalGroupSet => '+animalGroup+'\n';
+								groupAdminSet.addElement(selAnimalGroup);
+								?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
+					}								
+					else{
+						?'Cant find animal =>'+species+' usda =>'+usda+'\n';
+					}
+
 				}
 			}
 		}
 	{{/each}}
 
-for(var i=0; i<speciesArrayOrig.length; i++) {
-   var exists = false;
-   var origArrayItem = speciesArrayOrig[i].species;
-   for(var j=0; j<speciesArrayNew.length; j++){
-       var newArrayItem = speciesArrayNew[j].species;
-       if(origArrayItem == newArrayItem){
-         exists = true;
-       }  
-   }
-   if(exists == false){
-      var item = speciesArrayOrig[i].species;
-      speciesArrayNotFound.push({"species":item});
-      var exists = animalGroupSet.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+item+"'");
-	   if(exists.count() > 0){
-	   		var item_1 = exists.elements().item(1);
-	   		?'animalGroupItem not longer used in IACUC => '+item_1+'\n';
-	   		item_1.customAttributes._ProtocolGroup.customAttributes.approved = 0;
-	   		?'setting approved animal count => 0\n';
-			item_1.customAttributes._ProtocolGroup.customAttributes.available = 0;
-			?'setting available animal count => 0\n';
+	for(var i=0; i<speciesArrayOrig.length; i++) {
+	   var exists = false;
+	   var origArrayItem = speciesArrayOrig[i].species;
+	   for(var j=0; j<speciesArrayNew.length; j++){
+	       var newArrayItem = speciesArrayNew[j].species;
+	       if(origArrayItem == newArrayItem){
+	         exists = true;
+	       }  
 	   }
-	   else{
-	   	?'species not found => '+item+'\n';
+	   if(exists == false){
+	      var item = speciesArrayOrig[i].species;
+	      speciesArrayNotFound.push({"species":item});
+	      var exists = animalGroupSet.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+item+"'");
+		   if(exists.count() > 0){
+		   		var item_1 = exists.elements().item(1);
+		   		?'animalGroupItem not longer used in IACUC => '+item_1+'\n';
+		   		item_1.customAttributes._ProtocolGroup.customAttributes.approved = 0;
+		   		?'setting approved animal count => 0\n';
+				item_1.customAttributes._ProtocolGroup.customAttributes.available = 0;
+				?'setting available animal count => 0\n';
+		   }
+		   else{
+		   	?'species not found => '+item+'\n';
+		   }
 	   }
-   }
-}
+	}
 
 
 iacucQ.calculateTotals();

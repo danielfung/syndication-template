@@ -663,3 +663,16 @@
 			 	iacucQ.logActivity(sch, actTypeSet, Person.getCurrentUser());
 			 	?'logging create activity => '+actTypeSet+'\n';
 			}
+
+
+			/*
+				2e. common procedures/variable procedures
+			*/
+
+			/*
+				2f. husbandry exceptions -> name, justification
+			*/
+
+			/*
+				2g. list of substances(unique list)
+			*/
