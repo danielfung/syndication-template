@@ -167,21 +167,27 @@
 		else{
 			?'ERROR => parent not found for submission => '+iacucQ.ID+'\n';
 		}
+		if(submissionTypeName == "Amendment"){
+			var amendmentAdd = iacucQ.customAttributes.amendment;
+			if(amendmentAdd == null){
+				iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
+				?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
+				iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
+				iacucQ.customAttributes.amendment.customAttributes.type = _ClickAmendmentType.createEntitySet();
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
+			}
+			else{
+				iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';		
+			}
 
-		var amendmentAdd = iacucQ.customAttributes.amendment;
-		if(amendmentAdd == null){
-			iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
-			?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
-			iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
-			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
-			iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
-			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
-			iacucQ.customAttributes.amendment.customAttributes.type = _ClickAmendmentType.createEntitySet();
-			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
-		}
-		else{
-			iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
-			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
-			iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
-			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';		
+			var draft = iacucQ.customAttributes.draftProtocol;
+			if(draft){
+				draft.setQualifiedAttribute("customAttributes.amendmentForDraft",iacucQ);
+			}
 		}

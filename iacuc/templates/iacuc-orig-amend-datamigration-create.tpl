@@ -915,4 +915,9 @@
 				draft.setQualifiedAttribute("customAttributes.investigator", invest);
 				?'adding Invest to draft investigator => '+invest+'\n';				
 			}
+
+			var draft = iacucQ.customAttributes.draftProtocol;
+			if(draft){
+				draft.setQualifiedAttribute("customAttributes.amendmentForDraft",iacucQ);
+			}
 		}
