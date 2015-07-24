@@ -302,7 +302,8 @@
 			1i. set name, shortDescription, longTitle
 		*/	
 			var putName = "{{name}}";
-			iacucQ.name = putName;
+			var shortenedPutName = putName.slice(0,255);
+			iacucQ.name = shortenedPutName;
 			?'setting iacucQ name =>'+iacucQ.name+'\n';
 			{{#if studyDetails.longTitle}}
 				iacucQ.customAttributes.fullTitle = "{{studyDetails.longTitle}}";
@@ -310,9 +311,9 @@
 				iacucQ.customAttributes.fullTitle_text = "{{studyDetails.longTitle}}";
 				?'setting iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
 			{{else}}
-				iacucQ.customAttributes.fullTitle = "{{name}}";
+				iacucQ.customAttributes.fullTitle = shortenedPutName;
 				?'default setting to name: iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
-				iacucQ.customAttributes.fullTitle_text = "{{name}}";
+				iacucQ.customAttributes.fullTitle_text = shortenedPutName;
 				?'default setting to name: iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
 			{{/if}}
 
@@ -416,11 +417,13 @@
 
 			var amendmentAdd = iacucQ.customAttributes.amendment;
 			if(amendmentAdd == null){
+				var putName = "{{name}}";
+				var shortenedPutName = putName.slice(0,255);
 				iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
 				?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
-				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", shortenedPutName);
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
-				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", shortenedPutName);
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
 				iacucQ.customAttributes.amendment.customAttributes.type = _ClickAmendmentType.createEntitySet();
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
