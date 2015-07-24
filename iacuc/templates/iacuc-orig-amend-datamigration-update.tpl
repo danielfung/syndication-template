@@ -191,3 +191,33 @@
 				draft.setQualifiedAttribute("customAttributes.amendmentForDraft",iacucQ);
 			}
 		}
+
+		var draft = iacucQ.customAttributes.draftProtocol;
+		var draftName = draft.name;
+		if(draftName == null){
+			var newName = iacucQ.name;
+			draft.name = newName;
+			?'setting draft.name => '+draft.name+'\n';
+			draft.customAttributes.fullTitle_text = newName;
+			?'setting draft.fullTitle_text => '+draft.customAttributes.fullTitle_text+'\n';
+		}
+
+
+		var draftAdminOffice = draft.customAttributes.adminOffice;
+		if(draftAdminOffice == null){
+			var adminOffice = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[455A658DB0BA7D498CB6DF34E2CA25EA]]');
+			draft.setQualifiedAttribute('customAttributes.adminOffice', adminOffice);
+			?'setting admin office for draft study => '+adminOffice+'\n';
+		}
+
+		var draftCompany = draft.company;
+		if(draftCompany == null){
+			var mainCompany = iacucQ.company;
+			draft.company = mainCompany;
+		}
+
+		var draftCreatedBy = draft.createdBy;
+		if(draftCreatedBy == null){
+			var mainCreatedBy = iacucQ.createdBy;
+			draft.createdBy = mainCreatedBy;			
+		}

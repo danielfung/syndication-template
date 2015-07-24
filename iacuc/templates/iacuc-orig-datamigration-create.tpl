@@ -814,6 +814,8 @@
 			?'created Draft Protocol => '+newClone+'\n';
 			newClone.ID = _ClickIACUCSubmission.getID("_ClickIACUCSubmission");
 			?'draft ID => '+newClone.ID+'\n';
+			newClone.name = iacucQ.name;
+			?'draft name => '+newClone.name+'\n';
 			newClone.registerEntity();
 			var today = new Date();
 			newClone.setQualifiedAttribute("dateModified",today);

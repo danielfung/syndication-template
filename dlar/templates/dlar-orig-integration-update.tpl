@@ -508,3 +508,7 @@ iacucQ.calculateTotals();
 			SF: lab locations - not done yet
 		*/
 	{{/each}}
+
+	/*
+		3a. common procedures/variable procedures/husbandryExceptions
+	*/
