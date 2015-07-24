@@ -430,18 +430,12 @@
 			var parent = iacucQ.customAttributes.parentProtocol;
 			if(parent != null){
 				var annualreview = parent.customAttributes.activeAnnualReview;
-				if(activeAnnualReview == null){
-					var activeAnnualReviewSet = _ClickIACUCSubmission.createEntitySet();
-					parent.customAttributes.activeAnnualReview = activeAnnualReviewSet;
-					?'setting parent activeAnnualReviewSet => '+activeAnnualReviewSet+'\n';
-					annualreview = parent.customAttributes.activeAnnualReview;
-				}
 				if(currentStatus != "Approved" && currentStatus != "Lapsed"){
-					annualreview.addElement(iacucQ);
-					?'adding annual review to parent activeANnualReview Set => '+annualreview+'\n';
+					parent.customAttributes.activeAnnualReview = iacucQ;
+					?'adding annual review to parent activeANnualReview => '+iacucQ+'\n';
 				}
 				else{
-					?'Not adding annual review to activeAnnualReview Set because status is approved or lapsed\n';
+					?'Not adding annual review to activeAnnualReview because status is approved or lapsed\n';
 				}
 
 			}
