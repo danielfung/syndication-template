@@ -18,16 +18,14 @@
 		{{/if}}
 
 	    {{#if topaz.draftProtocol}}
-	    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
 	    	var parentSubmission = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
-			if(parentStudy == null && parentSubmission.count() > 0){
+			if(parentSubmission.count() > 0){
 				var parentSubmission_1 = parentSubmission.elements().item(1);
 				iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", parentSubmission_1);
 			}
 			?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
 
-			var draftProtocol = iacucQ.getQualifiedAttribute("customAttributes.draftProtocol");
-			if(draftProtocol == null && parentSubmission.count() > 0){
+			if(parentSubmission.count() > 0){
 				var parentSubmission_1 = parentSubmission.elements().item(1);
 				if(parentSubmission_1.customAttributes.draftProtocol){
 					var parentDraft = parentSubmission_1.customAttributes.draftProtocol;
@@ -46,11 +44,9 @@
 
 		{{#if topaz.principalInvestigator}}
 				//update PI field
-				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
-
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{topaz.principalInvestigator}}'").elements();
 				
-				if(investigator == null && person.count() > 0){
+				if(person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
 					?'_StudyTeamMemberInfo =>'+studyTeamMember+'\n';
 					iacucQ.setQualifiedAttribute("customAttributes.investigator", studyTeamMember);
@@ -175,8 +171,8 @@
 						?'iacucQ create _ClickActiveAmendment => '+activeAmend+'\n';
 						activeAmend.setQualifiedAttribute('customAttributes.activeAmendment', iacucQ);
 						?'assign active amendment => '+iacucQ+'\n';
-						activeSet.addElement(activeAmend);
-						?'add activeAmendment to set => '+activeAmend+'\n';
+						parentAmendSet.addElement(activeAmend);
+						?'add activeAmendment to set => '+parentAmendSet+'\n';
 					}
 				}
 				else{
@@ -359,3 +355,7 @@
 					?'Template not found\n';
 				}
 			}
+
+			var dateMod = new Date();
+			iacucQ.dateModified = dateMod;
+			?'dateModifed => '+iacucQ.dateModified+'\n';

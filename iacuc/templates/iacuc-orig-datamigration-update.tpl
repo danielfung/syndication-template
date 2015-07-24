@@ -225,3 +225,7 @@
 			iacucQ.customAttributes.effectiveDate = a;
 			?'setting orig effectiveDate => '+iacucQ.customAttributes.effectiveDate+'\n';
 		{{/if}}
+
+		var dateMod = new Date();
+		iacucQ.dateModified = dateMod;
+		?'dateModifed => '+iacucQ.dateModified+'\n';
