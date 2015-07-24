@@ -1,6 +1,5 @@
 		iacucQ = iacucQ.elements().item(1);
 		?'iacucQ submission found =>'+iacucQ.ID+'\n';
-
 		var parent = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
 
 		if(parent.count() > 0){
@@ -16,6 +15,33 @@
 					iacucQ.status = statusOID;
 					?'iacucQ.status =>'+statusOID+'\n';
 				}
+		{{/if}}
+
+	    {{#if topaz.draftProtocol}}
+	    	var parentStudy = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
+	    	var parentSubmission = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
+			if(parentStudy == null && parentSubmission.count() > 0){
+				var parentSubmission_1 = parentSubmission.elements().item(1);
+				iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", parentSubmission_1);
+			}
+			?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
+
+			var draftProtocol = iacucQ.getQualifiedAttribute("customAttributes.draftProtocol");
+			if(draftProtocol == null && parentSubmission.count() > 0){
+				var parentSubmission_1 = parentSubmission.elements().item(1);
+				if(parentSubmission_1.customAttributes.draftProtocol){
+					var parentDraft = parentSubmission_1.customAttributes.draftProtocol;
+						iacucQ.setQualifiedAttribute("customAttributes.draftProtocol", parentDraft);
+				}
+			}
+			?'draftProtocol =>'+iacucQ.customAttributes.draftProtocol +'\n';
+
+	    {{else}}
+	    	var parentProtocol = iacucQ.getQualifiedAttribute("customAttributes.parentProtocol");
+			if(parentProtocol == null){
+				iacucQ.setQualifiedAttribute("customAttributes.parentProtocol", iacucQ);
+			}
+			?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
 		{{/if}}
 
 		{{#if topaz.principalInvestigator}}
@@ -172,7 +198,7 @@
 			if(amendmentAdd == null){
 				iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
 				?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
-				iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
 				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
@@ -180,7 +206,7 @@
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
 			}
 			else{
-				iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
 				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';		
@@ -241,3 +267,97 @@
 			iacucQ.currentSmartFormStartingStep  = startingSmartForm;
 			?'setting amendment or annual review starting smartform => '+startingSmartForm+'\n';
 		}
+
+		/* Rebuild Template */
+		iacucQ.resourceContainer = null;
+		?'setting resource container to null\n';
+
+			var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+			var status = iacucQ.status.ID;
+			var whichTemplate;
+			var createProtocolActivity;
+
+			if(submissionTypeName != null){
+				if(submissionTypeName == "New Protocol Application"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D07C62360C5A80";
+						?'template New Proto=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D02B5766D47C23";
+						?'template New Proto=>'+whichTemplate+'\n';
+					}
+				}
+
+				else if(submissionTypeName == "Triennial Review"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D089BC317FF635";
+						?'template TR=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D089BC317FF632";
+						?'template TR=>'+whichTemplate+'\n';
+					}
+				}
+
+				else if(submissionTypeName == "Annual Review"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D0B9AB62B6DF48";
+						?'template AR=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D07C62360C5AC7";
+						?'template AR=>'+whichTemplate+'\n';
+					}
+				}
+
+				else if(submissionTypeName == "Amendment"){
+					if(status == "Approved"){
+						whichTemplate = "TMPL8D0C8D3FA92169A";
+						?'template amendment=>'+whichTemplate+'\n';
+					}
+					else{
+						whichTemplate = "TMPL8D0B9AB62B6DDD2";
+						?'template amendment=>'+whichTemplate+'\n';
+					}
+				}
+				else{
+					whichTemplate = "TMPL8D02B5766D47C23";
+					?'default template to new protocol=>'+whichTemplate+'\n';
+				}
+			}
+			else{
+				whichTemplate = "TMPL8D02B5766D47C23";
+				?'default template to new protocol=>'+whichTemplate+'\n';
+			}
+
+			var template =	ContainerTemplate.getElements("ContainerTemplateForID", "ID", whichTemplate);
+			var container;
+			if(submissionTypeName == "New Protocol Application"){
+				container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
+			}
+			else if(submissionTypeName == "Triennial Review" || submissionTypeName == "Annual Review" || submissionTypeName == "Amendment"){
+				var parentSubmission = ApplicationEntity.getResultSet('_ClickIACUCSubmission').query("ID='{{topaz.draftProtocol.id}}'");
+				if(parentSubmission.count() > 0){
+						parentSubmission = parentSubmission.elements().item(1);
+						container = parentSubmission.resourceContainer;
+						?'using parent.resourceContainer =>'+container+'\n';
+				}
+				else{
+					container = Container.getElements("ContainerForID", "ID", "CLICK_IACUC_SUBMISSIONS").item(1);
+					?'Cant find parent, using default container =>'+container+'\n';
+				}
+			}
+			
+			var resourceContainer = iacucQ.resourceContainer;
+			if(resourceContainer == null){
+				if(template.count == 1 && container != null){
+					template = template.item(1);
+					iacucQ.createWorkspace(container, template);
+					?'iacucQ.resourceContainer =>'+iacucQ.resourceContainer+'\n';
+					?'iacucQ.resourceContainer.template =>'+iacucQ.resourceContainer.template+'\n';
+				}
+				else{
+					?'Template not found\n';
+				}
+			}

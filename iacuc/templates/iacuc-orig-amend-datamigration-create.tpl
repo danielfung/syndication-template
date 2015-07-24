@@ -418,7 +418,7 @@
 			if(amendmentAdd == null){
 				iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
 				?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
-				iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
 				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
@@ -959,12 +959,12 @@
 		var startingSmartForm;
 		var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
 		if(submissionTypeName == "Amendment"){
-			//amendment
+			//Amendment Summary: ApplicationEntity.getResultSet('WizardPage').query("name='Amendment Summary'")
 			startingSmartForm = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[9044B1F5DD68904DA1A8F354092EA281]]');
 			?'starting smartform for amendments => '+startingSmartForm.name+'\n';
 		}
 		if(submissionTypeName == "Annual Review"){
-			//Annual Review Introduction
+			//Annual Review Introduction: ApplicationEntity.getResultSet('WizardPage').query("name='Annual Review Introduction'")
 			startingSmartForm = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[BF87D119D3493A458BAF11C039E7249C]]');
 			?'starting smartform for annual review => '+startingSmartForm.name+'\n';
 		}
