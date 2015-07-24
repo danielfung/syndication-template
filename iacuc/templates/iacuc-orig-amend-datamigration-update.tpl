@@ -105,3 +105,83 @@
 		var statusID = iacucQ.status.ID;
 		iacucQ.setQualifiedAttribute("globalAttributes.clickProjectStatusAsString",statusID);
 		?'setting inbox study status id => '+iacucQ.globalAttributes.clickProjectStatusAsString+'\n';
+
+		var parent = iacucQ.customAttributes.parentProtocol;
+		var parentAmend = parent.customAttributes.amendment;
+		var parentAmendSet;
+
+		var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+		var currentStatus = iacucQ.status.ID;
+
+		if(parentAmend == null){
+			var amend = _ClickAmendment.createEntity();
+			iacucQ.customAttributes.parentProtocol.setQualifiedAttribute('customAttributes.amendment', amend);
+			?'setting parent amendment => '+amend+'\n';
+			var activeAmendSet = ApplicationEntity.createEntitySet('_ClickActiveAmendment');
+			iacucQ.customAttributes.parentProtocol.customAttributes.amendment.setQualifiedAttribute("customAttributes.activeAmendments" , activeAmendSet);
+			?'set activeAmendSet =>'+iacucQ.customAttributes.amendment.customAttributes.activeAmendments+'\n';
+			parentAmendSet = iacucQ.customAttributes.parentProtocol.customAttributes.amendment.customAttributes.activeAmendments;
+		}
+		else{
+			parentAmendSet = parentAmend.customAttributes.activeAmendments;
+			if(parentAmendSet == null){
+				iacucQ.customAttributes.parentProtocol.customAttributes.amendment.setQualifiedAttribute("customAttributes.activeAmendments" , activeAmendSet);
+				?'set activeAmendSet =>'+iacucQ.customAttributes.amendment.customAttributes.activeAmendments+'\n';
+				parentAmendSet = iacucQ.customAttributes.parentProtocol.customAttributes.amendment.customAttributes.activeAmendments;				
+			}
+		}
+
+		if(parent != null){
+			if(submissionTypeName == "Annual Review"){
+				var annualreview = parent.customAttributes.activeAnnualReview;
+				if(activeAnnualReview == null){
+					var activeAnnualReviewSet = _ClickIACUCSubmission.createEntitySet();
+					parent.customAttributes.activeAnnualReview = activeAnnualReviewSet;
+					?'setting parent activeAnnualReviewSet => '+activeAnnualReviewSet+'\n';
+					annualreview = parent.customAttributes.activeAnnualReview;
+				}
+				if(currentStatus != "Approved" && currentStatus != "Lapsed"){
+					annualreview.addElement(iacucQ);
+					?'adding annual review to parent activeANnualReview Set => '+annualreview+'\n';
+				}
+				else{
+					?'Not adding annual review to activeAnnualReview Set because status is approved or lapsed\n';
+				}
+			}
+			if(submissionTypeName == "Amendment"){
+				if(currentStatus != "Approved" && currentStatus != "Lapsed"){
+					if(parentAmendSet){
+						var activeAmend = _ClickActiveAmendment.createEntity();
+						?'iacucQ create _ClickActiveAmendment => '+activeAmend+'\n';
+						activeAmend.setQualifiedAttribute('customAttributes.activeAmendment', iacucQ);
+						?'assign active amendment => '+iacucQ+'\n';
+						activeSet.addElement(activeAmend);
+						?'add activeAmendment to set => '+activeAmend+'\n';
+					}
+				}
+				else{
+					?'Dont Add to parent active amend set\n';
+				}			
+			}
+		}
+		else{
+			?'ERROR => parent not found for submission => '+iacucQ.ID+'\n';
+		}
+
+		var amendmentAdd = iacucQ.customAttributes.amendment;
+		if(amendmentAdd == null){
+			iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
+			?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
+			iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
+			iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
+			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
+			iacucQ.customAttributes.amendment.customAttributes.type = _ClickAmendmentType.createEntitySet();
+			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
+		}
+		else{
+			iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
+			iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
+			?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';		
+		}

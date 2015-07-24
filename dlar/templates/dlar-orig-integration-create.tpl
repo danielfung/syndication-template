@@ -240,6 +240,7 @@
 				_attribute32(species) eSet
 				groups(_IS_SEL_AnimalGroup) eSet
 				housingFacilities(_Facility) eSet
+				husbandryExceptionSet(_HusbandryException) eset
 			*/
 
 				var animalHousing = _IS_AnimalHousing.createEntitySet();
@@ -250,6 +251,7 @@
 				var species = ApplicationEntity.createEntitySet("_IACUC-Species");
 				var group = _IS_SEL_AnimalGroup.createEntitySet();
 				var housingFacilitiy = _Facility.createEntitySet();
+				var husbExcepSet = _HusbandryException.createEntitySet();
 
 				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
 				?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
@@ -271,6 +273,9 @@
 
 				iacucQ.setQualifiedAttribute('customAttributes.housingFacilities', housingFacilitiy);
 				?'create eset iacucQ.customAttributes.housingFacilities=>'+housingFacilitiy+'\n';
+
+				iacucQ.setQualifiedAttribute('customAttributes.husbandryExceptionSet', husbExcepSet);
+				?'create eset iacucQ.customAttributes.husbandryExceptionSet=>'+husbExcepSet+'\n';
 
 				var speciesAdminSet = iacucQ.customAttributes._attribute32;
 				var groupAdminSet = iacucQ.customAttributes.groups;
@@ -668,19 +673,68 @@
 
 
 			/*
-				2e. common procedures/variable procedures
+				2e. common procedures/variable procedures/husbandryExceptions
+			*/
+			var husbandryEset = iacucQ.customAttributes.husbandryExceptionSet;
+
+			{{#each animalGroups}}
+				var species = "{{species.commonName}}";
+				var usda = "{{species.isUSDASpecies}}";
+
+				var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+				if(usda == "yes" || usda == "Yes" || usda == "1"){
+					clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+				}
+				else{
+					clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+				}
+				if(clickSpecies.count() > 0){
+					var species = clickSpecies.elements().item(1);
+					{{#each commonProcedures}}
+						var speciesName = "";
+						var procedureScopeName = "";
+						var procedureTypeName = "";
+						var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
+						//set animal species
+					{{/each}}
+
+					{{#each variableProcedures}}
+						var speciesName;
+						var procedureScopeName;
+						var procedureTypeName;
+						var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
+						//set animal species
+					{{/each}}
+
+					{{#each husbandryExceptions}}
+						{{#if name}}
+							var husbExcepItem = _HusbandryException.createEntity();
+							?'created husbExcepItem => '+husbExcepItem+'\n';
+							var husbExcepName = "{{name}}";
+							var justification = "{{justification}}";
+							husbExcepItem.setQualifiedAttribute("customAttributes.name", husbExcepName);
+							?'setting husbandryException name => '+husbExcepName+'\n';
+							husbExcepItem.setQualifiedAttribute("customAttributes.justification", justification);
+							?'setting husbandryException justification => '+justification+'\n';	
+							husbExcepItem.setQualifiedAttribute("customAttributes.species", species);						
+							?'set animal as species => '+species+'\n';
+							husbandryEset.addElement(husbExcepItem);
+							?'adding husbExcepItem to eset => '+husbandryEset+'\n';
+						{{/if}}
+					{{/each}}
+				}
+				else{
+					?'species not found => '+species+' usda => '+usda+'\n';
+				}
+
+			{{/each}}
+
+			/*
+				2f. list of substances(unique list)
 			*/
 
 			/*
-				2f. husbandry exceptions -> name, justification
-			*/
-
-			/*
-				2g. list of substances(unique list)
-			*/
-
-			/*
-				2h. recalculate totals
+				2g. recalculate totals
 			*/
 			iacucQ.calculateTotals();
 			?'recalculating total animal counts\n';

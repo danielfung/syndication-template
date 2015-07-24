@@ -89,7 +89,7 @@
 					?'updating draftProtocol.protocolNumber => '+protocolNumber+'\n';
 				}
 		{{/if}}
-
+		var draft = iacucQ.customAttributes.draftProtocol;
 		var draftStudyTeamMember = draft.customAttributes.studyTeamMembers;
 		var draftReaders = draft.customAttributes.readers;
 		var draftEditors = draft.customAttributes.editors;

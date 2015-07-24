@@ -368,10 +368,11 @@
 		{{/if}}
 
 		/*
-			2e. create active amendment set
+			2e. create active amendment set or add to active amendment set
 		*/
 
 		var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+		var currentStatus = iacucQ.status.ID;
 		if(submissionTypeName == "New Protocol Application"){
 			var amend = _ClickAmendment.createEntity();
 			iacucQ.setQualifiedAttribute('customAttributes.amendment', amend);
@@ -386,14 +387,19 @@
 			if(parent != null){
 				var amendment = parent.customAttributes.amendment;
 				if(amendment != null){
-					var activeSet = amendment.customAttributes.activeAmendments;
-					if(activeSet){
-						var activeAmend = _ClickActiveAmendment.createEntity();
-						?'iacucQ create _ClickActiveAmendment => '+activeAmend+'\n';
-						activeAmend.setQualifiedAttribute('customAttributes.activeAmendment', iacucQ);
-						?'assign active amendment => '+iacucQ+'\n';
-						activeSet.addElement(activeAmend);
-						?'add activeAmendment to set => '+activeAmend+'\n';
+					if(currentStatus != "Approved" && currentStatus != "Lapsed"){
+						var activeSet = amendment.customAttributes.activeAmendments;
+						if(activeSet){
+							var activeAmend = _ClickActiveAmendment.createEntity();
+							?'iacucQ create _ClickActiveAmendment => '+activeAmend+'\n';
+							activeAmend.setQualifiedAttribute('customAttributes.activeAmendment', iacucQ);
+							?'assign active amendment => '+iacucQ+'\n';
+							activeSet.addElement(activeAmend);
+							?'add activeAmendment to set => '+activeAmend+'\n';
+						}
+					}
+					else{
+						?'Dont Add to parent active amend set\n';
 					}
 				}
 				else{
@@ -406,6 +412,38 @@
 					iacucQ.customAttributes.parentProtocol.customAttributes.amendment.setQualifiedAttribute("customAttributes.activeAmendments" , activeAmendSet);
 					?'set activeAmendSet =>'+iacucQ.customAttributes.amendment.customAttributes.activeAmendments+'\n';
 				}
+			}
+
+			var amendmentAdd = iacucQ.customAttributes.amendment;
+			if(amendmentAdd == null){
+				iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
+				?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
+				iauccQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", "{{name}}");
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
+				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.rationale", "{{name}}");
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.rationale+'\n';
+				iacucQ.customAttributes.amendment.customAttributes.type = _ClickAmendmentType.createEntitySet();
+				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
+			}
+		}
+		if(submissionTypeName == "Annual Review"){
+			var parent = iacucQ.customAttributes.parentProtocol;
+			if(parent != null){
+				var annualreview = parent.customAttributes.activeAnnualReview;
+				if(activeAnnualReview == null){
+					var activeAnnualReviewSet = _ClickIACUCSubmission.createEntitySet();
+					parent.customAttributes.activeAnnualReview = activeAnnualReviewSet;
+					?'setting parent activeAnnualReviewSet => '+activeAnnualReviewSet+'\n';
+					annualreview = parent.customAttributes.activeAnnualReview;
+				}
+				if(currentStatus != "Approved" && currentStatus != "Lapsed"){
+					annualreview.addElement(iacucQ);
+					?'adding annual review to parent activeANnualReview Set => '+annualreview+'\n';
+				}
+				else{
+					?'Not adding annual review to activeAnnualReview Set because status is approved or lapsed\n';
+				}
+
 			}
 		}
 
