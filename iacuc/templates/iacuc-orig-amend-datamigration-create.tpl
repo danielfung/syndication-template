@@ -942,5 +942,33 @@
 		}
 
 		var draftCompany = draft.company;
+		if(draftCompany == null){
+			var mainCompany = iacucQ.company;
+			draft.company = mainCompany;
+		}
 
 		var draftCreatedBy = draft.createdBy;
+		if(draftCreatedBy == null){
+			var mainCreatedBy = iacucQ.createdBy;
+			draft.createdBy = mainCreatedBy;			
+		}
+
+		/*
+			3a. starting smart form based on submission type
+		*/
+		var startingSmartForm;
+		var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
+		if(submissionTypeName == "Amendment"){
+			//amendment
+			startingSmartForm = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[9044B1F5DD68904DA1A8F354092EA281]]');
+			?'starting smartform for amendments => '+startingSmartForm.name+'\n';
+		}
+		if(submissionTypeName == "Annual Review"){
+			//Annual Review Introduction
+			startingSmartForm = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[BF87D119D3493A458BAF11C039E7249C]]');
+			?'starting smartform for annual review => '+startingSmartForm.name+'\n';
+		}
+		if(startingSmartForm){
+			iacucQ.currentSmartFormStartingStep  = startingSmartForm;
+			?'setting amendment or annual review starting smartform => '+startingSmartForm+'\n';
+		}
