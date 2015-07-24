@@ -391,9 +391,11 @@
 	}
 
 
-iacucQ.calculateTotals();
-?'recalculateTotals for protocol \n';
-
+			var count = iacucQ.customAttributes._attribute71;
+			if(count > 0){
+				iacucQ.calculateTotals();
+				?'recalculating total animal counts\n';
+			}
 /*
 	Locations Update
 */
