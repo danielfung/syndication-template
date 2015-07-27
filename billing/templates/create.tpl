@@ -1,8 +1,23 @@
 
-var monthString = "{{month}}";
-var censusYear = "{{year}}";
+var monthString = "{{month}}"; //#
+var year = "{{year}}"; //#
 
-var censusName = monthString + " " + censusYear;
+var month=new Array(12);
+month[0]="January";
+month[1]="February";
+month[2]="March";
+month[3]="April";
+month[4]="May";
+month[5]="June";
+month[6]="July";
+month[7]="August";
+month[8]="September";
+month[9]="October";
+month[10]="November";
+month[11]="December";
+
+var monthStringName = month[monthString - 1];
+var censusName = monthStringName + " " + year;
 
 var census;
 var existingCensus = ApplicationEntity.getResultSet("_AnimalCensus").query("name = '" + censusName + "'").elements();
@@ -17,10 +32,17 @@ if(existingCensus.count() == 0){
 	census.createWorkspace(parentContainer, null);
 	?'creating animal census workspace with parentContainer => '+parentContainer+'\n';
 
+	var periodStartDate = new Date(year, monthString-1, 1);
+	var censusMonth = periodStartDate.getMonth();
+	var censusYear = periodStartDate.getFullYear();
 	var lastDate = LastDayOfMonth(censusYear, (censusMonth+1));
 	var periodEndDate = new Date(censusYear, censusMonth, lastDate);
-	var periodStartDate = new Date(cenusYear, monthString, 1);
-		
+
+	function LastDayOfMonth(Year, Month)
+	{
+		return(new Date((new Date(Year, Month,1))-1)).getDate();
+	}
+			
 	census.setQualifiedAttribute("customAttributes.periodStart", periodStartDate);
 	?'setting period start => '+periodStartDate+'\n';
 	census.setQualifiedAttribute("customAttributes.periodEnd", periodEndDate);

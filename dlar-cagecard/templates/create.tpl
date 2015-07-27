@@ -114,6 +114,63 @@ if(cageCard.count() == 0){
 			cageCard.status = status;
 			?'setting cageCard status => '+cageCard.status+'\n';
 		{{/if}}
+
+	/*
+		2a. setting cage card legacy info
+	*/
+
+		var cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
+		if(cageLegacyInfo == null){
+			cageCard.customAttributes.legacyCageCardInfo = _CageCardLegacyInfo.createEntity();
+			cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
+			?'created cagecard entity => '+cageLegacyInfo+'\n';
+		}
+
+		{{#if legacyCageCardInfo.accountNumber}}
+			/*
+				3a. set legacyCageCardInfo.accountNumber
+			*/
+			var legacyAccountNumber = "{{legacyCageCardInfo.accountNumber}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.accountNumber", legacyAccountNumber);
+			?'setting legacyCageCardInfo => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.accountNumber+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.cageCardID}}
+			/*
+				3b. set legacyCageCardInfo.cageCardID
+			*/
+			var legacyCageCardID = "{{legacyCageCardInfo.cageCardID}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.cageCardID", legacyCageCardID);
+			?'setting legacyCageCardID => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.cageCardID+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.cageCardNumberOfAnimal}}
+			/*
+				3c. set legacyCageCardInfo.cageCardNumberOfAnimal
+			*/
+			var legacyCageCardNumAnimal = "{{legacyCageCardInfo.cageCardNumberOfAnimal}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.cageCardNumberOfAnimal", legacyCageCardNumAnimal);
+			?'setting legacyCageCardNumAnimal => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.cageCardNumberOfAnimal+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.censusActiveDate}}
+			/*
+				3d. set legacyCageCardInfo.censusActiveDate
+			*/
+			var legacyCensusActiveDate = "{{legacyCageCardInfo.censusActiveDate}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.censusActiveDate", legacyCensusActiveDate);
+			?'setting legacyCensusActiveDate => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.censusActiveDate+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.clickAnimalOrderLineItem}}
+			/*
+				3e. set legacyCageCardInfo.clickAnimalOrderLineItem
+			*/
+			var legacyAnimalOrderLineItem = "{{legacyCageCardInfo.clickAnimalOrderLineItem}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.clickAnimalOrderLineItem", legacyAnimalOrderLineItem);
+			?'setting legacyCensusActiveDate => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.clickAnimalOrderLineItem+'\n';
+		{{/if}}
+
 }
 else{
 	cageCard = cageCard.elements().item(1);
