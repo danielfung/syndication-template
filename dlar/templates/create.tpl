@@ -6,10 +6,13 @@
 	var iacuc_id ="{{this.id}}";
 {{/if}}
 
-{{#if topaz.id}}
-	var iacuc_id ="{{topaz.id}}";
-	?'ID for data migration => '+iacuc_id+'\n';
-{{/if}}
+var iacucStudyID = {{id}};
+var index = iacucStudyID.indexOf("TZ:");
+
+if(index > -1){
+	iacuc_id = iacucStudyID;
+	?'DATA MIGRATION STUDY USE ID INSTEAD OF PROTOCOL NUMBER\n';
+}
 
 var status = '{{status}}';
 
