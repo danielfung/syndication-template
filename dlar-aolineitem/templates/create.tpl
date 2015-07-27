@@ -140,7 +140,7 @@ if(parentOrder.count() > 0){
 	
 
 		/*
-			1e. set quantityRequested = 0 if not given;
+			1e. set quantityRequested = 0 if not given;, set quantityReceived = 0 if not given
 		*/
 			{{#if quantityRequested}}
 				order.customAttributes.quantityRequested= {{quantityRequested}};
@@ -148,6 +148,14 @@ if(parentOrder.count() > 0){
 			{{else}}
 				order.customAttributes.quantityRequested=0;
 				?'order.quantityRequested => 0\n';
+			{{/if}}
+
+			{{#if quantityReceived}}
+				order.customAttributes.quantityReceived= {{quantityReceived}};
+				?'order.quantityReceived =>'+order.customAttributes.quantityReceived+'\n';
+			{{else}}
+				order.customAttributes.quantityReceived=0;
+				?'order.quantityReceived => 0\n';
 			{{/if}}
 
 		/*
