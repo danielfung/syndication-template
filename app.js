@@ -98,7 +98,15 @@ var rawPartialDlarOrigUpdateTemplate = fs.readFileSync(__dirname+'/dlar/template
 var rawDlarPartialPreCompileUpdateTemplate = handlebars.compile(rawPartialDlarOrigUpdateTemplate);
 handlebars.registerPartial("integrationDlarOrigUpdate", rawDlarPartialPreCompileUpdateTemplate);
 
+/*
+  HandleBars register helper
+*/
 
+handlebars.registerHelper('breaklines', function(text) {
+    text = handlebars.Utils.escapeExpression(text);
+    text = text.replace(/(\r\n|\n|\r)/gm, ' ');
+    return new handlebars.SafeString(text);
+});
 
 /*
   https://www.npmjs.com/package/body-parser --> Added limit because of Error: request entity too large

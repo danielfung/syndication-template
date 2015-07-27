@@ -265,7 +265,7 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 		/*
 			1i. set name, shortDescription, longTitle
 		*/
-			iacucQ.name = "{{name}}";
+			iacucQ.name = "{{breaklines name}}";
 			?'setting iacucQ name =>'+iacucQ.name+'\n';
 			{{#if studyDetails.longTitle}}
 				iacucQ.customAttributes.fullTitle = "{{studyDetails.longTitle}}";
@@ -273,9 +273,9 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 				iacucQ.customAttributes.fullTitle_text = "{{studyDetails.longTitle}}";
 				?'setting iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
 			{{else}}
-				iacucQ.customAttributes.fullTitle = "{{name}}";
+				iacucQ.customAttributes.fullTitle = "{{breaklines name}}";
 				?'default setting to name: iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
-				iacucQ.customAttributes.fullTitle_text = "{{name}}";
+				iacucQ.customAttributes.fullTitle_text = "{{breaklines name}}";
 				?'default setting to name: iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
 			{{/if}}
 

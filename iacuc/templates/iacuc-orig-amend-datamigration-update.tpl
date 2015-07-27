@@ -186,7 +186,7 @@
 		if(submissionTypeName == "Amendment"){
 			var amendmentAdd = iacucQ.customAttributes.amendment;
 			if(amendmentAdd == null){
-				var putName = "{{name}}";
+				var putName = "{{breaklines name}}";
 				var shortenedPutName = putName.slice(0,255);
 				iacucQ.customAttributes.amendment = _ClickAmendment.createEntity();
 				?'create amendent to include changes details for amendment => '+iacucQ.customAttributes.amendment+'\n';
@@ -198,7 +198,7 @@
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.type+'\n';
 			}
 			else{
-				var putName = "{{name}}";
+				var putName = "{{breaklines name}}";
 				var shortenedPutName = putName.slice(0,255);
 				iacucQ.customAttributes.amendment.setQualifiedAttribute("customAttributes.summaryOfChanges", shortenedPutName);
 				?'iacucQ.summaryOfChanges => '+iacucQ.customAttributes.amendment.customAttributes.summaryOfChanges+'\n';
