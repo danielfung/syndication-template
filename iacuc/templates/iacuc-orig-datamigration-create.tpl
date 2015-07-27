@@ -307,7 +307,9 @@
 		/*
 			1i. set name, shortDescription, longTitle
 		*/
-			iacucQ.name = "{{breaklines name}}";
+			var putName = "{{breaklines name}}"
+			var shortenedPutName = putName.slice(0,255);
+			iacucQ.name = shortenedPutName;
 			?'setting iacucQ name =>'+iacucQ.name+'\n';
 			{{#if studyDetails.longTitle}}
 				iacucQ.customAttributes.fullTitle = "{{studyDetails.longTitle}}";
@@ -315,9 +317,9 @@
 				iacucQ.customAttributes.fullTitle_text = "{{studyDetails.longTitle}}";
 				?'setting iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
 			{{else}}
-				iacucQ.customAttributes.fullTitle = "{{breaklines name}}";
+				iacucQ.customAttributes.fullTitle = shortenedPutName;
 				?'default setting to name: iacucQ.customAttributes.fullTitle =>'+iacucQ.customAttributes.fullTitle+'\n';
-				iacucQ.customAttributes.fullTitle_text = "{{breaklines name}}";
+				iacucQ.customAttributes.fullTitle_text = shortenedPutName;
 				?'default setting to name: iacucQ.customAttributes.fullTitle_text=>'+iacucQ.customAttributes.fullTitle_text+'\n';
 			{{/if}}
 
