@@ -1,6 +1,7 @@
 
-var monthString = "{{month}}"; //#
+var monthString = {{month}}; //#
 var year = "{{year}}"; //#
+var censusID = {{id}};
 
 var month=new Array(12);
 month[0]="January";
@@ -26,6 +27,8 @@ var ClickOrg = EntityUtils.getObjectFromString("com.webridge.account.Party[OID[3
 if(existingCensus.count() == 0){
 	census = Project.CreateProject("_AnimalCensus", Person.getCurrentUser(), ClickOrg, Person.getCurrentUser(), null);
 	?'created _AnimalCensus Project => '+census+'\n';
+	census.id = censusID;
+	?'setting census id => '+census.id+'\n';
  	census.setQualifiedAttribute("name", censusName);
  	?'setting animal census name => '+censusName+'\n';
  	var parentContainer=EntityUtils.getObjectFromString("com.webridge.entity.Entity[OID[98C1BE5039023940BF40B8E15866784A]]");
