@@ -6,7 +6,8 @@
 	var iacuc_id ="{{this.id}}";
 {{/if}}
 
-var iacucStudyID = {{id}};
+/*
+var iacucStudyID = "{{id}}";
 var index = iacucStudyID.indexOf("TZ:");
 var iacucQ;
 if(index > -1){
@@ -17,14 +18,14 @@ if(index > -1){
 else{
 	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find+"%'");
 }
-
+*/
 var status = '{{status}}';
 
 var submissionType = '{{typeOfSubmission.id}}';
 
 var iacuc;
 //var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
-//var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find+"%'");
+var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find+"%'");
 if(submissionType == 'PROTOYYYY'){
 	
 	if(status == "Approved"){
