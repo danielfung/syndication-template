@@ -21,7 +21,7 @@ if(existParent.count() > 0){
 			?'billing period end date => '+censusEndDate+'\n';
 			var activitySheets = existingCensus.getQualifiedAttribute("customAttributes.censusActivitySheets");
 			?'billing period activitySheets => '+activitySheets+'\n';
-			var activitySheetsForThisStudy = activitySheets.query("customAttributes.protocol.ID = '" + this.ID + "'");
+			var activitySheetsForThisStudy = activitySheets.query("customAttributes.protocol.ID = '" + existParent.ID + "'");
 			var activitySheetsForThisStudyElements = activitySheetsForThisStudy.elements();
 			var activitySheetsForThisStudyCount = activitySheetsForThisStudyElements.count();
 			
