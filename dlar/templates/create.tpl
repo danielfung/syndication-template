@@ -8,20 +8,16 @@
 {{/if}}
 
 
-var iacucStudyID = "{{id}}";
-var index = iacucStudyID.indexOf("TZ:");
+var index = iacuc_id.indexOf("-");
 var iacucQ;
 if(index > -1){
-	iacuc_id = iacucStudyID;
-	?'DATA MIGRATION STUDY USE ID INSTEAD OF PROTOCOL NUMBER\n';
-	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find+"%'");
-	?'looking for study(datamigration) using id like => '+find+'\n';
+	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find_1+"%'");
+	?'protocolNumber contains - using id like => '+find_1+'\n';
 	
 }
 else{
-	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find_1+"%'");
-	?'looking for study using id like => '+find_1+'\n';
-
+	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID = '"+find+"%'");
+	?'protocolNumber does not contain - using id = => '+find+'\n';
 }
 
 var status = '{{status}}';
