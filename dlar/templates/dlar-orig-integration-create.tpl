@@ -738,6 +738,8 @@
 			*/
 			var count = iacucQ.customAttributes._attribute71;
 			if(count > 0){
-				iacucQ.calculateTotals();
-				?'recalculating total animal counts\n';
+				if(animalFind.count() > 0){
+					iacucQ.calculateTotals();
+					?'recalculating total animal counts\n';
+				}
 			}

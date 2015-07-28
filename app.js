@@ -8,8 +8,8 @@ var dlar = require('./dlar'); //DLAR
 var dlaraoi = require('./dlar-aolineitem');//dlar animal order line item(datamigration)
 var dlaraot = require('./dlar-aotransfer');//dlar animal order transfer(datamigration)
 var dlarcage = require('./dlar-cagecard');//dlar cage card(datamigration)
-var dlarbilling = require('./dlar-billing');//dlar billing period(data migration)
-var dlarinvoice = require('/dlar-invoice');//dlar invoice(data migration)
+var dlarbillings = require('./dlar-billing');//dlar billing period(data migration)
+var dlarinvoices = require('./dlar-invoice');//dlar invoice(data migration)
 var rnumber = require('./rnumber');//My Studies
 var test = require('./irb/test.js');
 var winston = require('winston');
@@ -248,7 +248,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarbilling'){
-      var i = dlarbilling.compiledHandleBars(req.body, req.preTemp);
+      var i = dlarbillings.compiledHandleBars(req.body, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -256,7 +256,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarinvoice'){
-      var i = dlarinvoice.compiledHandleBars(req.body, req.preTemp);
+      var i = dlarinvoices.compiledHandleBars(req.body, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
