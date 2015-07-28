@@ -5,9 +5,11 @@ var irb = require('./irb');//IRB
 var crms = require('./crms');//CRMS
 var iacuc = require('./iacuc');//IACUC
 var dlar = require('./dlar'); //DLAR
-var dlaraoi = require('./dlar-aolineitem');//dlar animal order line item
-var dlaraot = require('./dlar-aotransfer');//dlar animal order transfer
-var dlarcage = require('./dlar-cagecard');//dlar cage card
+var dlaraoi = require('./dlar-aolineitem');//dlar animal order line item(datamigration)
+var dlaraot = require('./dlar-aotransfer');//dlar animal order transfer(datamigration)
+var dlarcage = require('./dlar-cagecard');//dlar cage card(datamigration)
+var dlarbilling = require('./dlar-billing');//dlar billing period(data migration)
+var dlarinvoice = require('/dlar-invoice');//dlar invoice(data migration)
 var rnumber = require('./rnumber');//My Studies
 var test = require('./irb/test.js');
 var winston = require('winston');
@@ -36,6 +38,11 @@ var irbCompliedCreateTemplate = handlebars.compile(rawCreateIrbTemplate);
 var rawCreateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/create.tpl', {encoding:'utf8'});
 var crmsCompliedCreateTemplate = handlebars.compile(rawCreateCrmsTemplate);
 
+
+/*****************
+  DATA MIGRATION
+******************/
+
 //DLAR(Animal Order Line Item) Pre-Compile Create Template
 var rawCreateDlarAoiTemplate = fs.readFileSync(__dirname+'/dlar-aolineitem/templates/create.tpl', {encoding:'utf8'});
 var dlarAoiCompliedCreateTemplate = handlebars.compile(rawCreateDlarAoiTemplate);
@@ -48,9 +55,18 @@ var dlarAotCompliedCreateTemplate = handlebars.compile(rawCreateDlarAotTemplate)
 var rawCreateDlarCageTemplate = fs.readFileSync(__dirname+'/dlar-cagecard/templates/create.tpl', {encoding:'utf8'});
 var dlarCageCompliedCreateTemplate = handlebars.compile(rawCreateDlarCageTemplate);
 
-/*
+//DLAR(Invoice) Pre-Compile Create Template
+var rawCreateDlarInvoice = fs.readFileSync(__dirname+'/dlar-invoice/templates/create.tpl', {encoding:'utf8'});
+var dlarInvoiceCompliedCreateTemplate = handlebars.compile(rawCreateDlarInvoice);
+
+//DLAR(Billing) Pre-Compile Create Template
+var rawCreateDlarBilling = fs.readFileSync(__dirname+'/dlar-billing/templates/create.tpl', {encoding:'utf8'});
+var dlarBillingCompliedCreateTemplate = handlebars.compile(rawCreateDlarBilling);
+
+
+/*****************************
 * Pre-Compile Update Templates
-*/
+******************************/
 //RNUMBER Pre-Compile Update Template
 var rawUpdateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/update.tpl', {encoding:'utf8'});
 var rnUpdateTemplate = handlebars.compile(rawUpdateResearchNavigatorTemplate);
@@ -160,6 +176,12 @@ var stepCreateOne = function (req, res, next) {
     if(store == 'dlarcagecard'){
       req.preTemp = dlarCageCompliedCreateTemplate;
     }
+    if(store == 'dlarbilling'){
+      req.preTemp = dlarBillingCompliedCreateTemplate;
+    }
+    if(store == 'dlarinvoice'){
+      req.preTemp = dlarInvoiceCompliedCreateTemplate;
+    }
     next();
   };
 
@@ -219,6 +241,22 @@ var stepCreateTwo = function (req, res, next) {
   }
   if(store == 'dlarcagecard'){
       var i = dlarcage.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      i = '{"script":"'+compiledScript+'"}'
+      res.send(i);
+
+  }
+  if(store == 'dlarbilling'){
+      var i = dlarbilling.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      i = '{"script":"'+compiledScript+'"}'
+      res.send(i);
+
+  }
+  if(store == 'dlarinvoice'){
+      var i = dlarinvoice.compiledHandleBars(req.body, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'

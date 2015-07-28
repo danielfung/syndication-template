@@ -11,56 +11,92 @@
 var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find+"%'");
 ?'iacucQ.count => '+iacucQ.count()+'\n';
 if(iacucQ.count() > 0){
-	iacucQ = iacucQ.elements().item(1);
-	?'DLAR(IACUC Study) => '+iacucQ+'\n';
 
-	/*
-		1a. protocol team members => first clear the set, then re-add each study team member
-			contacts => first clear the set then re-add each study team member
-	*/
+			iacucQ = iacucQ.elements().item(1);
+			?'DLAR.iacucQ protocol found =>'+iacucQ.ID+'\n';
+			//update fields below total animal #.
 
-	var protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
-	if(protocolTeamMembers == null){
-		var studyTeamMemberInfo = _StudyTeamMemberINfo.createEntitySet();
-		iacucQ.setQualifiedAttribute('customAttributes.protocolTeamMembers', studyTeamMemberInfo);
-		protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
-		?'created iacucQ.customAttributes.protocolTeamMembers eset=>'+protocolTeamMembers+'\n';
-	}
-	else{
-		?'DLAR(IACUC) protocolTeamMembers => '+protocolTeamMembers+'\n';
-		protocolTeamMembers.removeAllElements();
-		?'removing all protocolTeamMembers and readding from eset => '+protocolTeamMembers+'\n';;
-	}
+			/*
+				1a. protocol team members => first clear the set, then re-add each study team member
+					contacts => first clear the set then re-add each study team member
+			*/
 
-	var contactSet = iacucQ.contacts;
-	if(contactSet == null){
-		iacucQ.contacts = Person.createEntitySet();
-		?'created contacts eset => '+iacucQ.contacts+'\n';
-		contactSet = iacucQ.contacts;
-	}
-	else{
-		?'DLAR(IACUC) contacts => '+contactSet+'\n';
-		contactSet.removeAllElements();
-		?'removing all contacts from list \n';
-	}
+			var protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
+			if(protocolTeamMembers == null){
+				var studyTeamMemberInfo = _StudyTeamMemberINfo.createEntitySet();
+				iacucQ.setQualifiedAttribute('customAttributes.protocolTeamMembers', studyTeamMemberInfo);
+				protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
+				?'created iacucQ.customAttributes.protocolTeamMembers eset=>'+protocolTeamMembers+'\n';
+			}
+			else{
+				?'DLAR(IACUC) protocolTeamMembers => '+protocolTeamMembers+'\n';
+				protocolTeamMembers.removeAllElements();
+				?'removing all protocolTeamMembers and readding from eset => '+protocolTeamMembers+'\n';;
+			}
 
-	{{#each studyTeamMembers}}
-		{{#if studyTeamMember.userId}}
+			var contactSet = iacucQ.contacts;
+			if(contactSet == null){
+				iacucQ.contacts = Person.createEntitySet();
+				?'created contacts eset => '+iacucQ.contacts+'\n';
+				contactSet = iacucQ.contacts;
+			}
+			else{
+				?'DLAR(IACUC) contacts => '+contactSet+'\n';
+				contactSet.removeAllElements();
+				?'removing all contacts from list \n';
+			}
 
-			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyTeamMember.userId}}'");
-			if(person.count() > 0){
-				person = person.elements().item(1);
-				contactSet.addElement(person);
-				?'added person to contact set =>'+person+'\n';
+			{{#each studyTeamMembers}}
+				{{#if studyTeamMember.userId}}
 
-				var studyTeam = _StudyTeamMemberINfo.createEntity();
-				?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
+					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyTeamMember.userId}}'");
+					if(person.count() > 0){
+						person = person.elements().item(1);
+						contactSet.addElement(person);
+						?'added person to contact set =>'+person+'\n';
 
-				studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
-				?'set person to studyTeamMember => '+person+'\n';
+						var studyTeam = _StudyTeamMemberINfo.createEntity();
+						?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
 
-				var iacucAuthorizedToOrderAnimals = "{{isAuthorizedToOrderAnimals}}";
-				var iacucInvolvedInAnimalHandling = "{{isInvolvedInAnimalHandling}}";
+						studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
+						?'set person to studyTeamMember => '+person+'\n';
+
+						var iacucAuthorizedToOrderAnimals = "{{isAuthorizedToOrderAnimals}}";
+						var iacucInvolvedInAnimalHandling = "{{isInvolvedInAnimalHandling}}";
+						var dlarAuthorizedToOrderAnimals;
+						var dlarInvolvedInAnimalHandling;
+
+						if(iacucAuthorizedToOrderAnimals == "1"){
+							dlarAuthorizedToOrderAnimals = true;
+						}
+						else{
+							dlarAuthorizedToOrderAnimals = false;
+						}
+
+						if(iacucInvolvedInAnimalHandling == "1"){
+							dlarInvolvedInAnimalHandling = true;
+						}
+						else{
+							dlarInvolvedInAnimalHandling = false;
+						}
+
+						studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
+						?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
+						studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
+						?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
+
+						protocolTeamMembers.addElement(studyTeam);
+						?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
+
+					}
+				{{/if}}
+			{{/each}}
+
+			{{#if investigator.studyTeamMember.userId}}
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
+						
+				var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
+				var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
 				var dlarAuthorizedToOrderAnimals;
 				var dlarInvolvedInAnimalHandling;
 
@@ -78,106 +114,95 @@ if(iacucQ.count() > 0){
 					dlarInvolvedInAnimalHandling = false;
 				}
 
-				studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
-				?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
-				studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
-				?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
+				if(person.count() > 0){
+					person = person.item(1);
+					contactSet.addElement(person);
+					?'added person to contact set =>'+person+'\n';
 
-				protocolTeamMembers.addElement(studyTeam);
-				?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
+					var studyTeam = _StudyTeamMemberINfo.createEntity();
+					?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
+					studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
+					?'set person to studyTeamMember => '+person+'\n';
+					studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
+					?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
+					studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
+					?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
+
+					protocolTeamMembers.addElement(studyTeam);
+					?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
+				}
+			{{/if}}
+
+			/*
+				1b. Assigning PI to Study
+			*/
+			//assigning PI to Study(IACUCQ)
+			{{#if investigator.studyTeamMember.userId}}
+				var investigator = iacucQ.getQualifiedAttribute("customAttributes._attribute7");
+
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
+					
+				if(investigator == null && person.count() > 0){
+					person = person.item(1);
+					iacucQ.setQualifiedAttribute("customAttributes._attribute7", person);
+					?'person adding as PI =>'+person.userID+'\n';
+				}
+			{{/if}}
+
+			/*
+				1c. update contact for department admins
+			*/
+			contactSet = iacucQ.contacts;
+			var deptAdmin = iacucQ.customAttributes.departmentAdministrators;
+			for(var i = 1; i<= deptAdmin.count(); i++){
+				var personToAdd = deptAdmin.elements().item(i);
+				contactSet.addElement(personToAdd);
+				?'added dept admin to contact set => '+personToAdd+'\n';
 
 			}
-		{{/if}}
-	{{/each}}
 
-	{{#if investigator.studyTeamMember.userId}}
-		var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
-				
-		var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
-		var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
-		var dlarAuthorizedToOrderAnimals;
-		var dlarInvolvedInAnimalHandling;
+			/*
+				approval/annual expiration date
+			*/
 
-		if(iacucAuthorizedToOrderAnimals == "1"){
-			dlarAuthorizedToOrderAnimals = true;
-		}
-		else{
-			dlarAuthorizedToOrderAnimals = false;
-		}
+			{{#if approvalDate}}
+				var date = "{{approvalDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.setQualifiedAttribute("customAttributes._attribute6", a);
+				?'iacucQ.customAttributes._attribute6(Date Approved) =>'+a+'\n';
+			{{/if}}
 
-		if(iacucInvolvedInAnimalHandling == "1"){
-			dlarInvolvedInAnimalHandling = true;
-		}
-		else{
-			dlarInvolvedInAnimalHandling = false;
-		}
+			/*
+			** 07-20-2015 => Sandy => DLAR wants the annual expiration date
+				{{#if finalExpirationDate}}
+					var date = "{{finalExpirationDate}}";
+					var dateArray = date.split('-');
+					var day = dateArray[2].substring(0,2);
+					var month = dateArray[1] - 1;
+					var year = dateArray[0];
+					var a = new Date(year, month, day);
+					iacucQ.customAttributes._attribute10 = a;
+					?'iacucQ.customAttributes._attribute10(Date Expiration) =>'+a+'\n';
+				{{/if}}
+			*/
 
-		if(person.count() > 0){
-			person = person.item(1);
-			contactSet.addElement(person);
-			?'added person to contact set =>'+person+'\n';
-
-			var studyTeam = _StudyTeamMemberINfo.createEntity();
-			?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
-			studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
-			?'set person to studyTeamMember => '+person+'\n';
-			studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
-			?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
-			studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
-			?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
-
-			protocolTeamMembers.addElement(studyTeam);
-			?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
-		}
-	{{/if}}
+			{{#if annualExpirationDate}}
+				var date = "{{annualExpirationDate}}";
+				var dateArray = date.split('-');
+				var day = dateArray[2].substring(0,2);
+				var month = dateArray[1] - 1;
+				var year = dateArray[0];
+				var a = new Date(year, month, day);
+				iacucQ.customAttributes._attribute10 = a;
+				?'iacucQ.customAttributes._attribute10(Date Expiration) =>'+a+'\n';
+			{{/if}}
 
 	/*
-		1b. update approval/expiration date
-	*/
-
-	{{#if approvalDate}}
-		var date = "{{approvalDate}}";
-		var dateArray = date.split('-');
-		var day = dateArray[2].substring(0,2);
-		var month = dateArray[1] - 1;
-		var year = dateArray[0];
-		var a = new Date(year, month, day);
-		iacucQ.setQualifiedAttribute("customAttributes._attribute6", a);
-		?'iacucQ.customAttributes._attribute6(Date Approved) =>'+a+'\n';
-	{{/if}}
-
-	/*
-	** 07-20-2015 => Sandy => DLAR wants the annual expiration date
-
-	{{#if finalExpirationDate}}
-		var date = "{{finalExpirationDate}}";
-		var dateArray = date.split('-');
-		var day = dateArray[2].substring(0,2);
-		var month = dateArray[1] - 1;
-		var year = dateArray[0];
-		var a = new Date(year, month, day);
-		iacucQ.customAttributes._attribute10 = a;
-		?'iacucQ.customAttributes._attribute10(Date Expiration) =>'+a+'\n';
-	{{/if}}
-	*/
-
-	{{#if annualExpirationDate}}
-		var date = "{{annualExpirationDate}}";
-		var dateArray = date.split('-');
-		var day = dateArray[2].substring(0,2);
-		var month = dateArray[1] - 1;
-		var year = dateArray[0];
-		var a = new Date(year, month, day);
-		iacucQ.customAttributes._attribute10 = a;
-		?'iacucQ.customAttributes._attribute10(Date Expiration) =>'+a+'\n';
-	{{/if}}
-
-	/*
-		1c. check husbandary exceptions => first clear the set, then re-add each husbandary exceptions
-	*/
-
-	/*
-		1d. update number of animal(approved) counts
+		updating species
 	*/
 
 	var animalCount = 0;
@@ -194,18 +219,37 @@ if(iacucQ.count() > 0){
 	var painCategoryD = 'Pain Category D';
 	var painCategoryE = 'Pain Category E';
 	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	var groupAdminSet = iacucQ.customAttributes.groups;
+	var speciesAdminSet = iacucQ.customAttributes._attribute32;
+	var speciesArrayNew = [];
+	var speciesArrayOrig = [];
+	var speciesArrayNotFound = [];
+
+	var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	if(animalGroupSet == null){
+		var animalGroup = _IS_AnimalGroup.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
+		?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
+		animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
+	}
+	else{
+		for(var i = 1; i<=animalGroupSet.count(); i++){
+			var name = animalGroupSet.elements().item(i).customAttributes._ProtocolGroup.customAttributes._ProtocolGroup;
+			speciesArrayOrig.push({"species":name});
+		}
+	}
+
+	if(groupAdminSet == null){
+		var group = _IS_SEL_AnimalGroup.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.groups', group);
+		?'create eset iacucQ.customAttributes.groups=>'+group+'\n';
+		groupAdminSet = iacucQ.customAttributes.groups;
+	}
 
 	{{#each animalCounts}}
 		var aCount = {{actualNumberOfAnimals}};
 
 		if(aCount > 0){
-			var animalGroupSet = iacucQ.customAttributes.SF_AnimalGroup;
-			if(animalGroupSet == null){
-				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalGroup',animalGroup)
-				?'create eset iacucQ.customAttributes.SF_AnimalGroup=>'+animalGroup+'\n';
-			}
-			
-
 			var species = "{{species.commonName}}";
 			//species = species.replace(" ", "");
 			var painCategory = "{{painCategory.category}}";
@@ -228,10 +272,13 @@ if(iacucQ.count() > 0){
 				?'painCategoryNotFound=>'+painCategory+'\n';
 			}
 
+			var protoGroupName_1 = species + ' {{painCategory.category}}';
+			speciesArrayNew.push({"species":protoGroupName_1});
+
 			if(painCategory_1 != null){
 				var protoGroupName = species + ' {{painCategory.category}}';
 				var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='"+species+"'");
-				if(usda == "yes" || usda == "Yes"){
+				if(usda == "yes" || usda == "Yes" || usda == "1"){
 					exists = exists.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes.usdaCovered=true");
 				}
 				else{
@@ -263,6 +310,15 @@ if(iacucQ.count() > 0){
 							item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
 							?'setting new animal count(available) => '+newAvaliable+'\n';
 						}
+						else if(currentAnimalAvaliable != newAnimalCount && totalOrderUsed == 0){
+							?'Protocol Group => '+item+' no animal used or on order\n';
+							var newAvaliable = newAnimalCount;
+							item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
+							?'setting new animal count(available) => '+newAvaliable+'\n';
+						}
+						else if(currentAnimalAvaliable == newAnimalCount){
+							?'Protocol Group => '+item+' avaliable count is same\n';
+						}
 						else{
 							?'Protocol Group => '+item+' count is different and there less animal avaliable\n';
 							item.customAttributes._ProtocolGroup.customAttributes.available = 0;
@@ -271,55 +327,98 @@ if(iacucQ.count() > 0){
 					}
 				}
 				else{
-					?'Can't find animal in animal group =>'+species+'\n';
-						var animalGroup = _IS_AnimalGroup.createEntity();
-						var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
-						var clickPainCategory = ApplicationEntity.getResultSet('_ClickPainCategory').query("customAttributes.Category = '"+painCategory_1+"'");
-						if(clickPainCategory.count() > 0){
-							clickPainCategory = clickPainCategory.elements().item(1);
-							selAnimalGroup.setQualifiedAttribute('customAttributes.usdaPainCategory', clickPainCategory);
-							?'setting selAnimalGroup.customAttributes.usdaPainCategory =>'+clickPainCategory+'\n';
-						}
-
+					?'Cant find animal in animal group =>'+species+'\n';
 						var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
-						if(usda == "yes" || usda == "Yes"){
+						if(usda == "yes" || usda == "Yes" || usda == "1"){
 							clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
 						}
 						else{
 							clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
 						}
 						if(clickSpecies.count() > 0){
-							clickSpecies = clickSpecies.elements().item(1);
-							selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
-							speciesAdminSet.addElement(clickSpecies);
-							?'adding clickSpeices to speciesAdminSet =>'+clickSpecies+'\n';
-							?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
-						}
-						else{
-							?'Cant find animal =>'+species+' usda =>'+usda+'\n';
-						}
-						selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
-						?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
-
-						var protoGroupName = species + ' {{painCategory.category}}';
-						selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
-						?'set protocolGroup name =>'+protoGroupName+'\n';
+							var animalGroup = _IS_AnimalGroup.createEntity();
+							var selAnimalGroup = _IS_SEL_AnimalGroup.createEntity();
+							var clickPainCategory = ApplicationEntity.getResultSet('_ClickPainCategory').query("customAttributes.Category = '"+painCategory_1+"'");
+							if(clickPainCategory.count() > 0){
+								clickPainCategory = clickPainCategory.elements().item(1);
+								selAnimalGroup.setQualifiedAttribute('customAttributes.usdaPainCategory', clickPainCategory);
+								?'setting selAnimalGroup.customAttributes.usdaPainCategory =>'+clickPainCategory+'\n';
+							}
 
 
-						animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
-						animalGroupSet.addElement(animalGroup);
-						?'adding eset animalGroupSet => '+animalGroup+'\n';
-						groupAdminSet.addElement(selAnimalGroup);
-						?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
+								clickSpecies = clickSpecies.elements().item(1);
+								selAnimalGroup.setQualifiedAttribute('customAttributes._Species', clickSpecies);
+								speciesAdminSet.addElement(clickSpecies);
+								?'adding clickSpeices to speciesAdminSet =>'+clickSpecies+'\n';
+								?'setting selAnimalGroup.customAttributes._Species =>'+clickSpecies+'usda =>'+usda+'\n';
+
+								selAnimalGroup.customAttributes.approved = {{actualNumberOfAnimals}};
+								?'set number of approved for this animal =>{{actualNumberOfAnimals}}\n';
+								selAnimalGroup.customAttributes.available = {{actualNumberOfAnimals}};
+								?'set number of avaliable for this animal =>{{actualNumberOfAnimals}}\n';
+
+								var protoGroupName = species + ' {{painCategory.category}}';
+								selAnimalGroup.customAttributes._ProtocolGroup = protoGroupName;
+								?'set protocolGroup name =>'+protoGroupName+'\n';
+
+
+								animalGroup.setQualifiedAttribute('customAttributes._ProtocolGroup', selAnimalGroup);
+								animalGroupSet.addElement(animalGroup);
+								?'adding eset animalGroupSet => '+animalGroup+'\n';
+								groupAdminSet.addElement(selAnimalGroup);
+								?'adding to eset groupAdminSet =>'+selAnimalGroup+'\n';
+					}								
+					else{
+						?'Cant find animal =>'+species+' usda =>'+usda+'\n';
+					}
+
 				}
 			}
 		}
 	{{/each}}
 
+	for(var i=0; i<speciesArrayOrig.length; i++) {
+	   var exists = false;
+	   var origArrayItem = speciesArrayOrig[i].species;
+	   for(var j=0; j<speciesArrayNew.length; j++){
+	       var newArrayItem = speciesArrayNew[j].species;
+	       if(origArrayItem == newArrayItem){
+	         exists = true;
+	       }  
+	   }
+	   if(exists == false){
+	      var item = speciesArrayOrig[i].species;
+	      speciesArrayNotFound.push({"species":item});
+	      var exists = animalGroupSet.query("customAttributes._ProtocolGroup.customAttributes._ProtocolGroup='"+item+"'");
+		   if(exists.count() > 0){
+		   		var item_1 = exists.elements().item(1);
+		   		?'animalGroupItem not longer used in IACUC => '+item_1+'\n';
+		   		item_1.customAttributes._ProtocolGroup.customAttributes.approved = 0;
+		   		?'setting approved animal count => 0\n';
+				item_1.customAttributes._ProtocolGroup.customAttributes.available = 0;
+				?'setting available animal count => 0\n';
+		   }
+		   else{
+		   	?'species not found => '+item+'\n';
+		   }
+	   }
+	}
+
+
+			var count = iacucQ.customAttributes._attribute71;
+			if(count > 0){
+				iacucQ.calculateTotals();
+				?'recalculating total animal counts\n';
+			}
+/*
+	Locations Update
+*/
+	
 	/*
 		1e. Housing update, remove all animal housing then readd
 	*/
 	var housingSet = iacucQ.customAttributes.SF_AnimalHousing;
+	var housingAdminSet = iacucQ.customAttributes.housingFacilities;
 	if(housingSet == null){
 		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
 		?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
@@ -426,33 +525,10 @@ if(iacucQ.count() > 0){
 		*/
 	{{/each}}
 
-			/*
-				1f. Assigning PI to Study
-			*/
-			//assigning PI to Study(IACUCQ)
-			{{#if investigator.studyTeamMember.userId}}
-				var investigator = iacucQ.getQualifiedAttribute("customAttributes._attribute7");
+	/*
+		3a. common procedures/variable procedures/husbandryExceptions
+	*/
 
-				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
-					
-				if(investigator == null && person.count() > 0){
-					person = person.item(1);
-					iacucQ.setQualifiedAttribute("customAttributes._attribute7", person);
-					?'person adding as PI =>'+person.userID+'\n';
-				}
-			{{/if}}
-
-			/*
-				1g. update contact for department admins
-			*/
-			contactSet = iacucQ.contacts;
-			var deptAdmin = iacucQ.customAttributes.departmentAdministrators;
-			for(var i = 1; i<= deptAdmin.count(); i++){
-				var personToAdd = deptAdmin.elements().item(i);
-				contactSet.addElement(personToAdd);
-				?'added dept admin to contact set => '+personToAdd+'\n';
-
-			}
 }
 else{
 	?'DLAR(IACUC Study) Not Found => '+iacuc_id+'\n';
