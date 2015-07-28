@@ -120,6 +120,17 @@
 			?'setting effectiveDate => '+iacucQ.customAttributes.effectiveDate+'\n';
 
 		{{/if}}
+
+		{{#if topaz.annualExpirationDate}}
+			var date = "{{topaz.annualExpirationDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			iacucQ.customAttributes.annualExpirationDate = a;
+			?'setting annualExpirationDate => '+iacucQ.customAttributes.annualExpirationDate+'\n';
+		{{/if}}	
 		
 		/*
 			set inbox status

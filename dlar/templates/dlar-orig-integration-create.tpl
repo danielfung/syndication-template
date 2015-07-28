@@ -241,6 +241,7 @@
 				groups(_IS_SEL_AnimalGroup) eSet
 				housingFacilities(_Facility) eSet
 				husbandryExceptionSet(_HusbandryException) eset
+				prodecureSet(_Procedure) eset
 			*/
 
 				var animalHousing = _IS_AnimalHousing.createEntitySet();
@@ -676,7 +677,7 @@
 				2e. common procedures/variable procedures/husbandryExceptions
 			*/
 			var husbandryEset = iacucQ.customAttributes.husbandryExceptionSet;
-
+			var prodecureEset = iacucQ.customAttributes.prodecureSet;
 			{{#each animalGroups}}
 				var species = "{{species.commonName}}";
 				var usda = "{{species.isUSDASpecies}}";

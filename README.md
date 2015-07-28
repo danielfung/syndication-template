@@ -42,4 +42,4 @@
       }' -H "Content-Type: application/json" http://10.137.100.55:4441/iacuc
  ```
 
-3b. Animal Order/Animal Order Line Item/Cage Card
+3b. Animal Order/Animal Order Line Item/Cage Card/Billing/Invoices

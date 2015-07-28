@@ -89,6 +89,7 @@
 					?'updating draftProtocol.protocolNumber => '+protocolNumber+'\n';
 				}
 		{{/if}}
+
 		var draft = iacucQ.customAttributes.draftProtocol;
 		var draftStudyTeamMember = draft.customAttributes.studyTeamMembers;
 		var draftReaders = draft.customAttributes.readers;
@@ -200,6 +201,8 @@
 			?'setting draft approvalDate => '+draftProtocol.customAttributes.approvalDate+'\n';
 			iacucQ.customAttributes.approvalDate = a;
 			?'setting orig approvalDate => '+iacucQ.customAttributes.approvalDate+'\n';
+			draftProtocol.customAttributes.approvalDate = a;
+			?'setting draft approval date => '+draftProtocol.customAttributes.approvalDate+'\n';
 		{{/if}}
 
 		{{#if topaz.expirationDate}}
@@ -213,6 +216,8 @@
 			?'setting draft finalExpirationDate => '+draftProtocol.customAttributes.finalExpirationDate+'\n';
 			iacucQ.customAttributes.finalExpirationDate = a;
 			?'setting orig finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+			draftProtocol.customAttributes.finalExpirationDate = a;
+			?'setting draft finalExpirationDate => '+draftProtocol.customAttributes.finalExpirationDate+'\n';
 		{{/if}}
 
 		{{#if topaz.effectiveDate}}
@@ -224,7 +229,22 @@
 			var a = new Date(year, month, day);
 			iacucQ.customAttributes.effectiveDate = a;
 			?'setting orig effectiveDate => '+iacucQ.customAttributes.effectiveDate+'\n';
+			draftProtocol.customAttributes.effectiveDate = a;
+			?'setting draft effectiveDate => '+draftProtocol.customAttributes.effectiveDate+'\n';
 		{{/if}}
+
+		{{#if topaz.annualExpirationDate}}
+			var date = "{{topaz.annualExpirationDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			iacucQ.customAttributes.annualExpirationDate = a;
+			?'setting orig annualExpirationDate => '+iacucQ.customAttributes.annualExpirationDate+'\n';
+			draftProtocol.customAttributes.annualExpirationDate = a;
+			?'setting draft annualExpirationDate => '+draftProtocol.customAttributes.annualExpirationDate+'\n';
+		{{/if}}		
 
 		var dateMod = new Date();
 		iacucQ.dateModified = dateMod;
