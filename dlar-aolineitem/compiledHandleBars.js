@@ -19,6 +19,6 @@ module.exports = function(testData, preTemp) {
     */
     compiledScript = preTemp(testData);
   }
-  //fs.writeFileSync('./test-outCRMS', compiledScript, {encoding:'utf8'});
+  //fs.writeFileSync('./output/test-outAOL', compiledScript, {encoding:'utf8'});
   return compiledScript;
 };

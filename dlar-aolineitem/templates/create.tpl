@@ -1,7 +1,7 @@
 {{#if id}}
 	var order_id ="{{id}}";
 	?'animal order line item ID for data migration => '+order_id+'\n';
-	var parentOrderID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
+	var parentOrderID = order_id.substr(0, order_id.lastIndexOf(":"));
 	?'parentOrderID => '+parentOrderID+'\n';
 {{else}}
 	var order_id = _OrderLineItem.getID();
@@ -41,6 +41,10 @@ if(parentOrder.count() > 0){
 				var name = '{{name}}';
 				order.name = name;
 				?'set order.name =>'+order.name+'\n';
+			{{else}}
+				var name = 'AOL - '+order_id;
+				order.name = name;
+				?'set order.name =>'+order.name+'\n';				
 			{{/if}}
 
 		/*
@@ -182,7 +186,8 @@ if(parentOrder.count() > 0){
 		*/
 		{{#if status.oid}}
 			var status = entityUtils.getObjectFromString('{{status.oid}}');
-			status = status;
+			order.status = status;
+			?'setting order.status => '+order.status+'\n';
 		{{/if}}
 
 
@@ -268,6 +273,46 @@ if(parentOrder.count() > 0){
 			 	?'numAnimalPerCage not found => {{animalsPerCage}}\n';
 			 }
 		{{/if}}
+
+		/*
+			2h. set sex of animal
+		*/
+		{{#if sex.oid}}
+			var sex = entityUtils.getObjectFromString('{{sex.oid}}');
+			order.customAttributes.sex = sex;
+			?'setting animal sex => '+sex+'\n';
+		{{/if}}
+
+		/*
+			2i. set procurementAccount
+		*/
+		{{#if procurementAccount}}
+			var accountInfo = ApplicationEntity.getResultSet('_GLAccount_SE').query("ID='{{procurementAccount}}'");
+			if(accountInfo.count() > 0){
+				var accountInfo_1 = accountInfo.elements().item(1);
+				order.customAttributes.procurementAccount = accountInfo_1;
+				?'setting procurementAccount => '+order.customAttributes.procurementAccount+'\n';
+			}
+			else{
+				?'procurementAccount not found => {{procurementAccount}}\n';
+			}
+		{{/if}}
+
+		/*
+			2j. set perDiemBillingAccount
+		*/
+		{{#if perDiemBillingAccount}}
+			var accountInfo = ApplicationEntity.getResultSet('_GLAccount_SE').query("ID='{{perDiemBillingAccount}}'");
+			if(accountInfo.count() > 0){
+				var accountInfo_1 = accountInfo.elements().item(1);
+				order.customAttributes.perDiemBillingAccount = accountInfo_1;
+				?'setting perDiemBillingAccount => '+order.customAttributes.perDiemBillingAccount+'\n';
+			}
+			else{
+				?'perDiemBillingAccount not found => {{perDiemBillingAccount}}\n';
+			}
+		{{/if}}
+
 	}
 	else{
 		order = order.elements().item(1);
