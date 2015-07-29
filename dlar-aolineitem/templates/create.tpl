@@ -254,6 +254,20 @@ if(parentOrder.count() > 0){
 			?'setting order.customAttributes.surcharge => '+order.customAttributes.surcharge+'\n';
 		{{/if}}		
 
+		/*
+			2g. set animalsPerCage	
+		*/
+		{{#if animalsPerCage}}
+			 var numAnimalPerCage = ApplicationEntity.getResultSet('_animalsPerCage').query("customAttributes.value={{animalsPerCage}}");
+			 if(numAnimalPerCage.count() > 0){
+			 	numAnimalPerCage= numAnimalPerCage.elements().item(1);
+				order.customAttributes.animalsPerCage = numAnimalPerCage;
+				?'setting order.customAttributes.animalsPerCage => '+order.customAttributes.animalsPerCage+'\n';			 	
+			 }
+			 else{
+			 	?'numAnimalPerCage not found => {{animalsPerCage}}\n';
+			 }
+		{{/if}}
 	}
 	else{
 		order = order.elements().item(1);
