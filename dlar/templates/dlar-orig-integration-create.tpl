@@ -478,8 +478,7 @@
 
 			{{#if investigator.studyTeamMember.userId}}
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
-				Kristen => PI DEFAULTS TO YES, form got changed in IACUC
-				/*
+
 					var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
 					var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
 					var dlarAuthorizedToOrderAnimals;
@@ -498,10 +497,10 @@
 					else{
 						dlarInvolvedInAnimalHandling = false;
 					}
+				/*
+					var dlarAuthorizedToOrderAnimals = true;
+					var dlarInvolvedInAnimalHandling = true;
 				*/
-
-				var dlarAuthorizedToOrderAnimals = true;
-				var dlarInvolvedInAnimalHandling = true;
 				
 				if(person.count() > 0){
 					person = person.item(1);
