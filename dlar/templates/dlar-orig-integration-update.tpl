@@ -1,6 +1,11 @@
 			iacucQ = iacucQ.elements().item(1);
 			?'DLAR.iacucQ protocol found =>'+iacucQ.ID+'\n';
 			//update fields below total animal #.
+			/*
+				1. update protocol ID 
+			*/
+				iacucQ.ID = iacuc_id;
+				?'setting new id => '+iacucQ.ID+'\n';
 
 			/*
 				1a. protocol team members => first clear the set, then re-add each study team member
@@ -105,7 +110,7 @@
 					var dlarAuthorizedToOrderAnimals = true;
 					var dlarInvolvedInAnimalHandling = true;
 				*/
-				
+
 				if(person.count() > 0){
 					person = person.item(1);
 					contactSet.addElement(person);
