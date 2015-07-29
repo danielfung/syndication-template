@@ -313,11 +313,174 @@ if(parentOrder.count() > 0){
 			}
 		{{/if}}
 
+		/*
+			3a. create animalorderlineitemlegacyinfo
+		*/
+
+		var legacyInfo = _AO_AnimalOrderLineItemLegacyInfo.createEntity();
+		?'created legacyInfo entity => '+legacyInfo+'\n';
+		legacyInfo.ID = order_id;
+		?'setting legacyInfoLineItem.id => '+legacyInfo.ID+'\n';
+
+
 	}
 	else{
 		order = order.elements().item(1);
 		?'DLAR.animal order line item found =>'+order.ID+'\n';
 		//update fields below total animal #.
+
+		/*
+			1e. set quantityRequested = 0 if not given;, set quantityReceived = 0 if not given
+		*/
+			{{#if quantityRequested}}
+				order.customAttributes.quantityRequested= {{quantityRequested}};
+				?'order.quantityRequested =>'+order.customAttributes.quantityRequested+'\n';
+			{{else}}
+				order.customAttributes.quantityRequested=0;
+				?'order.quantityRequested => 0\n';
+			{{/if}}
+
+			{{#if quantityReceived}}
+				order.customAttributes.quantityReceived= {{quantityReceived}};
+				?'order.quantityReceived =>'+order.customAttributes.quantityReceived+'\n';
+			{{else}}
+				order.customAttributes.quantityReceived=0;
+				?'order.quantityReceived => 0\n';
+			{{/if}}
+		
+		/*
+			1g. set status
+		*/
+		{{#if status.oid}}
+			var status = entityUtils.getObjectFromString('{{status.oid}}');
+			order.status = status;
+			?'setting order.status => '+order.status+'\n';
+		{{/if}}
+
+
+		/*
+			2a. set age
+		*/
+
+		{{#if age}}
+			order.customAttributes.age = "{{age}}";
+			?'setting orderLineItem.age => '+order.customAttributes.age+'\n';
+		{{/if}}
+
+		/*
+			2b. set confirmation code
+		*/
+
+		{{#if confirmationCode}}
+			order.customAttributes.confirmationCode = "{{confirmationCode}}";
+			?'setting order.customAttributes.confirmationCode => '+order.customAttributes.confirmationCode+'\n';
+		{{/if}}
+
+		/*
+			2c. set dates(deliveryDate/orderDate)
+		*/
+
+		{{#if deliveryDate}}
+			var date = "{{deliveryDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			order.customAttributes.deliveryDate = a;
+			?'setting deliveryDate => '+order.customAttributes.deliveryDate+'\n';
+		{{/if}}
+
+		{{#if orderDate}}
+			var date = "{{orderDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			order.customAttributes.orderDate = a;
+			?'setting orderDate => '+order.customAttributes.orderDate+'\n';
+		{{/if}}
+
+		/*
+			2d. set po number
+		*/
+		{{#if poNumber}}
+			order.customAttributes.poNumber = "{{poNumber}}";
+			?'setting order.customAttributes.poNumber => '+order.customAttributes.poNumber+'\n';
+		{{/if}}
+
+		/*
+			2e. set weight
+		*/
+		{{#if weight}}
+			order.customAttributes.weight = "{{weight}}";
+			?'setting order.customAttributes.weight => '+order.customAttributes.weight+'\n';
+		{{/if}}
+
+		/*
+			2f. set surcharge
+		*/
+		{{#if surcharge}}
+			order.customAttributes.surcharge = "{{surcharge}}";
+			?'setting order.customAttributes.surcharge => '+order.customAttributes.surcharge+'\n';
+		{{/if}}		
+
+		/*
+			2g. set animalsPerCage	
+		*/
+		{{#if animalsPerCage}}
+			 var numAnimalPerCage = ApplicationEntity.getResultSet('_animalsPerCage').query("customAttributes.value={{animalsPerCage}}");
+			 if(numAnimalPerCage.count() > 0){
+			 	numAnimalPerCage= numAnimalPerCage.elements().item(1);
+				order.customAttributes.animalsPerCage = numAnimalPerCage;
+				?'setting order.customAttributes.animalsPerCage => '+order.customAttributes.animalsPerCage+'\n';			 	
+			 }
+			 else{
+			 	?'numAnimalPerCage not found => {{animalsPerCage}}\n';
+			 }
+		{{/if}}
+
+		/*
+			2h. set sex of animal
+		*/
+		{{#if sex.oid}}
+			var sex = entityUtils.getObjectFromString('{{sex.oid}}');
+			order.customAttributes.sex = sex;
+			?'setting animal sex => '+sex+'\n';
+		{{/if}}
+
+		/*
+			2i. set procurementAccount
+		*/
+		{{#if procurementAccount}}
+			var accountInfo = ApplicationEntity.getResultSet('_GLAccount_SE').query("ID='{{procurementAccount}}'");
+			if(accountInfo.count() > 0){
+				var accountInfo_1 = accountInfo.elements().item(1);
+				order.customAttributes.procurementAccount = accountInfo_1;
+				?'setting procurementAccount => '+order.customAttributes.procurementAccount+'\n';
+			}
+			else{
+				?'procurementAccount not found => {{procurementAccount}}\n';
+			}
+		{{/if}}
+
+		/*
+			2j. set perDiemBillingAccount
+		*/
+		{{#if perDiemBillingAccount}}
+			var accountInfo = ApplicationEntity.getResultSet('_GLAccount_SE').query("ID='{{perDiemBillingAccount}}'");
+			if(accountInfo.count() > 0){
+				var accountInfo_1 = accountInfo.elements().item(1);
+				order.customAttributes.perDiemBillingAccount = accountInfo_1;
+				?'setting perDiemBillingAccount => '+order.customAttributes.perDiemBillingAccount+'\n';
+			}
+			else{
+				?'perDiemBillingAccount not found => {{perDiemBillingAccount}}\n';
+			}
+		{{/if}}
+
+
 	}
 }
 else{
