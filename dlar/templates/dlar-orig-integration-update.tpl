@@ -81,24 +81,30 @@
 			{{#if investigator.studyTeamMember.userId}}
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
 						
-				var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
-				var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
-				var dlarAuthorizedToOrderAnimals;
-				var dlarInvolvedInAnimalHandling;
+				Kristen => PI DEFAULTS TO YES, form got changed in IACUC
+				/*
+					var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
+					var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
+					var dlarAuthorizedToOrderAnimals;
+					var dlarInvolvedInAnimalHandling;
 
-				if(iacucAuthorizedToOrderAnimals == "1"){
-					dlarAuthorizedToOrderAnimals = true;
-				}
-				else{
-					dlarAuthorizedToOrderAnimals = false;
-				}
+					if(iacucAuthorizedToOrderAnimals == "1"){
+						dlarAuthorizedToOrderAnimals = true;
+					}
+					else{
+						dlarAuthorizedToOrderAnimals = false;
+					}
 
-				if(iacucInvolvedInAnimalHandling == "1"){
-					dlarInvolvedInAnimalHandling = true;
-				}
-				else{
-					dlarInvolvedInAnimalHandling = false;
-				}
+					if(iacucInvolvedInAnimalHandling == "1"){
+						dlarInvolvedInAnimalHandling = true;
+					}
+					else{
+						dlarInvolvedInAnimalHandling = false;
+					}
+				*/
+
+				var dlarAuthorizedToOrderAnimals = true;
+				var dlarInvolvedInAnimalHandling = true;
 
 				if(person.count() > 0){
 					person = person.item(1);

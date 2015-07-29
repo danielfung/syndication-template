@@ -478,26 +478,31 @@
 
 			{{#if investigator.studyTeamMember.userId}}
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
+				Kristen => PI DEFAULTS TO YES, form got changed in IACUC
+				/*
+					var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
+					var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
+					var dlarAuthorizedToOrderAnimals;
+					var dlarInvolvedInAnimalHandling;
+
+					if(iacucAuthorizedToOrderAnimals == "1"){
+						dlarAuthorizedToOrderAnimals = true;
+					}
+					else{
+						dlarAuthorizedToOrderAnimals = false;
+					}
+
+					if(iacucInvolvedInAnimalHandling == "1"){
+						dlarInvolvedInAnimalHandling = true;
+					}
+					else{
+						dlarInvolvedInAnimalHandling = false;
+					}
+				*/
+
+				var dlarAuthorizedToOrderAnimals = true;
+				var dlarInvolvedInAnimalHandling = true;
 				
-				var iacucInvolvedInAnimalHandling = '{{investigator.isInvolvedInAnimalHandling}}';
-				var iacucAuthorizedToOrderAnimals = '{{investigator.isAuthorizedToOrderAnimals}}';
-				var dlarAuthorizedToOrderAnimals;
-				var dlarInvolvedInAnimalHandling;
-
-				if(iacucAuthorizedToOrderAnimals == "1"){
-					dlarAuthorizedToOrderAnimals = true;
-				}
-				else{
-					dlarAuthorizedToOrderAnimals = false;
-				}
-
-				if(iacucInvolvedInAnimalHandling == "1"){
-					dlarInvolvedInAnimalHandling = true;
-				}
-				else{
-					dlarInvolvedInAnimalHandling = false;
-				}
-
 				if(person.count() > 0){
 					person = person.item(1);
 					contactSet.addElement(person);
