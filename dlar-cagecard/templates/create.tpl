@@ -124,6 +124,8 @@ if(cageCard.count() == 0){
 			cageCard.customAttributes.legacyCageCardInfo = _CageCardLegacyInfo.createEntity();
 			cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
 			?'created cagecard entity => '+cageLegacyInfo+'\n';
+			cageLegacyInfo.ID = cageCard_id;
+			?'setting cageCard legacyInfo.ID => '+cageLegacyInfo.ID+'\n';
 		}
 
 		{{#if legacyCageCardInfo.accountNumber}}

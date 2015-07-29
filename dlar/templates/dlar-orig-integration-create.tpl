@@ -742,6 +742,7 @@
 				2g. recalculate totals
 			*/
 			var count = iacucQ.customAttributes._attribute71;
+			var animalFind = iacucQ.customAttributes.SF_AnimalGroup;
 			if(count > 0){
 				if(animalFind.count() > 0){
 					iacucQ.calculateTotals();
