@@ -134,7 +134,7 @@ if(cageCard.count() == 0){
 			*/
 			var legacyAccountNumber = "{{legacyCageCardInfo.accountNumber}}";
 			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.accountNumber", legacyAccountNumber);
-			?'setting legacyCageCardInfo => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.accountNumber+'\n';
+			?'setting legacyAccountNumber => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.accountNumber+'\n';
 		{{/if}}
 
 		{{#if legacyCageCardInfo.cageCardID}}
@@ -148,16 +148,16 @@ if(cageCard.count() == 0){
 
 		{{#if legacyCageCardInfo.cageCardLegacyID}}
 			/*
-				3b. set legacyCageCardInfo.cageCardLegacyID
+				3c. set legacyCageCardInfo.cageCardLegacyID
 			*/
-			var legacyCageCardID_1 = "{{legacyCageCardInfo.cageCardLegacyID}}";
+			var legacyCageCardID_1 = {{legacyCageCardInfo.cageCardLegacyID}};
 			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.cageCardLegacyID", legacyCageCardID_1);
-			?'setting legacyCageCardLegacyID => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.cageCardLegacyID+'\n';
+			?'setting legacyCageCardID_1 => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.cageCardLegacyID+'\n';
 		{{/if}}
 
 		{{#if legacyCageCardInfo.cageCardNumberOfAnimal}}
 			/*
-				3c. set legacyCageCardInfo.cageCardNumberOfAnimal
+				3d. set legacyCageCardInfo.cageCardNumberOfAnimal
 			*/
 			var legacyCageCardNumAnimal = {{legacyCageCardInfo.cageCardNumberOfAnimal}};
 			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.cageCardNumberOfAnimal", legacyCageCardNumAnimal);
@@ -166,7 +166,7 @@ if(cageCard.count() == 0){
 
 		{{#if legacyCageCardInfo.censusActiveDate}}
 			/*
-				3d. set legacyCageCardInfo.censusActiveDate
+				3e. set legacyCageCardInfo.censusActiveDate
 			*/
 			var date = "{{legacyCageCardInfo.censusActiveDate}}";
 			var dateArray = date.split('-');
@@ -180,31 +180,147 @@ if(cageCard.count() == 0){
 
 		{{#if legacyCageCardInfo.clickAnimalOrderLineItem}}
 			/*
-				3e. set legacyCageCardInfo.clickAnimalOrderLineItem
+				3f. set legacyCageCardInfo.clickAnimalOrderLineItem
 			*/
 			var legacyAnimalOrderLineItem = "{{legacyCageCardInfo.clickAnimalOrderLineItem}}";
 			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.clickAnimalOrderLineItem", legacyAnimalOrderLineItem);
-			?'setting legacyClickAnimalOrderLineItem => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.clickAnimalOrderLineItem+'\n';
+			?'setting legacyAnimalOrderLineItem => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.clickAnimalOrderLineItem+'\n';
 		{{/if}}
 
 		{{#if legacyCageCardInfo.costCenter}}
 			/*
-				3f. set legacyCageCardInfo.costCenter
+				3g. set legacyCageCardInfo.costCenter
 			*/
-			var legacyCostCenter = "{{legacyCageCardInfo.clickAnimalOrderLineItem}}";
+			var legacyCostCenter = "{{legacyCageCardInfo.costCenter}}";
 			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.costCenter", legacyCostCenter);
 			?'setting legacyCostCenter => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.costCenter+'\n';
 		{{/if}}
 
 		{{#if legacyCageCardInfo.deliveryID}}
 			/*
-				3g. set legacyCageCardInfo.deliveryID
+				3h. set legacyCageCardInfo.deliveryID
 			*/
 			var legacyDeliverID = {{legacyCageCardInfo.deliveryID}};
 			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.deliveryID", legacyDeliverID);
 			?'setting legacyDeliverID => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.deliveryID+'\n';
 		{{/if}}
 
+		{{#if legacyCageCardInfo.deliveryNumber}}
+			/*
+				3i. set legacyCageCardInfo.deliveryNumber
+			*/
+			var legacyDeliverNumber = {{legacyCageCardInfo.deliveryNumber}};
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.deliveryNumber", legacyDeliverNumber);
+			?'setting legacyDeliverNumber => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.deliveryNumber+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.legacyOrderNumber}}
+			/*
+				3j. set legacyCageCardInfo.legacyOrderNumber
+			*/
+			var legacyOrderNumber = {{legacyCageCardInfo.legacyOrderNumber}};
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.legacyOrderNumber", legacyOrderNumber);
+			?'setting legacyOrderNumber => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.legacyOrderNumber+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.location}}
+			/*
+				3k. set legacyCageCardInfo.location
+			*/
+			var legacyLocation = "{{legacyCageCardInfo.location}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.location", legacyLocation);
+			?'setting legacyLocation => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.location+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.order}}
+			/*
+				3l. set legacyCageCardInfo.order
+			*/
+			var legacyOrder = "{{legacyCageCardInfo.order}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.order", legacyOrder);
+			?'setting legacyOrder => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.order+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.protocol}}
+			/*
+				3m. set legacyCageCardInfo.protocol
+			*/
+			var legacyProtocol = "{{legacyCageCardInfo.protocol}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.protocol", legacyProtocol);
+			?'setting legacyProtocol => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.protocol+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.protocolSegment}}
+			/*
+				3n. set legacyCageCardInfo.protocolSegment
+			*/
+			var legacyProtocolSegment = "{{legacyCageCardInfo.protocolSegment}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.protocolSegment", legacyProtocolSegment);
+			?'setting legacyProtocolSegment => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.protocolSegment+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.requisitionNumber}}
+			/*
+				3o. set legacyCageCardInfo.requisitionNumber
+			*/
+			var legacyRequisitionNumber = "{{legacyCageCardInfo.requisitionNumber}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.requisitionNumber", legacyRequisitionNumber);
+			?'setting legacyRequisitionNumber => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.requisitionNumber+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.segmentSequence}}
+			/*
+				3p. set legacyCageCardInfo.segmentSequence
+			*/
+			var legacySegmentSequence = {{legacyCageCardInfo.segmentSequence}};
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.segmentSequence", legacySegmentSequence);
+			?'setting legacySegmentSequence => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.segmentSequence+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.species}}
+			/*
+				3q. set legacyCageCardInfo.species
+			*/
+			var legacySpecies = "{{legacyCageCardInfo.species}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.species", legacySpecies);
+			?'setting legacySpecies => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.species+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.staff}}
+			/*
+				3q. set legacyCageCardInfo.staff
+			*/
+			var legacyStaff = "{{legacyCageCardInfo.staff}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.staff", legacyStaff);
+			?'setting legacyStaff => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.staff+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.status}}
+			/*
+				3r. set legacyCageCardInfo.status
+			*/
+			var legacyStatus = "{{legacyCageCardInfo.status}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.status", legacyStatus);
+			?'setting legacyStatus => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.status+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.userID}}
+			/*
+				3s. set legacyCageCardInfo.userID
+			*/
+			var legacyUserID = "{{legacyCageCardInfo.userID}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.legacyUserID", legacyUserID);
+			?'setting legacyUserID => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.userID+'\n';
+		{{/if}}
+
+		{{#if legacyCageCardInfo.userReferenceNumber}}
+			/*
+				3t. set legacyCageCardInfo.userReferenceNumber
+			*/
+			var legacyUserReferenceNumber = "{{legacyCageCardInfo.userReferenceNumber}}";
+			cageCard.customAttributes.legacyCageCardInfo.setQualifiedAttribute("customAttributes.legacyUserID", legacyUserReferenceNumber);
+			?'setting legacyUserReferenceNumber => '+cageCard.customAttributes.legacyCageCardInfo.customAttributes.userReferenceNumber+'\n';
+		{{/if}}
 }
 else{
 	cageCard = cageCard.elements().item(1);
