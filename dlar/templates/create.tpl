@@ -16,7 +16,7 @@ if(index > -1){
 	
 }
 else{
-	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID = '"+find+"%'");
+	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+find+"'");
 	?'protocolNumber does not contain - using id = => '+find+'\n';
 }
 

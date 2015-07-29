@@ -195,6 +195,65 @@ if(parentOrder.count() > 0){
 			?'setting orderLineItem.age => '+order.customAttributes.age+'\n';
 		{{/if}}
 
+		/*
+			2b. set confirmation code
+		*/
+
+		{{#if confirmationCode}}
+			order.customAttributes.confirmationCode = "{{confirmationCode}}";
+			?'setting order.customAttributes.confirmationCode => '+order.customAttributes.confirmationCode+'\n';
+		{{/if}}
+
+		/*
+			2c. set dates(deliveryDate/orderDate)
+		*/
+
+		{{#if deliveryDate}}
+			var date = "{{deliveryDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			order.customAttributes.deliveryDate = a;
+			?'setting deliveryDate => '+order.customAttributes.deliveryDate+'\n';
+		{{/if}}
+
+		{{#if orderDate}}
+			var date = "{{orderDate}}";
+			var dateArray = date.split('-');
+			var day = dateArray[2].substring(0,2);
+			var month = dateArray[1] - 1;
+			var year = dateArray[0];
+			var a = new Date(year, month, day);
+			order.customAttributes.orderDate = a;
+			?'setting orderDate => '+order.customAttributes.orderDate+'\n';
+		{{/if}}
+
+		/*
+			2d. set po number
+		*/
+		{{#if poNumber}}
+			order.customAttributes.poNumber = "{{poNumber}}";
+			?'setting order.customAttributes.poNumber => '+order.customAttributes.poNumber+'\n';
+		{{/if}}
+
+		/*
+			2e. set weight
+		*/
+		{{#if weight}}
+			order.customAttributes.weight = "{{weight}}";
+			?'setting order.customAttributes.weight => '+order.customAttributes.weight+'\n';
+		{{/if}}
+
+		/*
+			2f. set surcharge
+		*/
+		{{#if surcharge}}
+			order.customAttributes.surcharge = "{{surcharge}}";
+			?'setting order.customAttributes.surcharge => '+order.customAttributes.surcharge+'\n';
+		{{/if}}		
+
 	}
 	else{
 		order = order.elements().item(1);
