@@ -253,6 +253,7 @@
 				var group = _IS_SEL_AnimalGroup.createEntitySet();
 				var housingFacilitiy = _Facility.createEntitySet();
 				var husbExcepSet = _HusbandryException.createEntitySet();
+				var procedureSet = _Procedure.createEntitySet();
 
 				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
 				?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
@@ -277,6 +278,9 @@
 
 				iacucQ.setQualifiedAttribute('customAttributes.husbandryExceptionSet', husbExcepSet);
 				?'create eset iacucQ.customAttributes.husbandryExceptionSet=>'+husbExcepSet+'\n';
+
+				iacucQ.setQualifiedAttribute('customAttributes.prodecureSet', procedureSet);
+				?'create eset iacucQ.customAttributes.prodecureSet=>'+procedureSet+'\n';
 
 				var speciesAdminSet = iacucQ.customAttributes._attribute32;
 				var groupAdminSet = iacucQ.customAttributes.groups;
