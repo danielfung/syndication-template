@@ -298,10 +298,18 @@ if(parentProtocol.count() > 0){
 		*/
 		var legacy = animalOrder.customAttributes.legacyAnimalOrderInfo;
 		if(legacy == null){
-			animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntity();
-			?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
-			legacy.ID = animalOrder_id;
-			?'setting legacy info.id => '+legacy.ID+'\n';
+			var findLegacyAnimalOrder = ApplicationEntity.getResultSet('_AO_AnimalOrderLegacyInfo').query("ID='"+animalOrder_id+"'");
+			if(findLegacyAnimalOrder.count() > 0){
+				findLegacyAnimalOrder = findLegacyAnimalOrder.elements().item(1);
+				animalOrder.customAttributes.legacyAnimalOrderInfo = findLegacyAnimalOrder;
+				?'setting legacy animal order info => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
+			}
+			else{
+				animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntity();
+				?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
+				legacy.ID = animalOrder_id;
+				?'setting legacy info.id => '+legacy.ID+'\n';
+			}
 		}
 
 		{{#if legacyAnimalOrderInfo.createDate}}
@@ -611,11 +619,19 @@ if(parentProtocol.count() > 0){
 			3a. set legacy info 
 		*/
 		var legacy = animalOrder.customAttributes.legacyAnimalOrderInfo;
+		var findLegacyAnimalOrder = ApplicationEntity.getResultSet('_AO_AnimalOrderLegacyInfo').query("ID='"+animalOrder_id+"'");
 		if(legacy == null){
-			animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntity();
-			?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
-			legacy.ID = animalOrder_id;
-			?'setting legacy info.id => '+legacy.ID+'\n';
+			if(findLegacyAnimalOrder.count() > 0){
+				findLegacyAnimalOrder = findLegacyAnimalOrder.elements().item(1);
+				animalOrder.customAttributes.legacyAnimalOrderInfo = findLegacyAnimalOrder;
+				?'setting legacy animal order info => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
+			}
+			else{
+				animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntity();
+				?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
+				legacy.ID = animalOrder_id;
+				?'setting legacy info.id => '+legacy.ID+'\n';
+			}
 		}
 		else{
 			legacy.ID = animalOrder_id;
