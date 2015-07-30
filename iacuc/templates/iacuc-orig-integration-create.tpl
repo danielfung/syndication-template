@@ -163,7 +163,7 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 			?'parentProtocol =>'+iacucQ.customAttributes.parentProtocol+'\n';
 
 		/*
-			1g. set irb status to pre-submission
+			1g. set iacuc status to pre-submission
 				set dateCreated/dateModified;
 		*/
 				var status = iacucQ.status;

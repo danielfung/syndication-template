@@ -70,6 +70,17 @@ if(existParent.count() > 0){
 				?'setting status => '+invoice.status+'\n';
 			{{/if}}
 
+			var invoiceEset = existParent.customAttributes.invoices;
+			if(invoiceEset == null){
+				existParent.customAttributes.invoices = _Invoice.createEntitySet();
+				invoiceEset = existParent.customAttributes.invoices;
+				?'created invoice eset => '+invoiceEset+'\n';
+
+			}
+
+			invoiceEset.addElement(invoice);
+			?'adding invoice to eset => '+invoiceEset+'\n';
+
 		}
 		else{
 			existInvoice = existInvoice.elements().item(1);
