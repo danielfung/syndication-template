@@ -754,11 +754,19 @@
 								clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
 							}
 							if(clickSpecies.count() > 0){
+								var procItem = _Procedure.createEntity();
+								?'created procedure => '+procItem+'\n';
 								var species = clickSpecies.elements().item(1);
 								var speciesName = "{{procedure.name}}";
 								var procedureScopeName = "{{procedure.procedureScope.name}}";
 								var procedureTypeName = "{{procedure.procedureType.name}}";
 								var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
+								procItem.setQualifiedAttribute("customAttributes.name", procedureName);
+								?'setting procedure name => '+procedureName+'\n';
+								procItem.setQualifiedAttribute("customAttributes.species", species);
+								?'setting species => '+species+'\n';
+								prodecureEset.addElement(procItem);
+								?'added procedure to eset => '+prodecureEset+'\n';
 							}
 							else{
 								?'species not found => '+species+' usda => '+usda+'\n';

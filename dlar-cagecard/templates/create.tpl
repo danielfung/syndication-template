@@ -118,14 +118,22 @@ if(cageCard.count() == 0){
 	/*
 		2a. setting cage card legacy info
 	*/
-
+		var findLegacyCageCard = ApplicationEntity.getResultSet('_CageCardLegacyInfo').query("ID='"+cageCard_id+"'");
 		var cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
 		if(cageLegacyInfo == null){
-			cageCard.customAttributes.legacyCageCardInfo = _CageCardLegacyInfo.createEntity();
-			cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
-			?'created cagecard entity => '+cageLegacyInfo+'\n';
-			cageLegacyInfo.ID = cageCard_id;
-			?'setting cageCard legacyInfo.ID => '+cageLegacyInfo.ID+'\n';
+			if(findLegacyCageCard.count() > 0){
+				findLegacyCageCard = findLegacyCageCard.elements().item(1);
+				?'legacyCageCard found => '+findLegacyCageCard+'\n';
+				cageCard.customAttributes.legacyCageCardInfo = findLegacyCageCard;
+				?'setting legacyCageCardInfo => '+findLegacyCageCard+'\n';
+			}
+			else{
+				cageCard.customAttributes.legacyCageCardInfo = _CageCardLegacyInfo.createEntity();
+				cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
+				?'created cagecard entity => '+cageLegacyInfo+'\n';
+				cageLegacyInfo.ID = cageCard_id;
+				?'setting cageCard legacyInfo.ID => '+cageLegacyInfo.ID+'\n';
+			}
 		}
 
 		{{#if legacyCageCardInfo.accountNumber}}

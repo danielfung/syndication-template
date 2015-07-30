@@ -480,7 +480,7 @@ if(parentOrder.count() > 0){
 			}
 		{{/if}}
 
-		var findLegacyLineItem = ApplicationEntity.getResultSet('_AO_AnimalOrderLineItemLegacyInfo').query("ID='"+order_id+"'")
+		var findLegacyLineItem = ApplicationEntity.getResultSet('_AO_AnimalOrderLineItemLegacyInfo').query("ID='"+order_id+"'");
 		if(findLegacyLineItem.count() == 0){
 			var createLegacyLineItem = _AO_AnimalOrderLineItemLegacyInfo.createEntity();
 			?'created legacy line item entity => '+createLegacyLineItem+'\n';
