@@ -501,7 +501,7 @@
 					var dlarAuthorizedToOrderAnimals = true;
 					var dlarInvolvedInAnimalHandling = true;
 				*/
-				
+
 				if(person.count() > 0){
 					person = person.item(1);
 					contactSet.addElement(person);
@@ -737,7 +737,37 @@
 				}
 
 			{{/each}}
+			/*
+			//to be worked on procedures
+			{{#each procedurePersonnel}}
+				{{#if procedure.name}}
+					{{#if procedure.procedureScope.name}}
+						{{#if procedure.procedureType.name}}
+							var species = "{{procedure.species.commonName}}";
+							var usda = "{{procedure.species.isUSDASpecies}}";
 
+							var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+							if(usda == "yes" || usda == "Yes" || usda == "1"){
+								clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+							}
+							else{
+								clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+							}
+							if(clickSpecies.count() > 0){
+								var species = clickSpecies.elements().item(1);
+								var speciesName = "{{procedure.name}}";
+								var procedureScopeName = "{{procedure.procedureScope.name}}";
+								var procedureTypeName = "{{procedure.procedureType.name}}";
+								var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
+							}
+							else{
+								?'species not found => '+species+' usda => '+usda+'\n';
+							}
+						{{/if}}
+					{{/if}}
+				{{/if}}
+			{{/each}}
+			*/
 			/*
 				2f. list of substances(unique list)
 			*/
