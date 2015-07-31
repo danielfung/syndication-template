@@ -212,12 +212,10 @@
 			var month = dateArray[1] - 1;
 			var year = dateArray[0];
 			var a = new Date(year, month, day);
-			draftProtocol.customAttributes.finalExpirationDate = a;
-			?'setting draft finalExpirationDate => '+draftProtocol.customAttributes.finalExpirationDate+'\n';
-			iacucQ.customAttributes.finalExpirationDate = a;
-			?'setting orig finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
-			draftProtocol.customAttributes.finalExpirationDate = a;
-			?'setting draft finalExpirationDate => '+draftProtocol.customAttributes.finalExpirationDate+'\n';
+			draftProtocol.customAttributes.annualExpirationDate = a;
+			?'setting draft annualExpirationDate => '+draftProtocol.customAttributes.annualExpirationDate+'\n';
+			iacucQ.customAttributes.annualExpirationDate = a;
+			?'setting orig annualExpirationDate => '+iacucQ.customAttributes.annualExpirationDate+'\n';
 		{{/if}}
 
 		{{#if topaz.effectiveDate}}

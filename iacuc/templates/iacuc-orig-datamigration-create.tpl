@@ -767,7 +767,7 @@
 
 
 			/*
-				2i. setting approvalDate/finalExpirationDate/effectiveDate on original, status ID as string in inbox
+				2i. setting approvalDate/annualExpirationDate/effectiveDate on original, status ID as string in inbox
 			*/
 			{{#if topaz.approvalDate}}
 				var date = "{{topaz.approvalDate}}";
@@ -787,8 +787,8 @@
 				var month = dateArray[1] - 1;
 				var year = dateArray[0];
 				var a = new Date(year, month, day);
-				iacucQ.customAttributes.finalExpirationDate = a;
-				?'setting finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+				iacucQ.customAttributes.annualExpirationDate = a;
+				?'setting annualExpirationDate => '+iacucQ.customAttributes.annualExpirationDate+'\n';
 
 			{{/if}}
 

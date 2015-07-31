@@ -699,22 +699,6 @@
 				}
 				if(clickSpecies.count() > 0){
 					var species = clickSpecies.elements().item(1);
-					{{#each commonProcedures}}
-						var speciesName = "";
-						var procedureScopeName = "";
-						var procedureTypeName = "";
-						var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
-						//set animal species
-					{{/each}}
-
-					{{#each variableProcedures}}
-						var speciesName;
-						var procedureScopeName;
-						var procedureTypeName;
-						var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
-						//set animal species
-					{{/each}}
-
 					{{#each husbandryExceptions}}
 						{{#if name}}
 							var husbExcepItem = _HusbandryException.createEntity();
@@ -737,8 +721,7 @@
 				}
 
 			{{/each}}
-			/*
-			//to be worked on procedures
+
 			{{#each procedurePersonnel}}
 				{{#if procedure.name}}
 					{{#if procedure.procedureScope.name}}
@@ -775,7 +758,7 @@
 					{{/if}}
 				{{/if}}
 			{{/each}}
-			*/
+			
 			/*
 				2f. list of substances(unique list)
 			*/

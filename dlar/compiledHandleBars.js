@@ -10,7 +10,8 @@ module.exports = function(testData, preTemp) {
   }
   else{
     /*
-    var data = fs.readFileSync('./data/15-00143_sql_populatedDLAR.json', {encoding:'utf8'});
+    //var data = fs.readFileSync('./data/15-00143_sql_populatedDLAR.json', {encoding:'utf8'});
+    var data = fs.readFileSync('./data/15-00104_sql_populated.json', {encoding:'utf8'});
     //var data = fs.readFileSync('./data/15-00093_sql_populatedDLAR.json', {encoding:'utf8'});
     testData = JSON.parse(data);
   	/*

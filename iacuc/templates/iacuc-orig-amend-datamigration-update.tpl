@@ -104,8 +104,8 @@
 			var month = dateArray[1] - 1;
 			var year = dateArray[0];
 			var a = new Date(year, month, day);
-			iacucQ.customAttributes.finalExpirationDate = a;
-			?'setting finalExpirationDate => '+iacucQ.customAttributes.finalExpirationDate+'\n';
+			iacucQ.customAttributes.annualExpirationDate = a;
+			?'setting annualExpirationDate => '+iacucQ.customAttributes.annualExpirationDate+'\n';
 
 		{{/if}}
 
