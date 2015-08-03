@@ -50,7 +50,6 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 				var investigator = iacucQ.getQualifiedAttribute("customAttributes.investigator");
 
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.principalInvestigator.userId}}'").elements();
-				
 				if(investigator == null && person.count() > 0){
 					var studyTeamMember = _StudyTeamMemberInfo.createEntity();
 					?'_StudyTeamMemberInfo =>'+studyTeamMember+'\n';
@@ -61,11 +60,12 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					?'adding person to contacts list\n';
 					studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 					var department = person.customAttributes;
+					var division;
 					if(department != null){
 						department = person.customAttributes.department;
+						division = person.customAttributes.division;
 						if(department != null){
 							if(department.name == "Medicine" || department.name == "Population Health"){
-								var division = person.customAttributes.division;
 								if(division != null){
 									iacucQ.company = division;
 									?'Department is Medicine/Population Health => Check Division\n';
@@ -82,6 +82,43 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 							}
 						}
 					}
+
+					var piEmail = person.contactInformation;
+					if(piEmail){
+						piEmail = piEmail.emailPreferred;
+						if(piEmail){
+							piEmail = piEmail.eMailAddress;
+						}
+					}
+
+					var piNumber = person.contactInformation;
+					if(piNumber){
+						piNumber = piNumber.phoneBusiness;
+						if(piNumber){
+							piNumber = piNumber.phoneNumber;
+						}
+					}
+
+					var piCustomExtension = _PIExtensionInfromation.createEntity();
+					?'created piCustomExtension => '+piCustomExtension+'\n';
+					if(department){
+						piCustomExtension.setQualifiedAttribute("customAttributes.department", department);
+						?'setting piCustomExtension department => '+department+'\n';
+					}
+					if(division){
+						piCustomExtension.setQualifiedAttribute("customAttributes.division", division);
+						?'setting piCustomExtension division => '+division+'\n';
+					}
+					if(piEmail){
+						piCustomExtension.setQualifiedAttribute("customAttributes.emailAddress", piEmail);
+						?'setting piCustomExtension emailAddress => '+piEmail+'\n';
+					}
+					if(piNumber){
+						piCustomExtension.setQualifiedAttribute("customAttributes.phoneNumber", piNumber);
+						?'setting piCustomExtension phoneNumber => '+piNumber+'\n';						
+					}
+					studyTeamMember.setQualifiedAttribute("customAttributes.pIInformation", piCustomExtension);
+					?'setting studyTeamMember.customAttributes.piInfo => '+piCustomExtension+'\n';
 				}
 			{{/if}}
 
