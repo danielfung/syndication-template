@@ -748,6 +748,27 @@
 								?'setting procedure name => '+procedureName+'\n';
 								procItem.setQualifiedAttribute("customAttributes.species", species);
 								?'setting species => '+species+'\n';
+								
+								var labLocationEset = _Facility.createEntitySet();
+								?'created labLocationEset => '+labLocationEset+'\n';
+								procItem.setQualifiedAttribute("customAttributes.labLocation", labLocationEset);
+								labLocationEset = procItem.customAttributes.labLocation;
+								?'setting labLocation => '+labLocationEset+'\n';
+
+								{{#each locations}}
+									var labLocationExist = ApplicationEntity.getResultSet('_Facility').query("name='{{name}}'");
+									labLocationExist = labLocationExist.query("customAttributes._attribute2='Room'");
+									if(labLocationExist.count() > 0){
+										var labLocationExist_1 = labLocationExist.elements().item(1);
+										?'location found => '+labLocationExist_1+'\n';
+										labLocationEset.addElement(labLocationExist_1);
+										?'adding labLocation to eset => '+labLocationEset+'\n';
+									}
+									else{
+										?'location not found => {{name}}\n';
+									}
+								{{/each}}
+
 								prodecureEset.addElement(procItem);
 								?'added procedure to eset => '+prodecureEset+'\n';
 							}
