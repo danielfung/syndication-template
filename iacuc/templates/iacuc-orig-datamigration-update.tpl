@@ -29,7 +29,43 @@
 					iacucQ.setQualifiedAttribute("customAttributes.investigator", studyTeamMember);
 					person = person.item(1);
 					?'person adding as PI =>'+person+'\n';
+
+
+					var piEmail = person.contactInformation;
+					if(piEmail){
+						piEmail = piEmail.emailPreferred;
+						if(piEmail){
+							piEmail = piEmail.eMailAddress;
+						}
+					}
+
+					var piNumber = person.contactInformation;
+					if(piNumber){
+						piNumber = piNumber.phoneBusiness;
+						if(piNumber){
+							piNumber = piNumber.phoneNumber;
+						}
+					}
+
+					var piCustomExtension = _PIExtensionInfromation.createEntity();
+					?'created piCustomExtension => '+piCustomExtension+'\n';
+					if(department){
+						piCustomExtension.setQualifiedAttribute("customAttributes.department", department);
+						?'setting piCustomExtension department => '+department+'\n';
+					}
+					if(piEmail){
+						piCustomExtension.setQualifiedAttribute("customAttributes.emailAddress", piEmail);
+						?'setting piCustomExtension emailAddress => '+piEmail+'\n';
+					}
+					if(piNumber){
+						piCustomExtension.setQualifiedAttribute("customAttributes.phoneNumber", piNumber);
+						?'setting piCustomExtension phoneNumber => '+piNumber+'\n';						
+					}
+					studyTeamMember.setQualifiedAttribute("customAttributes.pIInformation", piCustomExtension);
+					?'setting studyTeamMember.customAttributes.piInfo => '+piCustomExtension+'\n';
+
 					studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					
 					if(reader != null){
 						reader.addElement(person);
 						?'adding pi to readers list\n';
