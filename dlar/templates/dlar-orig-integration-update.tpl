@@ -429,12 +429,7 @@
 	}
 
 	{{#each animalHousingLocationRoom}}
-		 var room = ApplicationEntity.getResultSet('_Facility').query("name='{{facilityRoom.name}}'");
-		 {{#if facilityRoom.facilityRoomCustomExtension.floor}}
-			 room = room.query("customAttributes.floor.name='{{facilityRoom.facilityRoomCustomExtension.floor}}'");
-		 {{/if}}
-		 room = room.query("customAttributes.building.name='{{facilityRoom.building.name}}'");
-		 room = room.query("customAttributes._attribute2='Room'");
+		 var room = ApplicationEntity.getResultSet('_Facility').query("ID='{{facilityRoom.id}}'");
 		 if(room.count() > 0){
 			room = room.elements().item(1);
 			var housing = _IS_AnimalHousing.createEntity();
@@ -479,8 +474,7 @@
 	{{/each}}
 
 	{{#each vivariumHousingLocations}}
-		var room = ApplicationEntity.getResultSet('_Facility').query("name='{{facilityBuilding.name}}'");
-		room = room.query("customAttributes._attribute2='Building'");
+		var room = ApplicationEntity.getResultSet('_Facility').query("ID='{{facilityBuilding.id}}'");
 		if(room.count() > 0){
 			room = room.elements().item(1);
 			var housing = _IS_AnimalHousing.createEntity();
@@ -619,8 +613,7 @@
 						?'setting labLocation => '+labLocationEset+'\n';
 
 						{{#each locations}}
-							var labLocationExist = ApplicationEntity.getResultSet('_Facility').query("name='{{name}}'");
-							labLocationExist = labLocationExist.query("customAttributes._attribute2='Room'");
+							var labLocationExist = ApplicationEntity.getResultSet('_Facility').query("ID='{{id}}'");
 							if(labLocationExist.count() > 0){
 								var labLocationExist_1 = labLocationExist.elements().item(1);
 								?'location found => '+labLocationExist_1+'\n';
@@ -646,6 +639,8 @@
 	/*
 		3b. Substances
 	*/
+	{{#each procedurePersonnel}}
 
+	{{/each}}
 
 	
