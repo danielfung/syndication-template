@@ -778,21 +778,7 @@
 			*/
 
 			{{#each procedurePersonnel}}
-				var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
-				if(usda == "yes" || usda == "Yes" || usda == "1"){
-					clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
-				}
-				else{
-					clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
-				}
-				if(clickSpecies.count() > 0){
 
-
-
-				}
-				else{
-					?'species not found => '+species+' usda => '+usda+'\n';
-				}
 			{{/each}}
 
 			/*
