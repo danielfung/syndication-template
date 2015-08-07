@@ -121,6 +121,17 @@ if(cageCard.count() == 0){
 			}
 		}
 
+		var findCageCardLegacyHistReport = ApplicationEntity.getResultSet('_CageCardLegacyHistoryReport').query("ID='"+cageCard_id+"'");
+		if(findCageCardLegacyHistReport.count() > 0){
+			?'findCageCardLegacyHistReport found for id => '+findCageCardLegacyHistReport.elements().item(1).ID+'\n';
+		}
+		else{
+			var cageCardHistoryReport = _CageCardLegacyHistoryReport.createEntity();
+			?'created _CageCardLegacyHistoryReport => '+cageCardHistoryReport+'\n';
+			cageCardHistoryReport.ID = cageCard_id;
+			?'setting cageCardHistoryReport ID => '+cageCardHistoryReport.ID+'\n';
+		}
+
 		{{#if legacyCageCardInfo.accountNumber}}
 			/*
 				3a. set legacyCageCardInfo.accountNumber
