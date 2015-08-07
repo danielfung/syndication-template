@@ -319,4 +319,11 @@ else{
 	cageCard = cageCard.elements().item(1);
 	?'DLAR.cageCard protocol found =>'+cageCard.ID+'\n';
 	//update fields below total animal #.
+
+	{{#if status.oid}}
+		var status = entityUtils.getObjectFromString('{{status.oid}}');
+		cageCard.status = status;
+		?'setting cageCard status => '+cageCard.status+'\n';
+	{{/if}}
+
 }
