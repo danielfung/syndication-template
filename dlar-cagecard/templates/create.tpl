@@ -1,8 +1,6 @@
 {{#if id}}
 	var cageCard_id ="{{id}}";
 	?'cage card ID for data migration => '+cageCard_id+'\n';
-	//var parentProtocolID = animalOrder_id.substr(0, animalOrder_id.lastIndexOf(":"));
-	//?'parentProtocolID => '+parentProtocolID+'\n';
 {{else}}
 	var cageCard_id = _CageCard.getID();
 {{/if}}
@@ -92,16 +90,6 @@ if(cageCard.count() == 0){
 		cageCard.dateModified=currentDate;
 		?'dateModified =>'+cageCard.dateModified+'\n';
 
-	/*
-		1d. set parent Protocol;
-	*/
-
-		var parentProtocol_1 = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+parentProtocolID+"'");
-		if(parentProtocol_1.count() > 0){
-			parentProtocol_1 = parentProtocol_1.elements().item(1);
-			cageCard.setQualifiedAttribute('customAttributes.IACUCProtocol', parentProtocol_1);
-			?'setting cageCard.parentProtocol =>'+cageCard.customAttributes.IACUCProtocol+'\n';
-		}
 
 	/*
 		1e. set status
