@@ -139,7 +139,7 @@
 
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
 					
-				if(investigator == null && person.count() > 0){
+				if(person.count() > 0){
 					person = person.item(1);
 					iacucQ.setQualifiedAttribute("customAttributes._attribute7", person);
 					?'person adding as PI =>'+person.userID+'\n';
