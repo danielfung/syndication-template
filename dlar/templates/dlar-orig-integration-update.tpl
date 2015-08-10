@@ -642,5 +642,13 @@
 	{{#each procedurePersonnel}}
 
 	{{/each}}
+	
+	/*
+		3c. updating dateModified
+	*/
+
+	var newDateMod = new Date();
+	iacucQ.dateModified = newDateMod;
+	?'setting new date modified => '+iacucQ.dateModified+'\n';
 
 	
