@@ -15,6 +15,7 @@ var test = require('./irb/test.js');
 var winston = require('winston');
 var bodyParser = require('body-parser');
 var logger = require("./utils/logger.js");
+//var logger = winston.loggers.get('')
 var handlebars = require('handlebars');
 var fs = require('fs');
 var config = require('./config');

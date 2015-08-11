@@ -5,7 +5,14 @@ winston.emitErrs = true;
 var myLogTransports = [];
 console.log(process.env.NODE_ENV);
 if(process.env.NODE_ENV == 'production'){
-    myLogTransports.push(new (winston.transports.File)({filename: config.logsFolder+'/rt-syndication-template.log', json: false, maxsize: 5242880, maxFiles: 5, colorize: false, handleExceptions: true}));
+    myLogTransports.push(new (winston.transports.File)({
+        filename: config.logsFolder+'/rt-syndication-template.log', 
+        json: false, 
+        maxsize: 5242880, 
+        maxFiles: 5, 
+        colorize: false, 
+        handleExceptions: true
+    }));
 }
 else{
     myLogTransports.push(new (winston.transports.Console)({ level: 'debug', handleExceptions: true, json:false, colorize: true}));

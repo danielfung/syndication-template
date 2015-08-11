@@ -515,10 +515,11 @@
 
 
 	/*
-		3a. common procedures/variable procedures/husbandryExceptions
+		3a. common procedures/variable procedures/husbandryExceptions/substance
 	*/
 	var husbandryEset = iacucQ.customAttributes.husbandryExceptionSet;
 	var prodecureEset = iacucQ.customAttributes.prodecureSet;
+	var substancEset = iacucQ.customAttributes.substanceSet;
 
 	if(husbandryEset == null){
 		var husbExcepSet = _HusbandryException.createEntitySet();
@@ -541,6 +542,17 @@
 	else{
 		prodecureEset.removeAllElements();
 		?'procedureEset found, removing all elements from eset => '+prodecureEset+'\n';
+	}
+	if(substancEset == null){
+		var substanceSet = _Substance.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.substanceSet', substanceSet);
+		?'create eset iacucQ.customAttributes.substanceSet => '+substanceSet+'\n';
+		substancEset = iacucQ.customAttributes.substanceSet;
+		?'substancEset => '+substancEset+'\n';
+	}
+	else{
+		substancEset.removeAllElements();
+		?'substancEset found, removing all elements from eset => '+substancEset+'\n'
 	}
 
 	{{#each animalGroups}}
