@@ -868,7 +868,7 @@
 						{{/if}}
 
 						{{#if procedure.intranasalInstallation}}
-							{{#if procedure..intranasalInstallation.agent.drugName}}
+							{{#if procedure.intranasalInstallation.agent.drugName}}
 								var intranasalDrugName = "{{procedure.intranasalInstallation.agent.drugName}}";
 								?'intranasalDrugName drug name => '+intranasalDrugName+'\n';
 								var item = findSubstance(intranasalDrugName);
@@ -1010,7 +1010,7 @@
 						{{/if}}
 
 						{{#if procedure.euthanasiaProcedures}}
-							{{each procedure.euthanasiaProcedures.methodSet}}
+							{{#each procedure.euthanasiaProcedures.methodSet}}
 								var euthMethodSet = "{{drugName}}";
 								?'euthMethodSet drug name => '+euthMethodSet+'\n';
 								var item = findSubstance(euthMethodSet);
