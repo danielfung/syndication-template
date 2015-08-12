@@ -796,7 +796,27 @@
 					- exogenousSubstanceHazerdousMaterial -> hazardousagentset(eset) -> iacucsubstancecustomextension -> tradename
 					- exogenousSubstancesAnimalPathogens -> pathogenname
 					- bloodCollection -> anesthesiatechniques -> drugname
+
+					*********** function findSubtance - if not found create otherwise return the substance *****************
 			*/
+
+			function findSubstance(substanceToFindName){
+				var substanceEsetByName = ApplicationEntity.getResultSet("_Substance").query("customAttributes.name='"+substanceToFindName+"'");
+				if(substanceEsetByName.count() > 0){
+				  substanceEsetByName = substanceEsetByName.elements().item(1);
+				  ?'substance found => '+substanceEsetByName.customAttributes.name+'\n';
+				}
+				else{
+				   var createSub = _Substance.createEntity();
+				   createSub.setQualifiedAttribute("customAttributes.name", substanceToFindName);
+				   substanceEsetByName = createSub;
+				   ?'created substance => '+substanceEsetByName.customAttributes.name+'\n';
+				}
+				return substanceEsetByName;
+			}
+
+			var iacucSubstanceSet = iacucQ.customAttributes.substanceSet;
+
 			{{#each procedurePersonnel}}
 				{{#if procedure}}		 			
 					var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");		
@@ -811,27 +831,38 @@
 
 						{{#each procedure.administrationOfSubstances}}
 							{{#if substances.iACUCSubstanceCustomExtension.tradeName}}
-								//administrationOfSubstances
 								var drugName = "{{substances.iACUCSubstanceCustomExtension.tradeName}}";
+								?'administrationOfSubstsance drug name => '+drugName+'\n';
+								var item = findSubstance(drugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 						{{/each}}
-
 
 						{{#if procedure.inhalationExposure}}
 							{{#if procedure.inhalationExposure.substanceToBeAdministered.id}}
 								var inhalationSubstanceToBeAdmin = "{{procedure.inhalationExposure.substanceToBeAdministered.id}}";
 								?'inhalationSubstanceToBeAdmin drug name => '+inhalationSubstanceToBeAdmin+'\n';
+								var item = findSubstance(inhalationSubstanceToBeAdmin);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 
 							{{#if procedure.inhalationExposure.otherAnesthesia}}
 								var inhalationOtherAnesthesia = "{{procedure.inhalationExposure.otherAnesthesia}}";
 								?'inhalationOtherAnesthesia drug name => '+inhalationOtherAnesthesia+'\n';
+								var item = findSubstance(inhalationOtherAnesthesia);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 
 							{{#each procedure.inhalationExposure.anesthesiaUsage}}
 								{{#if drugName}}
 									var inhalationDrugName = "{{drugName}}";
 									?'inhalationDrugName drug name => '+inhalationDrugName+'\n';
+									var item = findSubstance(inhalationDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';																	
 								{{/if}}
 							{{/each}}
 						{{/if}}
@@ -840,17 +871,26 @@
 							{{#if procedure..intranasalInstallation.agent.drugName}}
 								var intranasalDrugName = "{{procedure.intranasalInstallation.agent.drugName}}";
 								?'intranasalDrugName drug name => '+intranasalDrugName+'\n';
+								var item = findSubstance(intranasalDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 
 							{{#if procedure.intranasalInstallation.otherAgent}}
 								var intranasalOtherAgent = "{{procedure.intranasalInstallation.otherAgent}}";
 								?'intranasalOtherAgent drug name => '+intranasalOtherAgent+'\n';
+								var item = findSubstance(intranasalOtherAgent);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 
 							{{#each procedure.intranasalInstallation.substancesAdministeredViaIntranasal}}
 								{{#if iACUCSubstanceCustomExtension.tradeName}}
 									var intranasalSubstanceAdmin = "{{iACUCSubstanceCustomExtension.tradeName}}";
 									?'intranasalSubstanceAdmin drug name => '+intranasalSubstanceAdmin+'\n';
+									var item = findSubstance(intranasalSubstanceAdmin);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
 								{{/if}}
 							{{/each}}
 						{{/if}}
@@ -860,18 +900,27 @@
 								{{#if iACUCSubstanceCustomExtension.tradeName}}
 									var survivalSubstances = "{{iACUCSubstanceCustomExtension.tradeName}}";
 									?'survivalSubstances drug name => '+survivalSubstances+'\n';
+									var item = findSubstance(survivalSubstances);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
 								{{/if}}								
 							{{/each}}
 
 							{{#if procedure.survivalSurgery.anesthesiaTechniques.drugName}}
 								var survivalDrugName = "{{procedure.survivalSurgery.anesthesiaTechniques.drugName}}";
 								?'survivalDrugName drug name => '+survivalDrugName+'\n';
+								var item = findSubstance(survivalDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 						{{/if}}
 
 						{{#if procedure.irradiation.antibiotics.iACUCSubstanceCustomExtension.tradeName}}
 							var irradiationDrugName = "{{procedure.irradiation.antibiotics.iACUCSubstanceCustomExtension.tradeName}}";
 							?'irradiationDrugName drugName => '+irradiationDrugName+'\n';
+							var item = findSubstance(irradiationDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';
 						{{/if}}
 
 						{{#if procedure.imagingAndRadiation}}
@@ -879,12 +928,18 @@
 								{{#if iACUCSubstanceCustomExtension.tradeName}}
 									var imagingRadDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
 									?'imagingRadDrugName drug name => '+imagingRadDrugName+'\n';
+									var item = findSubstance(imagingRadDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
 								{{/if}}		
 							{{/each}}
 
 							{{#each procedure.imagingAndRadiation.imagingAnesthesiaTechnique}}
 								var imagingRadDrugName = "{{drugName}}";
 								?'imagingRadDrugName drug name => '+imagingRadDrugName+'\n';
+								var item = findSubstance(imagingRadDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/each}}
 						{{/if}}
 
@@ -893,12 +948,18 @@
 								{{#if iACUCSubstanceCustomExtension.tradeName}}
 									var imagingRadWoDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
 									?'imagingRadWoDrugName drug name => '+imagingRadWoDrugName+'\n';
+									var item = findSubstance(imagingRadWoDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
 								{{/if}}		
 							{{/each}}
 
 							{{#each procedure.imagingWithoutRadiation.anesthesiaTechniques}}
 								var imagingRadWoDrugName = "{{drugName}}";
 								?'imagingRadWoDrugName drug name => '+imagingRadWoDrugName+'\n';
+								var item = findSubstance(imagingRadWoDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/each}}
 						{{/if}}
 
@@ -907,26 +968,112 @@
 								{{#if iACUCSubstanceCustomExtension.tradeName}}
 									var implantationDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
 									?'implantationDrugName drug name => '+implantationDrugName+'\n';
+									var item = findSubstance(implantationDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
 								{{/if}}
 							{{/each}}
 
 							{{#if procedure.implantation.otherAnesthesia}}
 								var implantOtherAnesth = "{{procedure.implantation.otherAnesthesia}}";
 								?'implantOtherAnesth drug name => '+implantOtherAnesth+'\n';
+								var item = findSubstance(implantOtherAnesth);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 
 							{{#if procedure.implantation.otherSubstance}}
 								var implantOtherSub = "{{procedure.implantation.otherSubstance}}";
 								?'implantOtherSub drug name => '+implantOtherSub+'\n';
+								var item = findSubstance(implantOtherSub);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
 
 							{{#if procedure.implantation.anesthesiaUsed.drugName}}
 								var implantAnesthDrugName = "{{procedure.implantation.anesthesiaUsed.drugName}}";
 								?'implantAnesthDrugName drug name => '+implantAnesthDrugName+'\n';
+								var item = findSubstance(implantAnesthDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
 							{{/if}}
-
 						{{/if}}
 
+						{{#if procedure.exposure}}
+							{{#each procedure.exposure.setOfSubstances}}
+								var exposeSubstance = "{{iACUCSubstanceCustomExtension.tradeName}}";
+								?'exposeSubstance drug name => '+exposeSubstance+'\n';
+								var item = findSubstance(exposeSubstance);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';								
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.euthanasiaProcedures}}
+							{{each procedure.euthanasiaProcedures.methodSet}}
+								var euthMethodSet = "{{drugName}}";
+								?'euthMethodSet drug name => '+euthMethodSet+'\n';
+								var item = findSubstance(euthMethodSet);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.individualIdentificationTag.anesthesiaTechniques.drugName}}
+							var individualTagDrugName = "{{procedure.individualIdentificationTag.anesthesiaTechniques.drugName}}";
+							?'individualTagDrugName drug name => '+individualTagDrugName+'\n';
+							var item = findSubstance(individualTagDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+						{{/if}}
+
+						{{#if procedure.genotypingBloodCollection}}
+							{{#each procedure.genotypingBloodCollection.anesthesiaTechniques}}
+								var genoBloodCollectionDrugName = "{{drugName}}";
+								?'genoBloodCollectionDrugName drug name => '+genoBloodCollectionDrugName+'\n';
+								var item = findSubstance(genoBloodCollectionDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.genotypingTailTip}}
+							{{#each procedure.genotypingTailTip.anesthesiaTechniques}}
+								var genoTypingTailDrugName = "{{drugName}}";
+								?'genoTypingTailDrugName drug name => '+genoTypingTailDrugName+'\n';
+								var item = findSubstance(genoTypingTailDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+							{{/each}}							
+						{{/if}}
+
+						{{#if procedure.exogenousSubstancesHazardousMaterials}}
+							{{#each procedure.exogenousSubstancesHazardousMaterials.hazardousAgentSet}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var exogenousSubstanceDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'exogenousSubstanceDrugName drug name => '+exogenousSubstanceDrugName+'\n';
+									var item = findSubstance(exogenousSubstanceDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+								{{/if}}
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.exogenousSubstancesAnimalPathogens.pathogenName}}
+							var exogenousSubDrugName = "{{procedure.exogenousSubstancesAnimalPathogens.pathogenName}}";
+							?'exogenousSubDrugName drug name => '+exogenousSubDrugName+'\n';
+							var item = findSubstance(exogenousSubDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';
+						{{/if}}
+
+						{{#if procedure.bloodCollection.anesthesiaTechniques.drugName}}
+							var bloodCollectionDrugName = "{{procedure.bloodCollection.anesthesiaTechniques.drugName}}";
+							?'bloodCollectionDrugName drug name => '+bloodCollectionDrugName+'\n';
+							var item = findSubstance(bloodCollectionDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';
+						{{/if}}
 
 					}		
 					else{		
@@ -934,7 +1081,6 @@
 					}
 				{{/if}}	
  			{{/each}}
-
 
 			/*
 				2g. recalculate totals
