@@ -512,6 +512,148 @@
 			?'Building Not Found => {{facilityBuilding.name}}\n';
 		}
 	{{/each}}
+
+
+	/*
+		3a. common procedures/variable procedures/husbandryExceptions/substance
+	*/
+	var husbandryEset = iacucQ.customAttributes.husbandryExceptionSet;
+	var prodecureEset = iacucQ.customAttributes.prodecureSet;
+	var substancEset = iacucQ.customAttributes.substanceSet;
+
+	if(husbandryEset == null){
+		var husbExcepSet = _HusbandryException.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.husbandryExceptionSet', husbExcepSet);
+		?'create eset iacucQ.customAttributes.husbandryExceptionSet=>'+husbExcepSet+'\n';
+		husbandryEset = iacucQ.customAttributes.husbandryExceptionSet;
+		?'husbandryEset => '+husbandryEset+'\n';
+	}
+	else{
+		husbandryEset.removeAllElements();
+		?'husbandryEset found, removing all elements from eset => '+husbandryEset+'\n';
+	}
+	if(prodecureEset == null){
+		var procedureSet = _Procedure.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.prodecureSet', procedureSet);
+		?'create eset iacucQ.customAttributes.prodecureSet=>'+procedureSet+'\n';
+		prodecureEset = iacucQ.customAttributes.prodecureSet;
+		?'prodecureEset => '+prodecureEset+'\n';
+	}
+	else{
+		prodecureEset.removeAllElements();
+		?'procedureEset found, removing all elements from eset => '+prodecureEset+'\n';
+	}
+	if(substancEset == null){
+		var substanceSet = _Substance.createEntitySet();
+		iacucQ.setQualifiedAttribute('customAttributes.substanceSet', substanceSet);
+		?'create eset iacucQ.customAttributes.substanceSet => '+substanceSet+'\n';
+		substancEset = iacucQ.customAttributes.substanceSet;
+		?'substancEset => '+substancEset+'\n';
+	}
+	else{
+		substancEset.removeAllElements();
+		?'substancEset found, removing all elements from eset => '+substancEset+'\n'
+	}
+
+	{{#each animalGroups}}
+		var species = "{{species.commonName}}";
+		var usda = "{{species.isUSDASpecies}}";
+
+		var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+		if(usda == "yes" || usda == "Yes" || usda == "1"){
+			clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+		}
+		else{
+			clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+		}
+		if(clickSpecies.count() > 0){
+			var species = clickSpecies.elements().item(1);
+			{{#each husbandryExceptions}}
+				{{#if name}}
+					var husbExcepItem = _HusbandryException.createEntity();
+					?'created husbExcepItem => '+husbExcepItem+'\n';
+					var husbExcepName = "{{name}}";
+					var justification = "{{justification}}";
+					husbExcepItem.setQualifiedAttribute("customAttributes.name", husbExcepName);
+					?'setting husbandryException name => '+husbExcepName+'\n';
+					husbExcepItem.setQualifiedAttribute("customAttributes.justification", justification);
+					?'setting husbandryException justification => '+justification+'\n';	
+					husbExcepItem.setQualifiedAttribute("customAttributes.species", species);						
+					?'set animal as species => '+species+'\n';
+					husbandryEset.addElement(husbExcepItem);
+					?'adding husbExcepItem to eset => '+husbandryEset+'\n';
+				{{/if}}
+			{{/each}}
+		}
+		else{
+			?'species not found => '+species+' usda => '+usda+'\n';
+		}
+
+	{{/each}}
+
+	{{#each procedurePersonnel}}
+		{{#if procedure.name}}
+			{{#if procedure.procedureScope.name}}
+				{{#if procedure.procedureType.name}}
+					var species = "{{procedure.species.commonName}}";
+					var usda = "{{procedure.species.isUSDASpecies}}";
+
+					var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+					if(usda == "yes" || usda == "Yes" || usda == "1"){
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+					}
+					else{
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+					}
+					if(clickSpecies.count() > 0){
+						var procItem = _Procedure.createEntity();
+						?'created procedure => '+procItem+'\n';
+						var species = clickSpecies.elements().item(1);
+						var speciesName = "{{procedure.name}}";
+						var procedureScopeName = "{{procedure.procedureScope.name}}";
+						var procedureTypeName = "{{procedure.procedureType.name}}";
+						var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
+						procItem.setQualifiedAttribute("customAttributes.name", procedureName);
+						?'setting procedure name => '+procedureName+'\n';
+						procItem.setQualifiedAttribute("customAttributes.species", species);
+						?'setting species => '+species+'\n';
+
+						var labLocationEset = _Facility.createEntitySet();
+						?'created labLocationEset => '+labLocationEset+'\n';
+						procItem.setQualifiedAttribute("customAttributes.labLocation", labLocationEset);
+						labLocationEset = procItem.customAttributes.labLocation;
+						?'setting labLocation => '+labLocationEset+'\n';
+
+						{{#each locations}}
+							var labLocationExist = ApplicationEntity.getResultSet('_Facility').query("ID='{{id}}'");
+							if(labLocationExist.count() > 0){
+								var labLocationExist_1 = labLocationExist.elements().item(1);
+								?'location found => '+labLocationExist_1+'\n';
+								labLocationEset.addElement(labLocationExist_1);
+								?'adding labLocation to eset => '+labLocationEset+'\n';
+							}
+							else{
+								?'location not found => {{name}}\n';
+							}
+						{{/each}}
+
+						prodecureEset.addElement(procItem);
+						?'added procedure to eset => '+prodecureEset+'\n';
+					}
+					else{
+						?'species not found => '+species+' usda => '+usda+'\n';
+					}
+				{{/if}}
+			{{/if}}
+		{{/if}}
+	{{/each}}
+
+	/*
+		3b. Substances
+	*/
+	{{#each procedurePersonnel}}
+
+	{{/each}}
 	
 	/*
 		3c. updating dateModified

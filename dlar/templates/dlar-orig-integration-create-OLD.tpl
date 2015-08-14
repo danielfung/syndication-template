@@ -679,6 +679,408 @@
 			 	?'logging create activity => '+actTypeSet+'\n';
 			}
 
+
+			/*
+				2e. common procedures/variable procedures/husbandryExceptions
+			*/
+			var husbandryEset = iacucQ.customAttributes.husbandryExceptionSet;
+			var prodecureEset = iacucQ.customAttributes.prodecureSet;
+			{{#each animalGroups}}
+				var species = "{{species.commonName}}";
+				var usda = "{{species.isUSDASpecies}}";
+
+				var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+				if(usda == "yes" || usda == "Yes" || usda == "1"){
+					clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+				}
+				else{
+					clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+				}
+				if(clickSpecies.count() > 0){
+					var species = clickSpecies.elements().item(1);
+					{{#each husbandryExceptions}}
+						{{#if name}}
+							var husbExcepItem = _HusbandryException.createEntity();
+							?'created husbExcepItem => '+husbExcepItem+'\n';
+							var husbExcepName = "{{name}}";
+							var justification = "{{justification}}";
+							husbExcepItem.setQualifiedAttribute("customAttributes.name", husbExcepName);
+							?'setting husbandryException name => '+husbExcepName+'\n';
+							husbExcepItem.setQualifiedAttribute("customAttributes.justification", justification);
+							?'setting husbandryException justification => '+justification+'\n';	
+							husbExcepItem.setQualifiedAttribute("customAttributes.species", species);						
+							?'set animal as species => '+species+'\n';
+							husbandryEset.addElement(husbExcepItem);
+							?'adding husbExcepItem to eset => '+husbandryEset+'\n';
+						{{/if}}
+					{{/each}}
+				}
+				else{
+					?'species not found => '+species+' usda => '+usda+'\n';
+				}
+
+			{{/each}}
+
+			{{#each procedurePersonnel}}
+				{{#if procedure.name}}
+					{{#if procedure.procedureScope.name}}
+						{{#if procedure.procedureType.name}}
+							var species = "{{procedure.species.commonName}}";
+							var usda = "{{procedure.species.isUSDASpecies}}";
+
+							var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");
+							if(usda == "yes" || usda == "Yes" || usda == "1"){
+								clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");
+							}
+							else{
+								clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");
+							}
+							if(clickSpecies.count() > 0){
+								var procItem = _Procedure.createEntity();
+								?'created procedure => '+procItem+'\n';
+								var species = clickSpecies.elements().item(1);
+								var speciesName = "{{procedure.name}}";
+								var procedureScopeName = "{{procedure.procedureScope.name}}";
+								var procedureTypeName = "{{procedure.procedureType.name}}";
+								var procedureName = procedureTypeName+": "+speciesName+" ("+procedureScopeName+")";
+								procItem.setQualifiedAttribute("customAttributes.name", procedureName);
+								?'setting procedure name => '+procedureName+'\n';
+								procItem.setQualifiedAttribute("customAttributes.species", species);
+								?'setting species => '+species+'\n';
+								
+								var labLocationEset = _Facility.createEntitySet();
+								?'created labLocationEset => '+labLocationEset+'\n';
+								procItem.setQualifiedAttribute("customAttributes.labLocation", labLocationEset);
+								labLocationEset = procItem.customAttributes.labLocation;
+								?'setting labLocation => '+labLocationEset+'\n';
+
+								{{#each locations}}
+									var labLocationExist = ApplicationEntity.getResultSet('_Facility').query("ID='{{id}}'");
+									if(labLocationExist.count() > 0){
+										var labLocationExist_1 = labLocationExist.elements().item(1);
+										?'location found => '+labLocationExist_1+'\n';
+										labLocationEset.addElement(labLocationExist_1);
+										?'adding labLocation to eset => '+labLocationEset+'\n';
+									}
+									else{
+										?'location not found => {{name}}\n';
+									}
+								{{/each}}
+
+								prodecureEset.addElement(procItem);
+								?'added procedure to eset => '+prodecureEset+'\n';
+							}
+							else{
+								?'species not found => '+species+' usda => '+usda+'\n';
+							}
+						{{/if}}
+					{{/if}}
+				{{/if}}
+			{{/each}}
+			
+			/*
+				2f. list of substances(unique list per species)
+					- administrationOfSubstances(eset) -> substances -> iacucsubstancecustomextension -> tradeName
+					- inhalationExposure -> substancetobeadministered | -> otheranesthesia | -> anesthesiausage(eset) -> drugname
+					- intranasalInstallation -> agent -> drugname | -> otheragent | -> substanceadministeredviaintranasal(eset) -> iacucsubstancecustomextension -> tradename
+					- survivalSurgery -> setofsubstances(eset) -> iacucsubstancecustomextension -> tradename | anesthesiatechniques(eset) -> drugname
+					- irradiation -> antibiotics -> iacucsubstancecustomextension -> tradename
+					- imagingAndRadiation -> setofsubstances(eset) -> iacucsubstancecustomextension -> tradename | imaginganesthesiatechnique(eset) -> drugname
+					- imagingWithoutRadiation -> setofsubstances(eset) -> iacucsubstancecustomextension -> tradename | -> anesthesiatechniques(eset) -> drugname
+					- implantation -> setofsubstances(eset) -> iacucsubstancecustomextension -> tradename | -> otheranesthesia | -> othersubstance | anesthesiaused(eset) -> drugname
+					- exposure -> setofsubstance(eset) -> iacucsubstancecustomextension -> tradename
+					- euthansiaProcedures -> methodset(eset) -> drugname
+					- individualIdentificationTag -> anesthesiatechniques -> drugname
+					- genotypingBloodCollection -> anesthesiatechniques(eset) -> drugname
+					- genotypingTailTip -> anesthesiatechniques(eset) -> drugname
+					- exogenousSubstanceHazerdousMaterial -> hazardousagentset(eset) -> iacucsubstancecustomextension -> tradename
+					- exogenousSubstancesAnimalPathogens -> pathogenname
+					- bloodCollection -> anesthesiatechniques -> drugname
+
+					*********** function findSubtance - if not found create otherwise return the substance *****************
+			*/
+
+			function findSubstance(substanceToFindName){
+				var substanceEsetByName = ApplicationEntity.getResultSet("_Substance").query("customAttributes.name='"+substanceToFindName+"'");
+				if(substanceEsetByName.count() > 0){
+				  substanceEsetByName = substanceEsetByName.elements().item(1);
+				  ?'substance found => '+substanceEsetByName.customAttributes.name+'\n';
+				}
+				else{
+				   var createSub = _Substance.createEntity();
+				   createSub.setQualifiedAttribute("customAttributes.name", substanceToFindName);
+				   substanceEsetByName = createSub;
+				   ?'created substance => '+substanceEsetByName.customAttributes.name+'\n';
+				}
+				return substanceEsetByName;
+			}
+
+			var iacucSubstanceSet = iacucQ.customAttributes.substanceSet;
+
+			{{#each procedurePersonnel}}
+				{{#if procedure}}		 			
+					var clickSpecies = ApplicationEntity.getResultSet('_IACUC-Species').query("customAttributes._attribute0='"+species+"'");		
+					if(usda == "yes" || usda == "Yes" || usda == "1"){		
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=true");		
+					}		
+					else{		
+						clickSpecies = clickSpecies.query("customAttributes.usdaCovered=false");		
+					}		
+					if(clickSpecies.count() > 0){	
+						clickSpecies = clickSpecies.elements().item(1);
+
+						{{#each procedure.administrationOfSubstances}}
+							{{#if substances.iACUCSubstanceCustomExtension.tradeName}}
+								var drugName = "{{substances.iACUCSubstanceCustomExtension.tradeName}}";
+								?'administrationOfSubstsance drug name => '+drugName+'\n';
+								var item = findSubstance(drugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+						{{/each}}
+
+						{{#if procedure.inhalationExposure}}
+							{{#if procedure.inhalationExposure.substanceToBeAdministered.id}}
+								var inhalationSubstanceToBeAdmin = "{{procedure.inhalationExposure.substanceToBeAdministered.id}}";
+								?'inhalationSubstanceToBeAdmin drug name => '+inhalationSubstanceToBeAdmin+'\n';
+								var item = findSubstance(inhalationSubstanceToBeAdmin);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+
+							{{#if procedure.inhalationExposure.otherAnesthesia}}
+								var inhalationOtherAnesthesia = "{{procedure.inhalationExposure.otherAnesthesia}}";
+								?'inhalationOtherAnesthesia drug name => '+inhalationOtherAnesthesia+'\n';
+								var item = findSubstance(inhalationOtherAnesthesia);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+
+							{{#each procedure.inhalationExposure.anesthesiaUsage}}
+								{{#if drugName}}
+									var inhalationDrugName = "{{drugName}}";
+									?'inhalationDrugName drug name => '+inhalationDrugName+'\n';
+									var item = findSubstance(inhalationDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';																	
+								{{/if}}
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.intranasalInstallation}}
+							{{#if procedure.intranasalInstallation.agent.drugName}}
+								var intranasalDrugName = "{{procedure.intranasalInstallation.agent.drugName}}";
+								?'intranasalDrugName drug name => '+intranasalDrugName+'\n';
+								var item = findSubstance(intranasalDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+
+							{{#if procedure.intranasalInstallation.otherAgent}}
+								var intranasalOtherAgent = "{{procedure.intranasalInstallation.otherAgent}}";
+								?'intranasalOtherAgent drug name => '+intranasalOtherAgent+'\n';
+								var item = findSubstance(intranasalOtherAgent);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+
+							{{#each procedure.intranasalInstallation.substancesAdministeredViaIntranasal}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var intranasalSubstanceAdmin = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'intranasalSubstanceAdmin drug name => '+intranasalSubstanceAdmin+'\n';
+									var item = findSubstance(intranasalSubstanceAdmin);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
+								{{/if}}
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.survivalSurgery}}
+							{{#each procedure.survivalSurgery.setOfSubstances}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var survivalSubstances = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'survivalSubstances drug name => '+survivalSubstances+'\n';
+									var item = findSubstance(survivalSubstances);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
+								{{/if}}								
+							{{/each}}
+
+							{{#if procedure.survivalSurgery.anesthesiaTechniques.drugName}}
+								var survivalDrugName = "{{procedure.survivalSurgery.anesthesiaTechniques.drugName}}";
+								?'survivalDrugName drug name => '+survivalDrugName+'\n';
+								var item = findSubstance(survivalDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+						{{/if}}
+
+						{{#if procedure.irradiation.antibiotics.iACUCSubstanceCustomExtension.tradeName}}
+							var irradiationDrugName = "{{procedure.irradiation.antibiotics.iACUCSubstanceCustomExtension.tradeName}}";
+							?'irradiationDrugName drugName => '+irradiationDrugName+'\n';
+							var item = findSubstance(irradiationDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';
+						{{/if}}
+
+						{{#if procedure.imagingAndRadiation}}
+							{{#each procedure.imagingAndRadiation.setOfSubstances}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var imagingRadDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'imagingRadDrugName drug name => '+imagingRadDrugName+'\n';
+									var item = findSubstance(imagingRadDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
+								{{/if}}		
+							{{/each}}
+
+							{{#each procedure.imagingAndRadiation.imagingAnesthesiaTechnique}}
+								var imagingRadDrugName = "{{drugName}}";
+								?'imagingRadDrugName drug name => '+imagingRadDrugName+'\n';
+								var item = findSubstance(imagingRadDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.imagingWithoutRadiation}}
+							{{#each procedure.imagingWithoutRadiation.setOfSubstances}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var imagingRadWoDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'imagingRadWoDrugName drug name => '+imagingRadWoDrugName+'\n';
+									var item = findSubstance(imagingRadWoDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
+								{{/if}}		
+							{{/each}}
+
+							{{#each procedure.imagingWithoutRadiation.anesthesiaTechniques}}
+								var imagingRadWoDrugName = "{{drugName}}";
+								?'imagingRadWoDrugName drug name => '+imagingRadWoDrugName+'\n';
+								var item = findSubstance(imagingRadWoDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.implantation}}
+							{{#each procedure.implantation.setOfSubstances}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var implantationDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'implantationDrugName drug name => '+implantationDrugName+'\n';
+									var item = findSubstance(implantationDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';
+								{{/if}}
+							{{/each}}
+
+							{{#if procedure.implantation.otherAnesthesia}}
+								var implantOtherAnesth = "{{procedure.implantation.otherAnesthesia}}";
+								?'implantOtherAnesth drug name => '+implantOtherAnesth+'\n';
+								var item = findSubstance(implantOtherAnesth);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+
+							{{#if procedure.implantation.otherSubstance}}
+								var implantOtherSub = "{{procedure.implantation.otherSubstance}}";
+								?'implantOtherSub drug name => '+implantOtherSub+'\n';
+								var item = findSubstance(implantOtherSub);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+
+							{{#if procedure.implantation.anesthesiaUsed.drugName}}
+								var implantAnesthDrugName = "{{procedure.implantation.anesthesiaUsed.drugName}}";
+								?'implantAnesthDrugName drug name => '+implantAnesthDrugName+'\n';
+								var item = findSubstance(implantAnesthDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';
+							{{/if}}
+						{{/if}}
+
+						{{#if procedure.exposure}}
+							{{#each procedure.exposure.setOfSubstances}}
+								var exposeSubstance = "{{iACUCSubstanceCustomExtension.tradeName}}";
+								?'exposeSubstance drug name => '+exposeSubstance+'\n';
+								var item = findSubstance(exposeSubstance);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';								
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.euthanasiaProcedures}}
+							{{#each procedure.euthanasiaProcedures.methodSet}}
+								var euthMethodSet = "{{drugName}}";
+								?'euthMethodSet drug name => '+euthMethodSet+'\n';
+								var item = findSubstance(euthMethodSet);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.individualIdentificationTag.anesthesiaTechniques.drugName}}
+							var individualTagDrugName = "{{procedure.individualIdentificationTag.anesthesiaTechniques.drugName}}";
+							?'individualTagDrugName drug name => '+individualTagDrugName+'\n';
+							var item = findSubstance(individualTagDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+						{{/if}}
+
+						{{#if procedure.genotypingBloodCollection}}
+							{{#each procedure.genotypingBloodCollection.anesthesiaTechniques}}
+								var genoBloodCollectionDrugName = "{{drugName}}";
+								?'genoBloodCollectionDrugName drug name => '+genoBloodCollectionDrugName+'\n';
+								var item = findSubstance(genoBloodCollectionDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.genotypingTailTip}}
+							{{#each procedure.genotypingTailTip.anesthesiaTechniques}}
+								var genoTypingTailDrugName = "{{drugName}}";
+								?'genoTypingTailDrugName drug name => '+genoTypingTailDrugName+'\n';
+								var item = findSubstance(genoTypingTailDrugName);
+								iacucSubstanceSet.addElement(item);
+								?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+							{{/each}}							
+						{{/if}}
+
+						{{#if procedure.exogenousSubstancesHazardousMaterials}}
+							{{#each procedure.exogenousSubstancesHazardousMaterials.hazardousAgentSet}}
+								{{#if iACUCSubstanceCustomExtension.tradeName}}
+									var exogenousSubstanceDrugName = "{{iACUCSubstanceCustomExtension.tradeName}}";
+									?'exogenousSubstanceDrugName drug name => '+exogenousSubstanceDrugName+'\n';
+									var item = findSubstance(exogenousSubstanceDrugName);
+									iacucSubstanceSet.addElement(item);
+									?'adding substance to eset => '+iacucSubstanceSet+'\n';	
+								{{/if}}
+							{{/each}}
+						{{/if}}
+
+						{{#if procedure.exogenousSubstancesAnimalPathogens.pathogenName}}
+							var exogenousSubDrugName = "{{procedure.exogenousSubstancesAnimalPathogens.pathogenName}}";
+							?'exogenousSubDrugName drug name => '+exogenousSubDrugName+'\n';
+							var item = findSubstance(exogenousSubDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';
+						{{/if}}
+
+						{{#if procedure.bloodCollection.anesthesiaTechniques.drugName}}
+							var bloodCollectionDrugName = "{{procedure.bloodCollection.anesthesiaTechniques.drugName}}";
+							?'bloodCollectionDrugName drug name => '+bloodCollectionDrugName+'\n';
+							var item = findSubstance(bloodCollectionDrugName);
+							iacucSubstanceSet.addElement(item);
+							?'adding substance to eset => '+iacucSubstanceSet+'\n';
+						{{/if}}
+					}		
+					else{		
+						?'species not found => '+species+' usda => '+usda+'\n';		
+					}
+				{{/if}}	
+ 			{{/each}}
+
 			/*
 				2g. recalculate totals
 			*/
