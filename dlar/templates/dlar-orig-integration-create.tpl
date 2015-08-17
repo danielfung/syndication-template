@@ -240,9 +240,9 @@
 				_attribute32(species) eSet
 				groups(_IS_SEL_AnimalGroup) eSet
 				housingFacilities(_Facility) eSet
-				husbandryExceptionSet(_HusbandryException) eset
-				prodecureSet(_Procedure) eset
-				substanceSet(_Substance) eset
+				husbandryExceptionSet(_HusbandryException) eset -- not used
+				prodecureSet(_Procedure) eset -- not used
+				substanceSet(_Substance) eset -- not used
 			*/
 
 				var animalHousing = _IS_AnimalHousing.createEntitySet();
@@ -253,9 +253,6 @@
 				var species = ApplicationEntity.createEntitySet("_IACUC-Species");
 				var group = _IS_SEL_AnimalGroup.createEntitySet();
 				var housingFacilitiy = _Facility.createEntitySet();
-				var husbExcepSet = _HusbandryException.createEntitySet();
-				var procedureSet = _Procedure.createEntitySet();
-				var substanceSet = _Substance.createEntitySet();
 
 				iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalHousing',animalHousing)
 				?'create eset iacucQ.customAttributes.SF_AnimalHousing=>'+animalHousing+'\n';
@@ -277,15 +274,6 @@
 
 				iacucQ.setQualifiedAttribute('customAttributes.housingFacilities', housingFacilitiy);
 				?'create eset iacucQ.customAttributes.housingFacilities=>'+housingFacilitiy+'\n';
-
-				iacucQ.setQualifiedAttribute('customAttributes.husbandryExceptionSet', husbExcepSet);
-				?'create eset iacucQ.customAttributes.husbandryExceptionSet=>'+husbExcepSet+'\n';
-
-				iacucQ.setQualifiedAttribute('customAttributes.prodecureSet', procedureSet);
-				?'create eset iacucQ.customAttributes.prodecureSet=>'+procedureSet+'\n';
-
-				iacucQ.setQualifiedAttribute('customAttributes.substanceSet', substanceSet);
-				?'create eset iacucQ.customAttributes.substanceSet => '+substanceSet+'\n';
 
 				var speciesAdminSet = iacucQ.customAttributes._attribute32;
 				var groupAdminSet = iacucQ.customAttributes.groups;
