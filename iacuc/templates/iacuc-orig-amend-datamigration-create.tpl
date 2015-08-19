@@ -994,6 +994,12 @@
 			draft.createdBy = mainCreatedBy;			
 		}
 
+		var draftProtocolNumber = draft.customAttributes.protocolNumber;
+		var newProtocolNumber = iacucQ.customAttributes.protocolNumber;
+		draft.setQualifiedAttribute("customAttributes.protocolNumber", newProtocolNumber);			
+		?'setting draftProtocolNumber =>'+draftProtocolNumber+'\n';
+
+
 		/*
 			3a. starting smart form based on submission type
 		*/
