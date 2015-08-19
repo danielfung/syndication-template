@@ -9,10 +9,8 @@
 {
  "id":"1235-01:CAGEId",
  "name":"TESTING CAGE CARD",
- "topaz":{
- 		  "createdBy":{"userId":"test01"},
- 		  "status":{"id":"com.entity[OID[123132123]"}
- 		 }
+ "createdBy":{"userId":"test01"},
+ "status":{"oid":"com.entity[OID[123132123]"}
  }
 
  ```

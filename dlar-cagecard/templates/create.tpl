@@ -92,12 +92,17 @@ if(cageCard.count() == 0){
 
 
 	/*
-		1e. set status
+		1e. set status, name
 	*/
 		{{#if status.oid}}
 			var status = entityUtils.getObjectFromString('{{status.oid}}');
 			cageCard.status = status;
 			?'setting cageCard status => '+cageCard.status+'\n';
+		{{/if}}
+
+		{{#if name}}
+			cageCard.name = "{{name}}";
+			?'setting cageCard name => '+cageCard.name+'\n';
 		{{/if}}
 
 	/*
