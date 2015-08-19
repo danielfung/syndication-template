@@ -103,6 +103,7 @@ if(cageCard.count() == 0){
 	/*
 		2a. setting cage card legacy info
 	*/
+	/*
 		var findLegacyCageCard = ApplicationEntity.getResultSet('_CageCardLegacyInfo').query("ID='"+cageCard_id+"'");
 		var cageLegacyInfo = cageCard.customAttributes.legacyCageCardInfo;
 		if(cageLegacyInfo == null){
@@ -131,7 +132,7 @@ if(cageCard.count() == 0){
 			cageCardHistoryReport.ID = cageCard_id;
 			?'setting cageCardHistoryReport ID => '+cageCardHistoryReport.ID+'\n';
 		}
-
+	*/
 		{{#if legacyCageCardInfo.accountNumber}}
 			/*
 				3a. set legacyCageCardInfo.accountNumber
