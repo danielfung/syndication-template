@@ -994,10 +994,9 @@
 			draft.createdBy = mainCreatedBy;			
 		}
 
-		var draftProtocolNumber = draft.customAttributes.protocolNumber;
 		var newProtocolNumber = iacucQ.customAttributes.protocolNumber;
 		draft.setQualifiedAttribute("customAttributes.protocolNumber", newProtocolNumber);			
-		?'setting draftProtocolNumber =>'+draftProtocolNumber+'\n';
+		?'setting draft.protocolNumber =>'+draft.customAttributes.protocolNumber+'\n';
 
 
 		/*
