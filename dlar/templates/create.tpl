@@ -1,6 +1,9 @@
 {{#if protocolNumber}}
 	var iacuc_id = "{{protocolNumber}}";
-	var find = iacuc_id.split('-')[0];
+	//var find = iacuc_id.split('-')[0];
+	var itemToFind = iacuc_id.lastIndexOf("-");
+    var find = iacuc_id.substring(0, itemToFind);
+    ?'find => '+find+'\n';
 	?'ID for syndication => '+iacuc_id+'\n';
 	var find_1 = find+'-';
 {{else}}
