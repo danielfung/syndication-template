@@ -19,8 +19,8 @@ if(index > -1){
 	
 }
 else{
-	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+find+"'");
-	?'protocolNumber does not contain - using id = => '+find+'\n';
+	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
+	?'protocolNumber does not contain - using id = => '+iacuc_id+'\n';
 }
 
 var status = '{{status}}';
@@ -43,8 +43,11 @@ if(submissionType == 'PROTOYYYY'){
 			{{> integrationDlarOrigCreate}}
 
 		}
-		else{
+		else if(iacucQ.count() == 1){
 			{{> integrationDlarOrigUpdate}}
+		}
+		else{
+			?'More than one protocol found in DLAR => '+iacucQ.count()+'\n';
 		}
 
 	}
