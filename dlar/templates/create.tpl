@@ -30,7 +30,7 @@ var submissionType = '{{typeOfSubmission.id}}';
 var iacuc;
 //var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
 //iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID like '"+find_1+"%'");
-if(submissionType == 'PROTOYYYY'){
+if(submissionType == 'PROTOYYYY' || iacuc_id.indexOf(":") != -1){
 	
 	if(status == "Approved"){
 		?'IACUC ID =>'+iacuc_id+'\n';
