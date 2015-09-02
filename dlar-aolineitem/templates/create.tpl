@@ -316,12 +316,16 @@ if(parentOrder.count() > 0){
 		/*
 			3a. create animalorderlineitemlegacyinfo
 		*/
-
-		var legacyInfo = _AO_AnimalOrderLineItemLegacyInfo.createEntity();
-		?'created legacyInfo entity => '+legacyInfo+'\n';
-		legacyInfo.ID = order_id;
-		?'setting legacyInfoLineItem.id => '+legacyInfo.ID+'\n';
-
+		var findLegacyAnimalOrderLineItem = ApplicationEntity.getResultSet('_AO_AnimalOrderLegacyInfo').query("ID='"+order_id+"'");
+		if(findLegacyAnimalOrderLineItem.count() > 0){
+				?'findLegacyAnimalOrderLineItem exists => '+findLegacyAnimalOrderLineItem.elements().item(1)+'\n';
+		}
+		else{
+			var legacyInfo = _AO_AnimalOrderLineItemLegacyInfo.createEntity();
+			?'created legacyInfo entity => '+legacyInfo+'\n';
+			legacyInfo.ID = order_id;
+			?'setting legacyInfoLineItem.id => '+legacyInfo.ID+'\n';
+		}
 
 	}
 	else{
