@@ -521,4 +521,46 @@
 	iacucQ.dateModified = newDateMod;
 	?'setting new date modified => '+iacucQ.dateModified+'\n';
 
+
+	//_IS_AnimalSource
+	var animalSourceSet = iacucQ.customAttributes.SF_AnimalSource;
+
+	if(animalSourceSet == null){
+		iacucQ.setQualifiedAttribute('customAttributes.SF_AnimalSource',animalSource)
+		?'create eset iacucQ.customAttributes.SF_AnimalSource=>'+animalSource+'\n';
+		animalSourceSet = iacucQ.customAttributes.SF_AnimalSource;
+	}
+	else{
+		animalSourceSet.removeAllElements();
+		animalSourceSet = iacucQ.customAttributes.SF_AnimalSource;
+	}
+
+	//Sandy => 07/15/15 => Animal Source's do not need to be populated.
+	var animalSource = _IS_AnimalSource.createEntity();
+	var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
+	animalSource.setQualifiedAttribute("customAttributes._ProtocolGroup", animalHousingGroupSet);
+	?'creating source.groupSet =>'+animalHousingGroupSet+'\n';
+
+	var animalHousingGroupSet_2 = animalSource.customAttributes._ProtocolGroup;
+
+	var animalGroup = iacucQ.customAttributes.SF_AnimalGroup;
+	for(var i = 1; i<=animalGroup.count(); i++){
+		var animalGroup_1 = animalGroup.elements().item(i);
+		if(animalGroup_1){
+			var protoGroup = animalGroup_1.customAttributes._ProtocolGroup;
+			animalHousingGroupSet_2.addElement(protoGroup);
+			?'adding animal to source.animalSet =>'+protoGroup+'\n';
+		}
+	}
+
+	var source = ApplicationEntity.getResultSet('_IS_SEL_AnimalSource').query("ID='FromVendor'");
+	if(source.count() > 0){
+	source = source.elements().item(1);
+	animalSource.customAttributes._AnimalSource = source;
+	?'setting animal source => '+source+'\n';
+	}
+
+	animalSourceSet.addElement(animalSource);
+	?'adding Animal Source to source set => '+animalSource+'\n';
+
 	
