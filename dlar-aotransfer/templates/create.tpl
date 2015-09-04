@@ -307,6 +307,8 @@ if(parentProtocol.count() > 0){
 			else{
 				animalOrder.customAttributes.legacyAnimalOrderInfo = _AO_AnimalOrderLegacyInfo.createEntity();
 				?'setting animalOrder.customAttributes.legacyAnimalOrderInfo => '+animalOrder.customAttributes.legacyAnimalOrderInfo+'\n';
+				legacy = animalOrder.customAttributes.legacyAnimalOrderInfo;
+				?'legacy => '+legacy+'\n';
 				legacy.ID = animalOrder_id;
 				?'setting legacy info.id => '+legacy.ID+'\n';
 			}
