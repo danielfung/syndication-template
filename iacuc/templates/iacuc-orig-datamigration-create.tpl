@@ -1002,4 +1002,23 @@
 					newClone.customAttributes.annualExpirationDate = a;
 					?'setting draft annualExpirationDate => '+newClone.customAttributes.annualExpirationDate+'\n';
 				{{/if}}
+
+				  var parentSubmission = newClone.customAttributes.parentProtocol;
+			 	  var parentInvest = parentSubmission.customAttributes.investigator;
+			 	  var adminOffice = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[455A658DB0BA7D498CB6DF34E2CA25EA]]');
+			 	  var parentComp = parentSubmission.company;
+			 	  var parentCreatedby = parentSubmission.createdBy;
+			 	  if(parentInvest){
+			 	  		var invest = EntityCloner.quickClone(parentInvest);
+			 	  		newClone.setQualifiedAttribute('customAttributes.investigator', invest);
+			 	  }
+
+			 	  newClone.setQualifiedAttribute('customAttributes.adminOffice', adminOffice);
+
+			 
+
+			 	  newClone.company =  parentComp;
+			 	  
+			 	  newClone.createdBy = parentCreatedby;
+
 			}
