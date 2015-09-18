@@ -252,6 +252,10 @@
 						whichTemplate = "TMPL8D07C62360C5A80";
 						?'template New Proto=>'+whichTemplate+'\n';
 					}
+					else if(status == "Lapsed" || status == "Closed"){
+						whichTemplate = "TMPL8D284738B366772";
+						?'template New Proto=>'+whichTemplate+'\n';						
+					}
 					else{
 						whichTemplate = "TMPL8D02B5766D47C23";
 						?'template New Proto=>'+whichTemplate+'\n';
