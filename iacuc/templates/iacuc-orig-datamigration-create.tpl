@@ -1023,4 +1023,11 @@
 			 	  
 			 	  newClone.createdBy = parentCreatedby;
 
+			 	var projectSet = newClone.projects;
+				if(projectSet == null){
+					var projectSet = Project.createEntitySet();
+					newClone.projects = projectSet;
+					?'Created Project Set for Draft => '+newClone.projects+'\n';
+				}
+
 			}
