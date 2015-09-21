@@ -194,7 +194,7 @@ var stepCreateTwo = function (req, res, next) {
   var store = req.params.store;
   store = store.toLowerCase();
   logger.info("Store: "+store +" Action: Create");
-  logger.info(req.body);
+  logger.info("ID => "+req.body.id);
   if(store == 'irb'){
     var i = irb.compiledHandleBars(req.body, req.preTemp);
     var buf = new Buffer(i);
