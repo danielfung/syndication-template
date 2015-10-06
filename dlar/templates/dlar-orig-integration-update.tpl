@@ -10,6 +10,7 @@
 			/*
 				1a. protocol team members => first clear the set, then re-add each study team member
 					contacts => first clear the set then re-add each study team member
+					assignNumber
 			*/
 
 			var protocolTeamMembers = iacucQ.customAttributes.protocolTeamMembers;
@@ -129,6 +130,8 @@
 					?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
 				}
 			{{/if}}
+
+			iacucQ.setQualifiedAttribute("customAttributes.assignNumber", '{{id}}');
 
 			/*
 				1b. Assigning PI to Study
