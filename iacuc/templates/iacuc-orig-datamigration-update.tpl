@@ -10,6 +10,13 @@
 				var reader = iacucQ.customAttributes.readers;
 				var editor = iacucQ.customAttributes.editors;
 				var draft = iacucQ.customAttributes.draftProtocol;
+				var contacts = iacucQ.contacts;
+				if(contacts == null){
+					iacucQ.contacts = Person.createEntitySet();
+					?'created contacts set =>'+iacucQ.contacts+'\n';
+				}
+				contacts = iacucQ.contacts;
+
 				var draftReader;
 				var draftEditor;
 				if(draft != null){
@@ -82,6 +89,10 @@
 						draftEditor.addElement(person);
 						?'adding pi to draftEditor list\n';
 					}
+					if(contacts != null){
+						contacts.addElement(person);
+						?'adding person to contacts list\n';
+					}
 					var department = person.customAttributes;
 					if(department != null){
 						department = person.customAttributes.department;
@@ -133,6 +144,7 @@
 		var parentReaders = iacucQ.customAttributes.readers;
 		var parentEditors = iacucQ.customAttributes.editors;
 		var parentStudyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+		var parentContacts = iacucQ.contacts;
 
 		{{#if topaz.associates}}
 			var associateSet = "{{topaz.associates}}";
@@ -145,6 +157,7 @@
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '"+studyTeamMem+"'").elements();
 				if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
+					parentContacts.addElement(person);
 					parentReaders.addElement(person);
 					?'added associates to parent readers set => '+parentReaders+'\n';
 					if(draftReaders != null){
@@ -191,6 +204,7 @@
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '"+studyTeamMem+"'").elements();
 				if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
+					parentContacts.addElement(person);
 					parentReaders.addElement(person);
 					?'added teamSubInvestigators to parent readers set => '+parentReaders+'\n';
 					if(draftReaders != null){

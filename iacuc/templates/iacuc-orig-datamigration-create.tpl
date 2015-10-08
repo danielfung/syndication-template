@@ -29,6 +29,14 @@
 				?'Created Project Set => '+iacucQ.projects+'\n';
 			}
 
+			var contacts = iacucQ.contacts;
+			if(contacts == null){
+				iacucQ.contacts = Person.createEntitySet();
+				?'created contacts set =>'+iacucQ.contacts+'\n';
+			}
+
+			contacts = iacucQ.contacts;
+
 		/*
 			1c. set required fields (owner, company, createdby, pi)
 			if company not found --> default to MCIT
@@ -48,6 +56,8 @@
 					person = person.item(1);
 					?'person adding as PI =>'+person+'\n';
 					studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
+					contacts.addElement(person);
+					?'adding person to contacts set \n';
 					var department = person.customAttributes;
 					if(department != null){
 						department = person.customAttributes.department;
@@ -734,6 +744,7 @@
 			var readers = iacucQ.customAttributes.readers;
 			var editors = iacucQ.customAttributes.editors;
 			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
+			var contacts = iacucQ.contacts;
 			var canEdit;
 
 			{{#if topaz.coInvestigators}}
@@ -751,6 +762,8 @@
 						?'added teamSubInvestigators to readers set => '+readers+'\n';
 						editors.addElement(person);
 						?'added teamSubInvestigators to editors set => '+editors+'\n';
+						contacts.addElement(person);
+						?'adding person to contacts set => '+contacts+'\n';
 						var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
@@ -784,6 +797,8 @@
 						?'added associates to readers set => '+readers+'\n';
 						editors.addElement(person);
 						?'added associates to editors set => '+editors+'\n';
+						contacts.addElement(person);
+						?'adding person to contacts set => '+contacts+'\n';
 						var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
 						?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
 						studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
