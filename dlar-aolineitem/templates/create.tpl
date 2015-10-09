@@ -316,6 +316,8 @@ if(parentOrder.count() > 0){
 		/*
 			3a. create animalorderlineitemlegacyinfo
 		*/
+
+		/*
 		var findLegacyAnimalOrderLineItem = ApplicationEntity.getResultSet('_AO_AnimalOrderLegacyInfo').query("ID='"+order_id+"'");
 		if(findLegacyAnimalOrderLineItem.count() > 0){
 				?'findLegacyAnimalOrderLineItem exists => '+findLegacyAnimalOrderLineItem.elements().item(1)+'\n';
@@ -326,6 +328,7 @@ if(parentOrder.count() > 0){
 			legacyInfo.ID = order_id;
 			?'setting legacyInfoLineItem.id => '+legacyInfo.ID+'\n';
 		}
+		*/
 
 	}
 	else{
@@ -483,7 +486,7 @@ if(parentOrder.count() > 0){
 				?'perDiemBillingAccount not found => {{perDiemBillingAccount}}\n';
 			}
 		{{/if}}
-
+		/*
 		var findLegacyLineItem = ApplicationEntity.getResultSet('_AO_AnimalOrderLineItemLegacyInfo').query("ID='"+order_id+"'");
 		if(findLegacyLineItem.count() == 0){
 			var createLegacyLineItem = _AO_AnimalOrderLineItemLegacyInfo.createEntity();
@@ -495,7 +498,7 @@ if(parentOrder.count() > 0){
 			findLegacyLineItem = findLegacyLineItem.elements().item(1);
 			?'legacy line item found => '+findLegacyLineItem.ID+'\n';
 		}
-
+		*/
 
 	}
 }
