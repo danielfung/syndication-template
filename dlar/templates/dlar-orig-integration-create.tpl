@@ -78,6 +78,9 @@
 						person = person.item(1);
 						iacucQ.setQualifiedAttribute("customAttributes._attribute7", person);
 						?'person adding as PI =>'+person.userID+'\n';
+						var haveProtocol = true;
+						person.setQualifiedAttribute("customAttributes.hasProtocol", haveProtocol);
+						?'setting pi to have protocol => true\n';
 					}
 				{{/if}}
 
