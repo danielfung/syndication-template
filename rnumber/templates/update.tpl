@@ -158,5 +158,166 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 	else{
 		?'RN Study Not Found =>'+rnumber_id+'\n';
 		?'IACUC Study ID => {{id}}\n';
+		{{#if typeOfSubmission}}
+		//IACUC Legacy Study Creation
+		var rnumber_id = "{{this.id}}";
+		/*
+			1a. Create Research Project and assign ID 
+		*/
+
+		rnumberQ = wom.createTransientEntity('_Research Project');
+		rnumberQ.ID = rnumber_id;
+		?'rnumberQ.ID => '+rnumberQ.ID+'\n';
+
+		/*
+			1b. Register the entity.
+		*/
+		rnumberQ.registerEntity();
+		var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+rnumber_id+"'").elements().item(1);
+
+		/*
+			1c. set Study Details
+		*/
+		var studyDetailsEntity = _StudyDetails.createEntity();
+		rnumberQ.setQualifiedAttribute("customAttributes.studyDetails", studyDetailsEntity);
+		studyDetailsEntity = rnumberQ.customAttributes.studyDetails;
+		?'setting studyDetails => '+studyDetailsEntity;
+
+		/*
+			1d. Assign PI to Study, set company, createdBy, owner
+		*/
+		{{#if investigator.studyTeamMember.userId}}
+			var investigator = rnumberQ.getQualifiedAttribute("customAttributes.studyDetails.customAttributes.principalInvestigator");
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
+			if(investigator == null && person.count() > 0){
+				person = person.item(1);
+				rnumberQ.setQualifiedAttribute("customAttributes.studyDetails.customAttributes.principalInvestigator", person);
+				?'setting PI => '+rnumberQ.customAttributes.studyDetails.customAttributes.principalInvestigator+'\n';
+
+				var comp=rnumberQ.getQualifiedAttribute("customAttributes.studyDetails.customAttributes.principalInvestigator.customAttributes.department");
+				if(comp.name == "Medicine" || comp.name == "Population Health"){
+					var div = rnumberQ.getQualifiedAttribute("customAttributes.studyDetails.customAttributes.principalInvestigator.customAttributes.division");
+					if(div != null){
+						comp = div;
+						?'company is population health or medicine use division => '+comp+'\n';
+					}
+				}
+
+				rnumberQ.setQualifiedAttribute("company",comp);
+				?'setting rnumberQ.company => '+comp+'\n';
+
+			}
+		{{/if}}
+
+		var company = rnumberQ.company;
+		if(company == null){
+			//couldn't find department from PI, default to MCIT
+			var company = ApplicationEntity.getResultSet("Company").query("NAME = 'MCIT'").elements().item(1);
+			rnumberQ.company = company;
+			?'defaulting rnumberQ.company => MCIT: '+company+'\n';
+
+		}
+
+		{{#if createdBy.userId}}
+			var create = rnumberQ.createdBy;
+			if(create == null){
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{createdBy.userId}}'");
+				if(person.count() > 0){
+					person = person.elements().item(1);
+					rnumberQ.createdBy = person;
+					?'rnumberQ.createdBy =>'+rnumberQ.createdBy+'\n';
+				}
+				else{
+					?'Person Not Found =>{{createdBy.userId}}\n';
+					var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
+					rnumberQ.createdBy = person;
+					?'defaulting rnumberQ.createdBy => administrator: '+rnumberQ.createdBy+'\n';
+					}
+			}
+		{{else}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = 'administrator'").elements().item(1);
+			rnumberQ.createdBy = person;
+			?'defaulting rnumberQ.createdBy => administrator: '+rnumberQ.createdBy+'\n';
+		{{/if}}
+
+		{{#if owner}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{owner.userId}}'").elements();
+			var owner = rnumberQ.owner;
+			if(owner == null && person.count() > 0){
+				person = person.item(1);
+				rnumberQ.owner = person;
+				?'person adding as owner =>'+person.userID+'\n';
+			}
+
+		{{else}}
+			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{investigator.studyTeamMember.userId}}'").elements();
+			var owner = rnumberQ.owner;
+			if(owner == null && person.count() > 0){
+				person = person.item(1);
+				rnumberQ.owner = person;
+				?'setting PI as owner =>'+person.userID+'\n';
+			}
+		{{/if}}
+
+		/*
+			1e. Set study name, longTitle, existingProtocol
+		*/
+
+		rnumberQ.name = "{{name}}";
+		?'setting rnumberQ name => '+rnumberQ.name+'\n';
+
+		rnumberQ.setQualifiedAttribute("customAttributes.studyDetails.customAttributes.longTitle", "{{fullTitle}}");
+		?'setting rnumberQ longTitle => '+rnumberQ.customAttributes.studyDetails.customAttributes.longTitle+'\n';
+
+		rnumberQ.setQualifiedAttribute("customAttributes.studyDetails.customAttributes.existingProtocol", false);
+		?'setting rnumberQ existingProtocol => '+rnumberQ.customAttributes.studyDetails.customAttributes.existingProtocol+'\n';
+
+		/*
+			1f. Set Study Team Members(can/can't edit protocol) - studyDetails.customAttributes.otherStudyStaff - teamCanNotEdit
+		*/
+
+		var otherStudyStaffEset = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff
+		if(otherStudyStaffEset == null){
+			var personSet = Person.createEntitySet();
+			rnumberQ.setQualifiedAttribute("customAttributes.studyDetails.customAttributes.otherStudyStaff", personSet);
+			?'create other study staff eset => '+otherStudyStaffEset+'\n';
+			otherStudyStaffEset = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
+		}
+
+		var teamCantEditEset = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit
+		if(teamCantEditEset == null){
+			var personSet = Person.createEntitySet();
+			rnumberQ.setQualifiedAttribute("customAttributes.studyDetails.customAttributes.teamCanNotEdit", personSet);
+			?'create team cant edit eset => '+teamCantEditEset+'\n';
+			teamCantEditEset = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
+			
+		}
+
+		{{#each studyTeamMembers}}
+			{{#if studyTeamMember.userId}}
+
+				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyTeamMember.userId}}'");
+				if(person.count() > 0){
+					person = person.elements().item(1);
+					var canEditProtocol = '{{canEditProtocol}}';
+					if(canEditProtocol = '1'){
+						otherStudyStaffEset.addElement(person);
+						?'add person to other study staff eset => '+person+'\n';
+					}
+					else{
+						teamCantEditEset.addElement(person);
+						?'add person to team cant edit eset => '+person+'\n';
+					}
+					
+
+				}
+
+			{{/if}}
+		{{/each}}
+
+
 	}
 {{/if}}
+
+
+
