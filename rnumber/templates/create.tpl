@@ -164,10 +164,11 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 	{{/if}}
 	else{
 		?'RN Study Not Found =>'+rnumber_id+'\n';
+		if(index != -1){
 		{{#if typeOfSubmission}}
 			//IACUC Legacy Study Creation
-			?'IACUC Study ID => {{id}}\n';
-			var rnumber_id = "{{this.id}}";
+			//?'IACUC Study ID => {{id}}\n';
+			//var rnumber_id = "{{this.id}}";
 			/*
 				1a. Create Research Project and assign ID 
 			*/
@@ -306,7 +307,7 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 						if(person.count() > 0){
 							person = person.elements().item(1);
 							var canEditProtocol = '{{canEditProtocol}}';
-							if(canEditProtocol = '1'){
+							if(canEditProtocol == '1'){
 								otherStudyStaffEset.addElement(person);
 								?'add person to other study staff eset => '+person+'\n';
 							}
@@ -314,6 +315,9 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 								teamCantEditEset.addElement(person);
 								?'add person to team cant edit eset => '+person+'\n';
 							}
+						}
+						else{
+							?'person not found by userID => {{studyTeamMember.userId}}\n';
 						}
 					{{/if}}
 				{{/each}}
@@ -396,7 +400,7 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 				rnumberQ.updateReadersAndEditors();
 			{{/if}}
 			}
-	
+	}
 
 
 
