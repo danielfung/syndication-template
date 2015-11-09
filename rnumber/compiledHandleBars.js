@@ -9,16 +9,17 @@ module.exports = function(testData, preTemp) {
   	compiledScript = "?'Error: JSON missing id'";
   }
   else{
-    /*
+    
     //var data = fs.readFileSync('./data/15-00306.json', {encoding:'utf8'});
     //testData = JSON.parse(data);
-  	var rawTemplate = fs.readFileSync('./crms/templates/create.tpl', {encoding:'utf8'});
-
-  	var compiledTemplate = handlebars.compile(rawTemplate);
-  	compiledScript = compiledTemplate(testData);
-    */
+  	//var rawTemplate = fs.readFileSync('./rnumber/templates/create.tpl', {encoding:'utf8'});
+    //var data = fs.readFileSync('./data/15-00143_sql_populatedDLAR.json', {encoding:'utf8'});
+    //testData = JSON.parse(data);
+  	//var compiledTemplate = handlebars.compile(rawTemplate);
+  	//compiledScript = compiledTemplate(testData);
+    
     compiledScript = preTemp(testData);
   }
-  //fs.writeFileSync('./test-outCRMS', compiledScript, {encoding:'utf8'});
+  fs.writeFileSync('./output/test-outRNUMBER', compiledScript, {encoding:'utf8'});
   return compiledScript;
 };

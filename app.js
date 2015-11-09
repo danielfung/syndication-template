@@ -20,9 +20,9 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var config = require('./config');
 
-/*
+/******************************
 * Pre-Compile Create Templates
-*/
+*******************************/
 //DLAR Pre-Compile Create Template
 var rawCreateDlarTemplate = fs.readFileSync(__dirname+'/dlar/templates/create.tpl', {encoding:'utf8'});
 var dlarCompliedCreateTemplate = handlebars.compile(rawCreateDlarTemplate);
@@ -38,6 +38,10 @@ var irbCompliedCreateTemplate = handlebars.compile(rawCreateIrbTemplate);
 //CRMS Pre-Compile Create Template
 var rawCreateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/create.tpl', {encoding:'utf8'});
 var crmsCompliedCreateTemplate = handlebars.compile(rawCreateCrmsTemplate);
+
+//RNUMBER Pre-Compile Template
+var rawCreateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/create.tpl', {encoding:'utf8'});
+var rnumberCompliedCreateTemplate = handlebars.compile(rawCreateResearchNavigatorTemplate);
 
 
 /*****************
@@ -183,6 +187,9 @@ var stepCreateOne = function (req, res, next) {
     if(store == 'dlarinvoice'){
       req.preTemp = dlarInvoiceCompliedCreateTemplate;
     }
+    if(store == 'rnumber'){
+      req.preTemp = rnumberCompliedCreateTemplate;
+    }
     next();
   };
 
@@ -258,6 +265,14 @@ var stepCreateTwo = function (req, res, next) {
   }
   if(store == 'dlarinvoice'){
       var i = dlarinvoices.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      i = '{"script":"'+compiledScript+'"}'
+      res.send(i);
+
+  }
+  if(store == 'rnumber'){
+      var i = rnumber.compiledHandleBars(req.body, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
