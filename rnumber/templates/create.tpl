@@ -398,6 +398,15 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 			*/
 				rnumberQ.updateContacts(null);
 				rnumberQ.updateReadersAndEditors();
+
+			/*
+				2e. Set up smartform starting step - should not be null
+			*/
+
+				var smartFormStartingStep = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[5CEC12A73CC6DD4B9AFC3D82038932FF]]');
+				rnumberQ.currentSmartFormStartingStep = smartFormStartingStep;
+				?'smartform starting step => '+rnumberQ.currentSmartFormStartingStep+'\n';
+
 			{{/if}}
 			}
 	}
