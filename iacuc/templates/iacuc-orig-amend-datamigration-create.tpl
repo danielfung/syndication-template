@@ -838,7 +838,7 @@
 			?'Not Renewal or amendment => dont log anything\n';
 		}
 
-		if(submissionTypeName == "Amendment"){
+		if(submissionTypeName == "Amendment" || submissionTypeName == "Annual Review"){
 			var readers = iacucQ.customAttributes.readers;
 			var editors = iacucQ.customAttributes.editors;
 			var studyTeamMember = iacucQ.customAttributes.studyTeamMembers;

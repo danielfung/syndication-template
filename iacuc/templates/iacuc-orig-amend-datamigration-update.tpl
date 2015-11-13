@@ -405,7 +405,7 @@
 			?'dateModifed => '+iacucQ.dateModified+'\n';
 
 			var submissionTypeName = iacucQ.customAttributes.typeOfSubmission.customAttributes.name;
-			if(submissionTypeName == "Amendment"){
+			if(submissionTypeName == "Amendment" || submissionTypeName == "Annual Review"){
 				var draft = iacucQ.customAttributes.draftProtocol;
 				var draftStudyTeamMember = draft.customAttributes.studyTeamMembers;
 				var draftReaders = draft.customAttributes.readers;
