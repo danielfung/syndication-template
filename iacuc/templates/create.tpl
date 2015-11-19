@@ -1,9 +1,17 @@
 {{#if _uid}}
 	var iacuc_id = "{{this._uid}}";
-	//iacuc_id = iacuc_id.split('-')[1];
-	//var currentYear = new Date().getFullYear();
-	//iacuc_id = 'PROTO'+currentYear+iacuc_id;
-	iacuc_id = "IA"+iacuc_id;
+	var iacucREALID = "{{this.id}}";
+	var checkLegacyIndex = iacucREALID.indexOf('TZ:');
+	if(checkLegacyIndex > -1){
+		iacuc_id = iacucREALID;
+		?'is legacy iacuc study use TZ: instead => '+iacuc_id+'\n';
+	}else{
+		//iacuc_id = iacuc_id.split('-')[1];
+		//var currentYear = new Date().getFullYear();
+		//iacuc_id = 'PROTO'+currentYear+iacuc_id;
+		iacuc_id = "IA"+iacuc_id;
+		?'is not leagcy study use IA instead => '+iacuc_id+'\n';
+	}
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
