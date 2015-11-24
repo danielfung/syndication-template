@@ -111,8 +111,6 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 				var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyTeamMember.userId}}'");
 				if(person.count() > 0){
 					person = person.elements().item(1);
-					contactSet.addElement(person);
-					?'added person to contact set =>'+person+'\n';
 
 					var canEditProtocol = "{{canEditProtocol}}";
 					var rnumberCanEditProtocol;
