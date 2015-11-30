@@ -256,8 +256,8 @@ if(status == "Submitted"){
 			2b. set StudyTeam 
 			'customAttributes.studyDetails.customAttributes.teamSubInvestigators' --> co-investigator
 			'customAttributes.studyDetails.customAttributes.researchCoordinators' --> Study Coordinator/Primary Contact
-			'customAttributes.studyDetails.customAttributes.otherStudyStaff' --> studyTeamMember
-			'customAttributes.studyDetails.customAttributes.teamVolunteers' --> studyTeamMember
+			'customAttributes.studyDetails.customAttributes.otherStudyStaff' --> studyTeamMember -- new role??? -- not done
+			'customAttributes.studyDetails.customAttributes.teamVolunteers' --> studyTeamMember --new role??? -- not done
 			ex) var a = ApplicationEntity.createEntitySet("_StudyTeamMemberInfo");
 			    irbQ.setQualifiedAttribute("customAttributes.studyTeamMembers", a);	 
 				var stubTeamMap = {
@@ -282,7 +282,7 @@ if(status == "Submitted"){
 			//teamSubInvestigators --> co-investigator
 			{{#each studyDetails.teamSubInvestigators}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'");
-					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[975C66840E61074B9E445C485B28B58C]]");
+					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[975C66840E61074B9E445C485B28B58C]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -313,7 +313,7 @@ if(status == "Submitted"){
 			//researchCoordinators --> Study Coordinator/Primary Contact
 			{{#each studyDetails.researchCoordinators}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{coordinator.userId}}'");
-					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[22DEA0DE85F4EB4684FCA11837F4B923]]");
+					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[22DEA0DE85F4EB4684FCA11837F4B923]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -341,10 +341,10 @@ if(status == "Submitted"){
 					
 			{{/each}}
 
-			//other study staff --> study team member
+			//other study staff --> study team member --> create new role?? -- not done
 			{{#each studyDetails.otherStudyStaff}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'"); 
-					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
+					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -372,10 +372,10 @@ if(status == "Submitted"){
 
 			{{/each}}
 
-			//team Volunteer --> study team member
+			//team Volunteer --> study team member --> create new role?? -- not done
 			{{#each studyDetails.teamVolunteers}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'"); 
-					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
+					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);

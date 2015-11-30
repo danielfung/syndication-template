@@ -5,7 +5,7 @@ var crmsQ = ApplicationEntity.getResultSet('_ClinicalTrial').query("ID='"+crms_i
 ?'crmsQ.count() =>'+crmsQ.count()+'\n';
 
 var status = '{{status}}';
-if(status == "Submitted"){
+if(status == "Submitted" || status == "Approved"){
 	/*
 		1. Create CRMS Submission if it doesn't exist.
 	*/
@@ -293,7 +293,7 @@ if(status == "Submitted"){
 			{{/each}}
 
 		/*
-			2e. add sets(person) => otherStudyStaff, researchCoordinators, subInvestigators
+			2e. add sets(person) => otherStudyStaff, researchCoordinators, subInvestigators, team Volunteers(-- Need to create new eset) -- not done
 		*/
 			var otherStaff = crmsQ.customAttributes.otherStudyStaff;
 			var researchCoor = crmsQ.customAttributes.researchCoordinators;
