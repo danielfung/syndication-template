@@ -21,7 +21,7 @@
 				iacucQ.registerEntity();
 				//iacucQ.initalize();
 				//initalize
-				var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'").elements().item(1);
+				var iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+prefixID+"'").elements().item(1);
 
 			/*
 				1c. set required fields (owner, company, createdby, pi)
