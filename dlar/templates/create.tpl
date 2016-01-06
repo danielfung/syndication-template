@@ -9,8 +9,8 @@
 
 	//use to strip prefix/suffix - 12/07/2015  -- UNCOMMENT WHEN TIME TO USE
 	
-	var prefixID = iacuc_id.split('-')[0];
-	var suffixID = iacuc_id.split('-')[1];
+	var prefixID = iacuc_id.substring(0, itemToFind);;
+	var suffixID = iacuc_id.substring(itemToFind+1);
 	
 
 {{else}}
