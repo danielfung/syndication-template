@@ -538,7 +538,10 @@
 		animalSourceSet = iacucQ.customAttributes.SF_AnimalSource;
 	}
 
-	//Sandy => 07/15/15 => Animal Source's do not need to be populated.
+	/*
+		3d. Animal Source	
+	*/
+
 	var animalSource = _IS_AnimalSource.createEntity();
 	var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
 	animalSource.setQualifiedAttribute("customAttributes._ProtocolGroup", animalHousingGroupSet);
@@ -565,5 +568,16 @@
 
 	animalSourceSet.addElement(animalSource);
 	?'adding Animal Source to source set => '+animalSource+'\n';
+
+	/*
+		3e. Update Suffix protocol number
+	*/
+	//use to strip prefix/suffix - 12/07/2015 -- UNCOMMENT WHEN TIME TO USE
+	
+		if(suffixID){
+			iacucQ.setQualifiedAttribute('customAttributes.protocolSuffix', suffixID);
+			?'setting IACUC Suffix ID => '+suffixID+'\n';
+		}
+	
 
 	

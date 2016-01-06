@@ -5,8 +5,14 @@
 				1a. update ID of iacuc Submission
 			*/
 
-				iacucQ.ID = iacuc_id;
-				?'iacucQ.ID =>'+iacucQ.ID+'\n';
+				//iacucQ.ID = iacuc_id;
+				//?'iacucQ.ID =>'+iacucQ.ID+'\n';
+
+				//use to strip prefix/suffix - 12/07/2015 -- UNCOMMENT WHEN TIME TO USE
+				
+					iacucQ.ID = prefixID;
+					?'iacucQ.ID =>'+iacucQ.ID+'\n';
+				
 
 			/*
 				1b. Register and initalize iacuc Submission
@@ -681,3 +687,14 @@
 					?'recalculating total animal counts\n';
 				}
 			}
+
+			/*
+				2h. Update Suffix of protocol number
+			*/
+			//use to strip prefix/suffix - 12/07/2015 -- UNCOMMENT WHEN TIME TO USE
+			
+				if(suffixID){
+					iacucQ.setQualifiedAttribute('customAttributes.protocolSuffix', suffixID);
+					?'setting IACUC Suffix ID => '+suffixID+'\n';
+				}
+			

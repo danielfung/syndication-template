@@ -6,6 +6,13 @@
     ?'find => '+find+'\n';
 	?'ID for syndication => '+iacuc_id+'\n';
 	var find_1 = find+'-';
+
+	//use to strip prefix/suffix - 12/07/2015  -- UNCOMMENT WHEN TIME TO USE
+	
+	var prefixID = iacuc_id.split('-')[0];
+	var suffixID = iacuc_id.split('-')[1];
+	
+
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
@@ -22,6 +29,12 @@ else{
 	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
 	?'protocolNumber does not contain - using id = => '+iacuc_id+'\n';
 }
+
+//use to strip prefix/suffix - 12/07/2015  -- UNCOMMENT WHEN TIME TO USE
+
+	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+prefixID+"'");
+	?'find protocolNumber - using id = => '+prefixID+'\n';
+
 
 var status = '{{status}}';
 
