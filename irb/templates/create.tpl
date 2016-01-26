@@ -71,6 +71,19 @@ if(status == "Submitted"){
 				studyTeamMember.setQualifiedAttribute("customAttributes.studyTeamMember", person);
 			}
 
+			//set company to PI employer
+			investigator = irbQ.getQualifiedAttribute("customAttributes.investigator");
+			if(investigator){
+				var pi = investigator.customAttributes.studyTeamMember;
+				if(pi){
+					var employer = pi.employer;
+					if(employer){
+						irbQ.company = employer;
+					}
+				}
+			}
+
+
 		/*
 			1d. set parentStudy to itself;
 			if null, set to itself inorder for read security to work correctly

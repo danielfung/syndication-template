@@ -7,17 +7,28 @@
 	?'ID for syndication => '+iacuc_id+'\n';
 	var find_1 = find+'-';
 
+	var prefixID;
+	var suffixID;
 	//use to strip prefix/suffix - 12/07/2015  -- UNCOMMENT WHEN TIME TO USE
-	
-	var prefixID = iacuc_id.substring(0, itemToFind);;
-	var suffixID = iacuc_id.substring(itemToFind+1);
+	if(itemToFind > -1){
+		prefixID = iacuc_id.substring(0, itemToFind);
+		suffixID = iacuc_id.substring(itemToFind+1);
+		?'prefixID => '+prefixID+'\n';
+		?'suffixID => '+suffixID+'\n';
+	}
+	else{
+		prefixID = iacuc_id;
+		suffixID = '';
+		?'prefixID => '+prefixID+'\n';
+		?'suffixID => '+suffixID+'\n';
+	}
 	
 
 {{else}}
 	var iacuc_id ="{{this.id}}";
 {{/if}}
 
-
+/*
 var index = iacuc_id.indexOf("-");
 var iacucQ;
 if(index > -1){
@@ -29,6 +40,7 @@ else{
 	iacucQ = ApplicationEntity.getResultSet('_IACUC Study').query("ID='"+iacuc_id+"'");
 	?'protocolNumber does not contain - using id = => '+iacuc_id+'\n';
 }
+*/
 
 //use to strip prefix/suffix - 12/07/2015  -- UNCOMMENT WHEN TIME TO USE
 
