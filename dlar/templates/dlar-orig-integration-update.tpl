@@ -4,7 +4,7 @@
 			/*
 				1. update protocol ID 
 			*/
-				iacucQ.ID = iacuc_id;
+				iacucQ.ID = prefixID;
 				?'setting new id => '+iacucQ.ID+'\n';
 
 			/*
