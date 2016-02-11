@@ -199,7 +199,15 @@ if(status == "Submitted"){
 		/*
 			1i. set name, shortDescription, longTitle
 		*/
-			irbQ.name = "{{name}}";
+			var brany = irbQ.customAttributes.irbSubmissionCustomExtension.customAttributes.branyStudy;
+			if(brany){
+				var newName = "[BRANY] "+"{{name}}";
+				irbQ.name = newName;
+			}
+			else{
+				irbQ.name = "{{name}}";
+			}
+
 			?'setting irbQ name =>'+irbQ.name+'\n';
 			irbQ.description = "{{studyDetails.shortDescription}}";
 			?'setting irbQ description =>'+irbQ.description+'\n';
