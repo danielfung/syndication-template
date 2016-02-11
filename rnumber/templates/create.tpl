@@ -255,9 +255,7 @@ var submissionStatus = "{{status}}";
 							cantEdit.addElement(person);
 							?'person cant edit => '+person+'\n';
 						}	
-
 					}
-
 				{{/if}}
 			{{/each}}
 

@@ -108,7 +108,7 @@ if(status == "Submitted"){
 			?'submissionType =>'+irbQ.customAttributes.submissionType.ID+'\n';
 
 		/*
-			1f. set irb Settings, irbSubmissionCustomExtension.irbSettingsNYU, irb Group
+			1f. set irb Settings, irbSubmissionCustomExtension.irbSettingsNYU, irb Group, brany(bool)
 		*/
 			var irbSettings = _IRBSettings.getIRBSettings();
 			var setting = irbQ.customAttributes.irbSettings
@@ -137,6 +137,16 @@ if(status == "Submitted"){
 				?'found irbSubmissionCustomExtension.irbGroup =>'+f+'\n';
 				irbQ.customAttributes.irbSubmissionCustomExtension.setQualifiedAttribute("customAttributes.irbGroup", f);
 				?'added irbGroup =>'+irbQ.customAttributes.irbSubmissionCustomExtension.customAttributes.irbGroup+'\n';
+			}
+
+			var IRBname = "{{studyDetails.responsibleIRB.irbType}}";
+			if(IRBname == "BRANY IRB"){
+				irbQ.customAttributes.irbSubmissionCustomExtension.setQualifiedAttribute("customAttributes.branyStudy", true);
+				?'set irb.irbSubmissionCustomExtension.branyStudy => true\n';
+			}
+			else{
+				irbQ.customAttributes.irbSubmissionCustomExtension.setQualifiedAttribute("customAttributes.branyStudy", false);
+				?'set irb.irbSubmissionCustomExtension.branyStudy => false\n';
 			}
 
 		/*
