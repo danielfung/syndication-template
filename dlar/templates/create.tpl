@@ -83,7 +83,7 @@ if(submissionType == 'PROTOYYYY' || (currentItemID == parentID)){
 		if(iacucQ.count() == 1){
 			iacucQ = iacucQ.elements().item(1);
 			var suspendedProtocolActivity = ActivityType.getActivityType("_IACUC Study_MarkSuspended", "_IACUC Study");
-			if(createProtocolActivity != null){
+			if(suspendedProtocolActivity != null){
 				iacucQ.logActivity(sch, suspendedProtocolActivity, Person.getCurrentUser());
 				?'Logging suspended activity => '+suspendedProtocolActivity+'\n';
 			}
