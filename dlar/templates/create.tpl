@@ -98,7 +98,7 @@ if(submissionType == 'PROTOYYYY' || (currentItemID == parentID)){
 		}
 	}
 	else{
-		?'Error: Status is not Approved\n';
+		?'Error: Status is not Approved, Suspended or Closed\n';
 		?'IACUC Study ID: {{id}}\n';
 		?'current status =>{{status}}\n';
 	}	
