@@ -383,7 +383,7 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 			}
 			studyTeamMember = iacucQ.customAttributes.studyTeamMembers;
 			var canEdit;
-		/*
+		
 		{{#if studyDetails.studyDepartmentalAdmin.userId}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{studyDetails.studyDepartmentalAdmin.userId}}'");
 			var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyDetails.studyDepartmentalAdmin.userId}}'").elements();
@@ -392,21 +392,13 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 					person = person.item(1);
 					readers.addElement(person);
 					?'added department admin to readers set => '+readers+'\n';
-					editors.addElement(person);
-					?'added department admin to editors set => '+editors+'\n';
+					//editors.addElement(person);
+					//?'added department admin to editors set => '+editors+'\n';
 					contactsSet.addElement(person);
 					?'added department admin to contacts set => '+contactsSet+'\n';
-					var studyTeamMemInfo = _StudyTeamMemberInfo.createEntity();
-					?'created studyTeamMemInfo => '+studyTeamMemInfo+'\n';
-					studyTeamMemInfo.setQualifiedAttribute("customAttributes.studyTeamMember", person);
-					?'adding person to studyTeamMemInfo => '+person+'\n';
-					studyTeamMemInfo.customAttributes.canEditProtocol = canEdit;
-					?'Can Edit Protocol => True\n';
-					studyTeamMember.addElement(studyTeamMemInfo);
-					?'added department admin to study team mem info set => '+studyTeamMember+'\n';
 			}
 		{{/if}}
-		*/
+		
 
 		{{#each studyDetails.teamSubInvestigators}}
 			var exists = iacucQ.customAttributes.studyTeamMembers.query("customAttributes.studyTeamMember.userId='{{userId}}'");
