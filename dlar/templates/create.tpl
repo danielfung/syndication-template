@@ -93,7 +93,7 @@ if(submissionType == 'PROTOYYYY' || (currentItemID == parentID)){
 		if(iacucQ.count() == 1){
 			iacucQ = iacucQ.elements().item(1);
 			var closedStatusDCM = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[E74C789848FF194D9508D08A248FB788]]');
-			iacucQ.customAttributes.status = closedStatusDCM;
+			iacucQ.status = closedStatusDCM;
 			?'IACUC Study Closed => Change DCM Status to Closed => '+iacucQ.status.ID+'\n';
 		}
 	}
