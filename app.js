@@ -5,6 +5,7 @@ var irb = require('./irb');//IRB
 var crms = require('./crms');//CRMS
 var iacuc = require('./iacuc');//IACUC
 var dlar = require('./dlar'); //DLAR
+var locations = require('./locations'); //locations to iacuc
 var dlaraoi = require('./dlar-aolineitem');//dlar animal order line item(datamigration)
 var dlaraot = require('./dlar-aotransfer');//dlar animal order transfer(datamigration)
 var dlarcage = require('./dlar-cagecard');//dlar cage card(datamigration)
@@ -42,6 +43,10 @@ var crmsCompliedCreateTemplate = handlebars.compile(rawCreateCrmsTemplate);
 //RNUMBER Pre-Compile Template
 var rawCreateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/create.tpl', {encoding:'utf8'});
 var rnumberCompliedCreateTemplate = handlebars.compile(rawCreateResearchNavigatorTemplate);
+
+//Locations Pre-Compile Template
+var rawCreateIacucLocationTemplate = fs.readFileSync(__dirname+'/locations/templates/create.tpl', {encoding:'utf8'});
+var iacucLocationCompliedCreateTemplate = handlebars.compile(rawCreateIacucLocationTemplate);
 
 
 /*****************
@@ -111,6 +116,10 @@ var rawPartialIacucOrigCopyTemplate = fs.readFileSync(__dirname+'/iacuc/template
 var rawPartialIacucPreCompileOrigCopyTemplate = handlebars.compile(rawPartialIacucOrigCopyTemplate);
 handlebars.registerPartial("integrationIacucOrigCreateExisting", rawPartialIacucPreCompileOrigCopyTemplate);
 
+var rawPartialIacucOrigDCMTemplate = fs.readFileSync(__dirname+'/iacuc/templates/iacuc-orig-dcm-intergration.tpl', {encoding:'utf8'});
+var rawPartialIacucPreCompileOrigDCMTemplate = handlebars.compile(rawPartialIacucOrigDCMTemplate);
+handlebars.registerPartial("integrationIacucOrigDCMUpdate", rawPartialIacucPreCompileOrigDCMTemplate);
+
 var rawPartialDlarOrigCreateTemplate = fs.readFileSync(__dirname+'/dlar/templates/dlar-orig-integration-create.tpl', {encoding:'utf8'});
 var rawDlarPartialPreCompileCreateTemplate = handlebars.compile(rawPartialDlarOrigCreateTemplate);
 handlebars.registerPartial("integrationDlarOrigCreate", rawDlarPartialPreCompileCreateTemplate);
@@ -118,6 +127,19 @@ handlebars.registerPartial("integrationDlarOrigCreate", rawDlarPartialPreCompile
 var rawPartialDlarOrigUpdateTemplate = fs.readFileSync(__dirname+'/dlar/templates/dlar-orig-integration-update.tpl', {encoding:'utf8'});
 var rawDlarPartialPreCompileUpdateTemplate = handlebars.compile(rawPartialDlarOrigUpdateTemplate);
 handlebars.registerPartial("integrationDlarOrigUpdate", rawDlarPartialPreCompileUpdateTemplate);
+
+var rawPartialIacucRoomCreateTemplate = fs.readFileSync(__dirname+'/locations/templates/facilityRoom.tpl', {encoding:'utf8'});
+var rawDlarPartialPreCompileIacucRoomTemplate = handlebars.compile(rawPartialIacucRoomCreateTemplate);
+handlebars.registerPartial("integrationIacucRoomCreate", rawDlarPartialPreCompileIacucRoomTemplate);
+
+var rawPartialIacucBuildingCreateTemplate = fs.readFileSync(__dirname+'/locations/templates/facilityBuilding.tpl', {encoding:'utf8'});
+var rawDlarPartialPreCompileIacucBuildingTemplate = handlebars.compile(rawPartialIacucBuildingCreateTemplate);
+handlebars.registerPartial("integrationIacucBuildingCreate", rawDlarPartialPreCompileIacucBuildingTemplate);
+
+
+var rawPartialIacucCampusCreateTemplate = fs.readFileSync(__dirname+'/locations/templates/campus.tpl', {encoding:'utf8'});
+var rawDlarPartialPreCompileIacucCampusTemplate = handlebars.compile(rawPartialIacucCampusCreateTemplate);
+handlebars.registerPartial("integrationIacucCampusCreate", rawDlarPartialPreCompileIacucCampusTemplate);
 
 /*
   HandleBars register helper
@@ -189,6 +211,9 @@ var stepCreateOne = function (req, res, next) {
     }
     if(store == 'rnumber'){
       req.preTemp = rnumberCompliedCreateTemplate;
+    }
+    if(store == 'locations'){
+      req.preTemp = iacucLocationCompliedCreateTemplate;
     }
     next();
   };
@@ -278,6 +303,14 @@ var stepCreateTwo = function (req, res, next) {
       i = '{"script":"'+compiledScript+'"}'
       res.send(i);
 
+  }
+  if(store == 'locations'){
+      var i = locations.compiledHandleBars(req.body, req.preTemp);
+      var buf = new Buffer(i);
+      var compiledScript = buf.toString('base64');
+      i = '{"script":"'+compiledScript+'"}'
+      res.send(i);
+      
   }
 
   next();

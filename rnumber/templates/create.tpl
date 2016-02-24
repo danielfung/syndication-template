@@ -228,9 +228,32 @@ var submissionStatus = "{{status}}";
 			?'RN Study Found => '+rnumberQ.ID+'\n';
 			var canEdit = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
 			var cantEdit = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
+			var studyDetailsRnum = rnumberQ.customAttributes.studyDetails;
+			//Team Member - Read Only
+			if(cantEdit == null){
+				?'team can not edit Eset not found => '+cantEdit+'\n';
+				var a = ApplicationEntity.createEntitySet('Person');
+				studyDetailsRnum.setQualifiedAttribute('customAttributes.teamCanNotEdit', a);
+				cantEdit = studyDetailsRnum.customAttributes.teamCanNotEdit;
+				?'created team can not edit eset => '+cantEdit+'\n';
 
-			canEdit.removeAllElements();
-			cantEdit.removeAllElements();
+			}
+			else{
+				cantEdit.removeAllElements();
+			}
+
+			//Team Member 
+			if(canEdit == null){
+				?'team can edit Eset not found => '+canEdit+'\n';
+				var a = ApplicationEntity.createEntitySet('Person');
+				studyDetailsRnum.setQualifiedAttribute('customAttributes.otherStudyStaff', a);
+				canEdit = studyDetailsRnum.customAttributes.otherStudyStaff;
+				?'created team can edit eset => '+canEdit+'\n';
+
+			}
+			else{
+				canEdit.removeAllElements();
+			}
 
 			canEdit = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
 			cantEdit = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
