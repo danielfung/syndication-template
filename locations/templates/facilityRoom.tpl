@@ -66,6 +66,9 @@ if(currentBuilding.count() == 1){
 
 		}
 
+		facility.parentProject = facility.customAttributes.building;
+		?'Setting parent project of room to => '+facility.parentProject.ID+'\n';
+
 		//update Floor
 		var facRoomCustomExtension = facRoomItem.customAttributes.facilityRoomCustomExtension;
 		if(facRoomCustomExtension == null){
@@ -263,6 +266,12 @@ if(currentBuilding.count() == 1){
 			facility.setQualifiedAttribute("customAttributes.roomContacts", personSet);
 			?'Create facility room contacts eset => '+facility.customAttributes.roomContacts+'\n';
 		}
+
+		/*
+			1J. Set Parent Project
+		*/
+		facility.parentProject = buildingFound;
+		?'Setting parent project of room to => '+facility.parentProject.ID+'\n';
 
 	}
 }
