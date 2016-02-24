@@ -12,8 +12,10 @@ module.exports = function(testData, preTemp) {
   else{
     //console.log('testData => '+testData.id)
     //var data = fs.readFileSync('./data/locations/lo0000264_sql_populated.json', {encoding:'utf8'});
+    /*
     var data = fs.readFileSync('./data/locations/lo0000782_sql_populated.json', {encoding:'utf8'});
     testData = JSON.parse(data);
+    */
     /*
   	var rawTemplate = fs.readFileSync('./locations/templates/create.tpl', {encoding:'utf8'});
 
