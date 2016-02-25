@@ -182,6 +182,8 @@ router.post('/', function(req,res){
 */
 var stepCreateOne = function (req, res, next) {
     var store = req.params.store;
+    var type = req.body.modelName;
+    var action = req.body.action;
     if(store == 'irb'){
       req.preTemp = irbCompliedCreateTemplate;
     }
@@ -189,10 +191,17 @@ var stepCreateOne = function (req, res, next) {
       req.preTemp = crmsCompliedCreateTemplate;
     }
     if(store == 'iacuc'){
-      req.preTemp = iacucCompliedCreateTemplate;
+      if(type == '_Research Project' && action == 'researchproject:animal:status'){
+        req.preTemp = iacucCompliedCreateTemplate;
+      }
+      else if(type == '_Facility' && action == 'facility:resource:datemodified'){
+        req.preTemp = iacucLocationCompliedCreateTemplate;
+      }
     } 
     if(store == 'dlar'){
-      req.preTemp = dlarCompliedCreateTemplate;
+      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+        req.preTemp = dlarCompliedCreateTemplate;
+      }
     }
     if(store == 'dlaraolineitem'){
       req.preTemp = dlarAoiCompliedCreateTemplate;
@@ -210,10 +219,9 @@ var stepCreateOne = function (req, res, next) {
       req.preTemp = dlarInvoiceCompliedCreateTemplate;
     }
     if(store == 'rnumber'){
-      req.preTemp = rnumberCompliedCreateTemplate;
-    }
-    if(store == 'locations'){
-      req.preTemp = iacucLocationCompliedCreateTemplate;
+      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+        req.preTemp = rnumberCompliedCreateTemplate;
+      }
     }
     next();
   };
@@ -225,39 +233,53 @@ var stepCreateOne = function (req, res, next) {
 var stepCreateTwo = function (req, res, next) {
   var store = req.params.store;
   store = store.toLowerCase();
+  var type = req.body.modelName;
+  var action = req.body.action;
   logger.info("Store: "+store +" Action: Create");
-  logger.info("ID => "+req.body.id);
+  logger.info("ID => "+req.body.id+' => type => '+type+' => '+action);
+  var parseTheDocumentJson = JSON.parse(req.body.document);
   if(store == 'irb'){
-    var i = irb.compiledHandleBars(req.body, req.preTemp);
+    var i = irb.compiledHandleBars(parseTheDocumentJson, req.preTemp);
     var buf = new Buffer(i);
     var compiledScript = buf.toString('base64');
     i = '{"script":"'+compiledScript+'"}'
     res.send(i);
   }
   if(store == 'crms'){
-    var i = crms.compiledHandleBars(req.body, req.preTemp);
+    var i = crms.compiledHandleBars(parseTheDocumentJson, req.preTemp);
     var buf = new Buffer(i);
     var compiledScript = buf.toString('base64');
     i = '{"script":"'+compiledScript+'"}'
     res.send(i);
   }
   if(store == 'iacuc'){
-      var i = iacuc.compiledHandleBars(req.body, req.preTemp);
-      var buf = new Buffer(i);
-      var compiledScript = buf.toString('base64');
-      i = '{"script":"'+compiledScript+'"}'
-      res.send(i);
+      if(type == '_Research Project' && action == 'researchproject:animal:status'){
+          var i = iacuc.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+          var buf = new Buffer(i);
+          var compiledScript = buf.toString('base64');
+          i = '{"script":"'+compiledScript+'"}'
+          res.send(i);
+      }
+      else if(type == '_Facility' && action == 'facility:resource:datemodified'){
+          var i = locations.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+          var buf = new Buffer(i);
+          var compiledScript = buf.toString('base64');
+          i = '{"script":"'+compiledScript+'"}'
+          res.send(i);
+      }
   }
   if(store == 'dlar'){
-      var i = dlar.compiledHandleBars(req.body, req.preTemp);
-      var buf = new Buffer(i);
-      var compiledScript = buf.toString('base64');
-      i = '{"script":"'+compiledScript+'"}'
-      res.send(i);
+      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+        var i = dlar.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+        var buf = new Buffer(i);
+        var compiledScript = buf.toString('base64');
+        i = '{"script":"'+compiledScript+'"}'
+        res.send(i);
+      }
 
   }
   if(store == 'dlaraolineitem'){
-      var i = dlaraoi.compiledHandleBars(req.body, req.preTemp);
+      var i = dlaraoi.compiledHandleBars(parseTheDocumentJson, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -265,7 +287,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlaraotransfer'){
-      var i = dlaraot.compiledHandleBars(req.body, req.preTemp);
+      var i = dlaraot.compiledHandleBars(parseTheDocumentJson, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -273,7 +295,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarcagecard'){
-      var i = dlarcage.compiledHandleBars(req.body, req.preTemp);
+      var i = dlarcage.compiledHandleBars(parseTheDocumentJson, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -281,7 +303,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarbilling'){
-      var i = dlarbillings.compiledHandleBars(req.body, req.preTemp);
+      var i = dlarbillings.compiledHandleBars(parseTheDocumentJson, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -289,7 +311,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarinvoice'){
-      var i = dlarinvoices.compiledHandleBars(req.body, req.preTemp);
+      var i = dlarinvoices.compiledHandleBars(parseTheDocumentJson, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -297,22 +319,15 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'rnumber'){
-      var i = rnumber.compiledHandleBars(req.body, req.preTemp);
-      var buf = new Buffer(i);
-      var compiledScript = buf.toString('base64');
-      i = '{"script":"'+compiledScript+'"}'
-      res.send(i);
+      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+        var i = rnumber.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+        var buf = new Buffer(i);
+        var compiledScript = buf.toString('base64');
+        i = '{"script":"'+compiledScript+'"}'
+        res.send(i);
+      }
 
   }
-  if(store == 'locations'){
-      var i = locations.compiledHandleBars(req.body, req.preTemp);
-      var buf = new Buffer(i);
-      var compiledScript = buf.toString('base64');
-      i = '{"script":"'+compiledScript+'"}'
-      res.send(i);
-      
-  }
-
   next();
 };
 

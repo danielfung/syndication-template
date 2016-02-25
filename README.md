@@ -25,10 +25,11 @@
     $ sudo service syndication-template stop
  ```
 
-3a. Usage to create studies in IRB/CRMS/IACUC/DLAR
+3a. Usage to create studies in IRB/CRMS/IACUC/DLAR/Locations
   - To Create IRB/CRMS _uid is expected
   - To Create IACUC either _uid or id is expected
   - To Create DLAR protocolNumber is expected
+  - To Create IACUC-Locations id is expected
   - Example to create IACUC Submission: 
  ```
     $ curl -d '{
