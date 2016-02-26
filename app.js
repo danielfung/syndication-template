@@ -237,16 +237,16 @@ var stepCreateTwo = function (req, res, next) {
   var action = req.body.action;
   logger.info("Store: "+store +" Action: Create");
   logger.info("ID => "+req.body.id+' => type => '+type+' => '+action);
-  var parseTheDocumentJson = JSON.parse(req.body.document);
+  var jsonDocument = req.body.document;
   if(store == 'irb'){
-    var i = irb.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+    var i = irb.compiledHandleBars(jsonDocument, req.preTemp);
     var buf = new Buffer(i);
     var compiledScript = buf.toString('base64');
     i = '{"script":"'+compiledScript+'"}'
     res.send(i);
   }
   if(store == 'crms'){
-    var i = crms.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+    var i = crms.compiledHandleBars(jsonDocument, req.preTemp);
     var buf = new Buffer(i);
     var compiledScript = buf.toString('base64');
     i = '{"script":"'+compiledScript+'"}'
@@ -254,14 +254,14 @@ var stepCreateTwo = function (req, res, next) {
   }
   if(store == 'iacuc'){
       if(type == '_Research Project' && action == 'researchproject:animal:status'){
-          var i = iacuc.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+          var i = iacuc.compiledHandleBars(jsonDocument, req.preTemp);
           var buf = new Buffer(i);
           var compiledScript = buf.toString('base64');
           i = '{"script":"'+compiledScript+'"}'
           res.send(i);
       }
       else if(type == '_Facility' && action == 'facility:resource:datemodified'){
-          var i = locations.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+          var i = locations.compiledHandleBars(jsonDocument, req.preTemp);
           var buf = new Buffer(i);
           var compiledScript = buf.toString('base64');
           i = '{"script":"'+compiledScript+'"}'
@@ -270,7 +270,7 @@ var stepCreateTwo = function (req, res, next) {
   }
   if(store == 'dlar'){
       if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
-        var i = dlar.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+        var i = dlar.compiledHandleBars(jsonDocument, req.preTemp);
         var buf = new Buffer(i);
         var compiledScript = buf.toString('base64');
         i = '{"script":"'+compiledScript+'"}'
@@ -279,7 +279,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlaraolineitem'){
-      var i = dlaraoi.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+      var i = dlaraoi.compiledHandleBars(jsonDocument, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -287,7 +287,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlaraotransfer'){
-      var i = dlaraot.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+      var i = dlaraot.compiledHandleBars(jsonDocument, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -295,7 +295,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarcagecard'){
-      var i = dlarcage.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+      var i = dlarcage.compiledHandleBars(jsonDocument, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -303,7 +303,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarbilling'){
-      var i = dlarbillings.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+      var i = dlarbillings.compiledHandleBars(jsonDocument, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -311,7 +311,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'dlarinvoice'){
-      var i = dlarinvoices.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+      var i = dlarinvoices.compiledHandleBars(jsonDocument, req.preTemp);
       var buf = new Buffer(i);
       var compiledScript = buf.toString('base64');
       i = '{"script":"'+compiledScript+'"}'
@@ -320,7 +320,7 @@ var stepCreateTwo = function (req, res, next) {
   }
   if(store == 'rnumber'){
       if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
-        var i = rnumber.compiledHandleBars(parseTheDocumentJson, req.preTemp);
+        var i = rnumber.compiledHandleBars(jsonDocument, req.preTemp);
         var buf = new Buffer(i);
         var compiledScript = buf.toString('base64');
         i = '{"script":"'+compiledScript+'"}'
