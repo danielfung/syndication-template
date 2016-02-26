@@ -24,6 +24,6 @@ module.exports = function(testData, preTemp) {
     */
     compiledScript = preTemp(testData);
   }
-  fs.writeFileSync('./output/test-outLocation', compiledScript, {encoding:'utf8'});
+  //fs.writeFileSync('./output/test-outLocation', compiledScript, {encoding:'utf8'});
   return compiledScript;
 };
