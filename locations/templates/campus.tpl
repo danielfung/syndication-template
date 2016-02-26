@@ -1,4 +1,4 @@
-var site = ApplicationEntity.getResultSet('_ClickCampus').query("ID='{{id}}'").elements();
+var site = ApplicationEntity.getResultSet('_ClickCampus').query("ID='{{name}}'").elements();
 if(campusFound.count() == 1){
 	?'campus found => '+site.item(1)+'\n';
 }
