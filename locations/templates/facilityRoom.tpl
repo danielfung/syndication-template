@@ -66,8 +66,8 @@ if(currentBuilding.count() == 1){
 
 		}
 
-		facility.parentProject = facility.customAttributes.building;
-		?'Setting parent project of room to => '+facility.parentProject.ID+'\n';
+		facRoomItem.parentProject = facRoomItem.customAttributes.building;
+		?'Setting parent project of room to => '+facRoomItem.parentProject.ID+'\n';
 
 		//update Floor
 		var facRoomCustomExtension = facRoomItem.customAttributes.facilityRoomCustomExtension;

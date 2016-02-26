@@ -33,15 +33,15 @@ if(facBuilding.count() == 1){
 	?'Facility Building name => '+facBuildingItem.name+'\n';
 
 	var fullName = "{{name}}";
-	facility.setQualifiedAttribute("customAttributes.fullName", fullName);
-	?'setting fullName => '+facility.customAttributes.fullName+'\n';
+	facBuildingItem.setQualifiedAttribute("customAttributes.fullName", fullName);
+	?'setting fullName => '+facBuildingItem.customAttributes.fullName+'\n';
 
 	//Update Campus - Create if does not exist
 	var campusFound = ApplicationEntity.getResultSet('_ClickCampus').query("ID='{{site.name}}'").elements();
 	if(campusFound.count() == 1){
 		var campusItem = campusFound.item(1);
-		facility.setQualifiedAttribute("customAttributes.campus", campusItem);
-		?'setting facility campus => '+facility.customAttributes.campus+'\n';
+		facBuildingItem.setQualifiedAttribute("customAttributes.campus", campusItem);
+		?'setting facBuildingItem campus => '+facBuildingItem.customAttributes.campus+'\n';
 	}
 	else{
 		?'Click Campus not found => {{site.name}}\n';
@@ -53,8 +53,8 @@ if(facBuilding.count() == 1){
 		createCampus.dateModified = dateNow;
 		?'campus created => '+createCampus.ID+'\n';
 
-		facility.setQualifiedAttribute("customAttributes.campus", createCampus);
-		?'setting newly created facility campus => '+facility.customAttributes.campus+'\n';
+		facBuildingItem.setQualifiedAttribute("customAttributes.campus", createCampus);
+		?'setting newly created facBuildingItem campus => '+facBuildingItem.customAttributes.campus+'\n';
 	}
 }
 else if(facBuilding.count() > 1){
