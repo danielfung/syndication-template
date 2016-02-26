@@ -1,8 +1,8 @@
 var site = ApplicationEntity.getResultSet('_ClickCampus').query("ID='{{name}}'").elements();
-if(campusFound.count() == 1){
+if(site.count() == 1){
 	?'campus found => '+site.item(1)+'\n';
 }
-else if(campusFound.count() > 1){
+else if(site.count() > 1){
 	?'more than one campus found by id => {{id}}\n';
 }
 else{
