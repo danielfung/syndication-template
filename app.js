@@ -199,7 +199,7 @@ var stepCreateOne = function (req, res, next) {
       }
     } 
     if(store == 'dlar'){
-      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+      if(type == '_ClickIACUCSubmission' && (action == 'iacucsubmission:orginal:status' || action == 'iacucsubmission:amendment:status')){
         req.preTemp = dlarCompliedCreateTemplate;
       }
     }
@@ -219,7 +219,7 @@ var stepCreateOne = function (req, res, next) {
       req.preTemp = dlarInvoiceCompliedCreateTemplate;
     }
     if(store == 'rnumber'){
-      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+      if(type == '_ClickIACUCSubmission' && (action == 'iacucsubmission:orginal:status' || action == 'iacucsubmission:amendment:status'){
         req.preTemp = rnumberCompliedCreateTemplate;
       }
     }
@@ -269,7 +269,7 @@ var stepCreateTwo = function (req, res, next) {
       }
   }
   if(store == 'dlar'){
-      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+      if(type == '_ClickIACUCSubmission' && (action == 'iacucsubmission:orginal:status' || action == 'iacucsubmission:amendment:status')){
         var i = dlar.compiledHandleBars(jsonDocument, req.preTemp);
         var buf = new Buffer(i);
         var compiledScript = buf.toString('base64');
@@ -319,7 +319,7 @@ var stepCreateTwo = function (req, res, next) {
 
   }
   if(store == 'rnumber'){
-      if(type == '_ClickIACUCSubmission' && action == 'iacucsubmission:orginal:status'){
+      if(type == '_ClickIACUCSubmission' && (action == 'iacucsubmission:orginal:status' || action == 'iacucsubmission:amendment:status')){
         var i = rnumber.compiledHandleBars(jsonDocument, req.preTemp);
         var buf = new Buffer(i);
         var compiledScript = buf.toString('base64');
