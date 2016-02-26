@@ -84,6 +84,20 @@ if(currentBuilding.count() == 1){
 			?'Setting floor name => '+facRoomCustomExtension.customAttributes.floor+'\n';
 		{{/if}}
 
+		//Update Status
+		var status = "{{status}}";
+		if(status == "Active Animal Location"){
+			var iacucFacRoomApprovedStatus = EntityUtils.getObjectFromString("com.webridge.entity.Entity[OID[D4697F365E0110479C706BA0B7C45A14]]");
+			facRoomItem.status = iacucFacRoomApprovedStatus;
+			?'Set status to active => '+facRoomItem.status+'\n';
+		}
+		else{
+			var iacucFacRoomInactiveStatus = EntityUtils.getObjectFromString("com.webridge.entity.Entity[OID[69B8F67A4BB0FE4581E807E227593D57]]");
+			facRoomItem.status = iacucFacRoomInactiveStatus;
+			?'Set status to inactive => '+facRoomItem.status+'\n';
+		}
+
+
 	}
 	else if(facRoom.count() > 1){
 

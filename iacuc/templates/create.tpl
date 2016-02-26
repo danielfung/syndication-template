@@ -102,7 +102,6 @@ else{
 	//copy IACUC protocol
 	if(iacucQ.count() == 0){
 		var subjectType = "{{studyDetails.subjectType.name}}";
-		if(subjectType == "Animal"){
 			var status = "{{status}}";
 			if(status == "Submitted"){
 				{{> integrationIacucOrigCreateExisting}}
@@ -113,10 +112,7 @@ else{
 				?'current status =>{{status}}\n';
 			}
 		}
-		else{
-			?'Error: subjectType is not animal, not for IACUC\n';
-			?'RN Study ID =>{{id}}\n';
-		}
+
 	}
 	else{
 		?'IACUC Protocol Already Exists =>'+iacuc_id+'\n';
@@ -125,30 +121,24 @@ else{
 
 	{{else}}
 		var subjectType = "{{studyDetails.subjectType.name}}";
-		if(subjectType == "Animal"){
 			var status = "{{status}}";
 			if(status == "Submitted"){
-			/*
-				1. Create iacuc Submission if it doesn't exist.
-			*/
-			if(iacucQ.count() == 0){
-				{{> integrationIacucOrigCreate}}
+				/*
+					1. Create iacuc Submission if it doesn't exist.
+				*/
+				if(iacucQ.count() == 0){
+					{{> integrationIacucOrigCreate}}
 
-			}
-			else{
-				iacucQ = iacucQ.elements().item(1);
-				?'iacucQ submission found =>'+iacucQ.ID+'\n';
-			}
+				}
+				else{
+					iacucQ = iacucQ.elements().item(1);
+					?'iacucQ submission found =>'+iacucQ.ID+'\n';
+				}
 			}
 			else{
 				?'Error: Status is not submitted\n';
 				?'RN Study ID =>{{id}}\n';
 				?'current status =>{{status}}\n';
 			}
-		}
-		else{
-			?'Error: subjectType is not animal, not for IACUC\n';
-			?'RN Study ID =>{{id}}\n';
-		}
 	{{/if}}
 {{/if}}
