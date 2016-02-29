@@ -194,7 +194,7 @@ var stepCreateOne = function (req, res, next) {
       if(type == '_Research Project' && action == 'researchproject:animal:status'){
         req.preTemp = iacucCompliedCreateTemplate;
       }
-      else if(type == '_Facility' && action == 'facility:resource:datemodified'){
+      else if(type == '_Facility' && (action == 'facility:resource:datemodified' || action == 'facility:project:status')){
         req.preTemp = iacucLocationCompliedCreateTemplate;
       }
     } 
@@ -260,7 +260,7 @@ var stepCreateTwo = function (req, res, next) {
           i = '{"script":"'+compiledScript+'"}'
           res.send(i);
       }
-      else if(type == '_Facility' && action == 'facility:resource:datemodified'){
+      else if(type == '_Facility' && (action == 'facility:resource:datemodified' || action == 'facility:project:status')){
           var i = locations.compiledHandleBars(jsonDocument, req.preTemp);
           var buf = new Buffer(i);
           var compiledScript = buf.toString('base64');
