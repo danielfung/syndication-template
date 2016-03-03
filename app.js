@@ -219,7 +219,7 @@ var stepCreateOne = function (req, res, next) {
       req.preTemp = dlarInvoiceCompliedCreateTemplate;
     }
     if(store == 'rnumber'){
-      if(type == '_ClickIACUCSubmission' && (action == 'iacucsubmission:orginal:status' || action == 'iacucsubmission:amendment:status'){
+      if(type == '_ClickIACUCSubmission' && (action == 'iacucsubmission:orginal:status' || action == 'iacucsubmission:amendment:status')){
         req.preTemp = rnumberCompliedCreateTemplate;
       }
     }
