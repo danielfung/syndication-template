@@ -433,50 +433,6 @@
 		?'removing all housing from SF_AnimalHousing and readding'
 	}
 
-	{{#each animalHousingLocationRoom}}
-		 var room = ApplicationEntity.getResultSet('_Facility').query("ID='{{facilityRoom.id}}'");
-		 if(room.count() > 0){
-			room = room.elements().item(1);
-			var housing = _IS_AnimalHousing.createEntity();
-			?'creating animal housing =>'+housing+'\n';
-			housing.setQualifiedAttribute('customAttributes.facility', room);
-			?'set facility housing =>'+room+'\n';
-
-			housingAdminSet.addElement(room)+'\n';
-			?'adding to housingAdminSet => '+room+'\n';
-
-			var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
-			housing.customAttributes._ProtocolGroup = animalHousingGroupSet;
-			?'creating housing.groupSet =>'+animalHousingGroupSet+'\n';
-
-			var animalHousingGroupSet_1 = housing.customAttributes._ProtocolGroup;
-
-			{{#each species}}		
-				var findAnimal = "{{commonName}}";		 	
-				var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='{{commonName}}'");
-				if(exists.count() > 0){
-					for(var i = 1; i<=exists.count(); i++){
-					 	var animal = exists.elements().item(i).customAttributes._ProtocolGroup;
-					 	var animal_name = animal.customAttributes._Species.customAttributes._attribute0;
-					 	if(findAnimal == animal_name){
-					 		animalHousingGroupSet_1.addElement(animal);
-					 		?'adding animal to housing.animalSet =>'+animal+'\n';
-
-					 	}
-					 }
-				}
-			 {{/each}}
-			housingSet.addElement(housing);
-			?'adding to housingSet => '+housing+'\n';
-		 }
-		else{
-			?'Room Number Not Found => {{facilityRoom.name}}\n';
-			{{#if facilityRoom.facilityRoomCustomExtension.floor}}
-				?'Floor => {{facilityRoom.facilityRoomCustomExtension.floor}}\n';
-			{{/if}}
-			?'Building => {{facilityRoom.building.name}}\n';
-		}
-	{{/each}}
 
 	{{#each vivariumHousingLocations}}
 		var room = ApplicationEntity.getResultSet('_Facility').query("ID='{{facilityBuilding.id}}'");
@@ -515,6 +471,84 @@
 		}
 		else{
 			?'Building Not Found => {{facilityBuilding.name}}\n';
+		}
+	{{/each}}
+
+	{{#each animalHousingLocationRoom}}
+		 var room = ApplicationEntity.getResultSet('_Facility').query("ID='{{facilityRoom.id}}'");
+		 housingSet = iacucQ.customAttributes.SF_AnimalHousing;
+		 var newClass;
+		 var buildingID;
+		 var existsAlready = false;
+		 if(room.count() > 0){
+			room = room.elements().item(1);
+			var classOfFac = room.customAttributes._attribute2;
+			if(classOfFac == "Room" || classOfFac == "Floor"){
+				var buildingExist = room.customAttributes.building;
+				if(buildingExist){
+					room = buildingExist;
+					?'Use building instead of room\n';
+					newClass = buildingExist.customAttributes._attribute2;
+					buildingID = buildingExist.ID;
+				}
+			}
+
+			for(var i = 1; i<=housingSet.count(); i++){
+			   var itemHousing = housingSet.elements().item(i).customAttributes.facility;
+				?itemHousing.ID+'\n';
+				if(itemHousing.ID == buildingID){
+					existsAlready = true;
+				}
+			}
+			
+			if(newClass == "Building"){
+				if(existsAlready == false){
+					var housing = _IS_AnimalHousing.createEntity();
+					?'creating animal housing =>'+housing+'\n';
+					housing.setQualifiedAttribute('customAttributes.facility', room);
+					?'set facility housing =>'+room+'\n';
+
+					housingAdminSet.addElement(room)+'\n';
+					?'adding to housingAdminSet => '+room+'\n';
+
+					var animalHousingGroupSet = _IS_SEL_AnimalGroup.createEntitySet();
+					housing.customAttributes._ProtocolGroup = animalHousingGroupSet;
+					?'creating housing.groupSet =>'+animalHousingGroupSet+'\n';
+
+					var animalHousingGroupSet_1 = housing.customAttributes._ProtocolGroup;
+
+					{{#each species}}		
+						var findAnimal = "{{commonName}}";		 	
+						var exists = iacucQ.customAttributes.SF_AnimalGroup.query("customAttributes._ProtocolGroup.customAttributes._Species.customAttributes._attribute0='{{commonName}}'");
+						if(exists.count() > 0){
+							for(var i = 1; i<=exists.count(); i++){
+							 	var animal = exists.elements().item(i).customAttributes._ProtocolGroup;
+							 	var animal_name = animal.customAttributes._Species.customAttributes._attribute0;
+							 	if(findAnimal == animal_name){
+							 		animalHousingGroupSet_1.addElement(animal);
+							 		?'adding animal to housing.animalSet =>'+animal+'\n';
+
+							 	}
+							 }
+						}
+					 {{/each}}
+					housingSet.addElement(housing);
+					?'adding to housingSet => '+housing+'\n';
+				}
+				else{
+					?'Location Building is already in the system dont need to do anything\n';
+				}
+			}
+			else{
+				?'Location Class is not a building => '+room.ID+'\n';
+			}
+		 }
+		else{
+			?'Room Number Not Found => {{facilityRoom.name}}\n';
+			{{#if facilityRoom.facilityRoomCustomExtension.floor}}
+				?'Floor => {{facilityRoom.facilityRoomCustomExtension.floor}}\n';
+			{{/if}}
+			?'Building => {{facilityRoom.building.name}}\n';
 		}
 	{{/each}}
 	
