@@ -615,31 +615,3 @@
 			?'setting IACUC Suffix ID => '+suffixID+'\n';
 		}
 	
-	var hasFinacial = iacucQ.customAttributes.financials;
-	var setStatusActive = false;
-	if(hasFinacial){
-		var hasStudyAccount = hasFinacial.customAttributes.studyAccounts;
-		if(hasStudyAccount){
-			if(hasStudyAccount.count() > 0){
-				setStatusActive = true;
-			}
-		}
-		else{
-			setStatusActive = false;
-		}
-	}
-	else{
-		setStatusActive = false;
-	}
-	
-	var status;
-	if(setStatusActive){
-		 status= entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[5197D1D677FAFC438EAAB1699ED5C231]]');
-	}
-	else{
-		status = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[5ABEF2B631731F4C9C9E665C2D0AF3AD]]');
-	}
-
-	iacucQ.status = status;
-	?'setting status => '+iacucQ.status.ID+'\n';
-	

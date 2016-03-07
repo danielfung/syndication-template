@@ -79,26 +79,8 @@ if(submissionType == 'PROTOYYYY' || (currentItemID == parentID)){
 		}
 
 	}
-	else if(status == "Suspended"){
-		if(iacucQ.count() == 1){
-			iacucQ = iacucQ.elements().item(1);
-			var suspendedProtocolActivity = ActivityType.getActivityType("_IACUC Study_MarkSuspended", "_IACUC Study");
-			if(suspendedProtocolActivity != null){
-				iacucQ.logActivity(sch, suspendedProtocolActivity, Person.getCurrentUser());
-				?'Logging suspended activity => '+suspendedProtocolActivity+'\n';
-			}
-		}
-	}
-	else if(status == "Closed"){
-		if(iacucQ.count() == 1){
-			iacucQ = iacucQ.elements().item(1);
-			var closedStatusDCM = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[E74C789848FF194D9508D08A248FB788]]');
-			iacucQ.status = closedStatusDCM;
-			?'IACUC Study Closed => Change DCM Status to Closed => '+iacucQ.status.ID+'\n';
-		}
-	}
 	else{
-		?'Error: Status is not Approved, Suspended or Closed\n';
+		?'Error: Status is not Approved\n';
 		?'IACUC Study ID: {{id}}\n';
 		?'current status =>{{status}}\n';
 	}	

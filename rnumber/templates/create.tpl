@@ -308,25 +308,6 @@ var submissionStatus = "{{status}}";
 			?'running updateReadersAndEditors\n';
 			rnumberQ.updateContacts(null);
 			?'updating contacts\n';
-
-			//Update status based on IACUC
-			var status = "{{status}}";
-			if(status == "Discarded"){
-				var discardStatus = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[A4395FC87BADA242B299D1E1B029FBE2]]');
-				rnumberQ.status = discardStatus;
-				?'Updated status to discard => '+rnumberQ.status+'\n';
-			}
-			else if(status == "Closed"){
-				var closedStatus = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[AB57EC44D558484DAB9CCFA2176AFAB0]]');
-				rnumberQ.status = closedStatus;
-				?'Updated status to closed => '+rnumberQ.status+'\n';
-			}
-			else{
-				var submitStatus = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[EC4D938EFD0F244FAD70F312C85E0AF7]]');
-				rnumberQ.status = submitStatus;
-				?'Updated status to submit => '+rnumberQ.status+'\n';
-			}
-
 		}
 		else{
 			//IACUC Legacy Study Creation
