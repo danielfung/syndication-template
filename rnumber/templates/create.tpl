@@ -222,7 +222,7 @@ var submissionStatus = "{{status}}";
 {{#if typeOfSubmission}}
 //IACUC Update
 	//if(submissionStatus == "Approved" || submissionStatus == "Discarded" || submissionStatus == "Closed" || submissionStatus == "Approved - Managed Externally" || submissionStatus == "Expired - Managed Externally"){
-	if(submissionStatus == "Approved" || submissionStatus == "Discarded" || submissionStatus == "Closed"){
+	if(submissionStatus == "Approved"){
 		if(rnumberQ.count() > 0){
 			rnumberQ = rnumberQ.elements().item(1);
 			?'RN Study Found => '+rnumberQ.ID+'\n';
