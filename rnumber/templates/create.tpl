@@ -228,6 +228,8 @@ var submissionStatus = "{{status}}";
 			?'RN Study Found => '+rnumberQ.ID+'\n';
 			var canEdit = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
 			var cantEdit = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
+			var canEditExists = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
+			var cantEditExists = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
 			var studyDetailsRnum = rnumberQ.customAttributes.studyDetails;
 			//Team Member - Read Only
 			if(cantEdit == null){
@@ -235,11 +237,13 @@ var submissionStatus = "{{status}}";
 				var a = ApplicationEntity.createEntitySet('Person');
 				studyDetailsRnum.setQualifiedAttribute('customAttributes.teamCanNotEdit', a);
 				cantEdit = studyDetailsRnum.customAttributes.teamCanNotEdit;
+				cantEditExists = rnumberQ.customAttributes.studyDetails.customAttributes.teamCanNotEdit;
 				?'created team can not edit eset => '+cantEdit+'\n';
 
 			}
 			else{
-				cantEdit.removeAllElements();
+				?'cantEdit Set found => '+cantEdit+'\n';
+
 			}
 
 			//Team Member 
@@ -248,11 +252,12 @@ var submissionStatus = "{{status}}";
 				var a = ApplicationEntity.createEntitySet('Person');
 				studyDetailsRnum.setQualifiedAttribute('customAttributes.otherStudyStaff', a);
 				canEdit = studyDetailsRnum.customAttributes.otherStudyStaff;
+				canEditExists = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
 				?'created team can edit eset => '+canEdit+'\n';
 
 			}
 			else{
-				canEdit.removeAllElements();
+				?'canEdit Set found => '+canEdit+'\n';
 			}
 
 			canEdit = rnumberQ.customAttributes.studyDetails.customAttributes.otherStudyStaff;
@@ -260,23 +265,34 @@ var submissionStatus = "{{status}}";
 
 			{{#each studyTeamMembers}}
 				{{#if studyTeamMember.userId}}
-
 					var person = ApplicationEntity.getResultSet("Person").query("userID = '{{studyTeamMember.userId}}'");
 					if(person.count() > 0){
 						person = person.elements().item(1);
-
+						var personUserID = person.userID;
 						var canEditProtocol = "{{canEditProtocol}}";
 						var rnumberCanEditProtocol;
 
 						if(canEditProtocol == "1"){
-							rnumberCanEditProtocol = true;
-							canEdit.addElement(person);
-							?'person can edit => '+person+'\n';
+							var personExist = canEditExists.query("userID='"+personUserID+"'");
+							if(personExist.count() == 0){
+								rnumberCanEditProtocol = true;
+								canEdit.addElement(person);
+								?'person can edit => '+person+'\n';
+							}
+							else{
+								?'Person already exists in the canEditSet => '+person+'\n';
+							}
 						}
 						else{
-							rnumberCanEditProtocol = false;
-							cantEdit.addElement(person);
-							?'person cant edit => '+person+'\n';
+							var personExist = cantEditExists.query("userID='"+personUserID+"'");
+							if(personExist.count() == 0){
+								rnumberCanEditProtocol = false;
+								cantEdit.addElement(person);
+								?'person cant edit => '+person+'\n';
+							}
+							else{
+								?'Person already exists in the cantEditSet => '+person+'\n';
+							}
 						}	
 					}
 				{{/if}}
