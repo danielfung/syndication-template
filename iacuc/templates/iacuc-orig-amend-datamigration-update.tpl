@@ -415,37 +415,37 @@
 				var parentStudyTeamMember = iacucQ.customAttributes.studyTeamMembers;
 
 						if(draftStudyTeamMember){
-							draftStudyTeamMember.removeAllElements();
-							?'removing all elements from draft study team member\n';
+							//draftStudyTeamMember.removeAllElements();
+							//?'removing all elements from draft study team member\n';
 							draftStudyTeamMember = draft.customAttributes.studyTeamMembers;
 						}
 
 						if(draftReaders){
-							draftReaders.removeAllElements();
-							?'removing all elements from draft readers\n';
+							//draftReaders.removeAllElements();
+							//?'removing all elements from draft readers\n';
 							draftReaders = draft.customAttributes.readers;
 						}
 
 						if(draftEditors){
-							draftEditors.removeAllElements();
-							?'removing all elements from draft editors\n';
+							//draftEditors.removeAllElements();
+							//?'removing all elements from draft editors\n';
 							draftEditors = draft.customAttributes.editors;
 						}
 
 						if(parentReaders){
-							parentReaders.removeAllElements();
-							?'removing all elements from parent readers\n';
+							//parentReaders.removeAllElements();
+							//?'removing all elements from parent readers\n';
 							parentReaders = iacucQ.customAttributes.readers;
 						}
 
 						if(parentEditors){
-							parentEditors.removeAllElements();
-							?'removing all elements from parent editors\n';
+							//parentEditors.removeAllElements();
+							//?'removing all elements from parent editors\n';
 							parentEditors = iacucQ.customAttributes.editors;
 						}
 						if(parentStudyTeamMember){
-							parentStudyTeamMember.removeAllElements();
-							?'removing all elements from parent study team member\n';
+							//parentStudyTeamMember.removeAllElements();
+							//?'removing all elements from parent study team member\n';
 							parentStudyTeamMember = iacucQ.customAttributes.studyTeamMembers;
 						}
 
