@@ -272,6 +272,10 @@
 						whichTemplate = "TMPL8D284738B366772";
 						?'template New Proto=>'+whichTemplate+'\n';						
 					}
+					else if(status == "Approved - Managed Externally" || status == "Expired - Managed Externally"){
+						whichTemplate = "TMPL8D07C62360C5A80";
+						?'template AR=>'+whichTemplate+'\n';					
+					}
 					else{
 						whichTemplate = "TMPL8D02B5766D47C23";
 						?'template New Proto=>'+whichTemplate+'\n';
@@ -282,6 +286,10 @@
 					if(status == "Approved"){
 						whichTemplate = "TMPL8D089BC317FF635";
 						?'template TR=>'+whichTemplate+'\n';
+					}
+					else if(status == "Approved - Managed Externally" || status == "Expired - Managed Externally"){
+						whichTemplate = "TMPL8D089BC317FF635";
+						?'template AR=>'+whichTemplate+'\n';					
 					}
 					else{
 						whichTemplate = "TMPL8D089BC317FF632";
@@ -294,6 +302,10 @@
 						whichTemplate = "TMPL8D0B9AB62B6DF48";
 						?'template AR=>'+whichTemplate+'\n';
 					}
+					else if(status == "Approved - Managed Externally" || status == "Expired - Managed Externally"){
+						whichTemplate = "TMPL8D0B9AB62B6DF48";
+						?'template AR=>'+whichTemplate+'\n';					
+					}
 					else{
 						whichTemplate = "TMPL8D07C62360C5AC7";
 						?'template AR=>'+whichTemplate+'\n';
@@ -304,6 +316,10 @@
 					if(status == "Approved"){
 						whichTemplate = "TMPL8D0C8D3FA92169A";
 						?'template amendment=>'+whichTemplate+'\n';
+					}
+					else if(status == "Approved - Managed Externally" || status == "Expired - Managed Externally"){
+						whichTemplate = "TMPL8D0C8D3FA92169A";
+						?'template AR=>'+whichTemplate+'\n';					
 					}
 					else{
 						whichTemplate = "TMPL8D0B9AB62B6DDD2";
