@@ -704,7 +704,7 @@
 		 	*/
 		 	var actTypeSet = getElements("ActivityTypeForID", "ID", "_IACUC Study_Created");
 			if(actTypeSet.count() > 0){
-			 	actTypeSet = actTypeSet(1);
+			 	actTypeSet = actTypeSet.item(1);
 			 	iacucQ.logActivity(sch, actTypeSet, Person.getCurrentUser());
 			 	?'logging create activity => '+actTypeSet+'\n';
 			}
