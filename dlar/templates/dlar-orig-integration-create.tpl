@@ -41,6 +41,9 @@
 						}
 						else{
 							?'Company Not Found =>{{company.id}}\n';
+							var company = ApplicationEntity.getResultSet("Company").query("NAME = 'MCIT'").elements().item(1);
+							iacucQ.company = company;
+							?'defaulting iacucQ.company => MCIT: '+company+'\n';
 						}
 					}
 				{{else}}
