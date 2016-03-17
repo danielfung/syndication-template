@@ -390,6 +390,8 @@ iacucQ = wom.createTransientEntity('_ClickIACUCSubmission');
 			canEdit = true;
 			if(exists.count() == 0 && person.count() > 0){
 					person = person.item(1);
+					iacucQ.setQualifiedAttribute("customAttributes.departmentAdministrator", person);
+					?'department admin => '+iacucQ.customAttributes.departmentAdministrator+'\n';
 					readers.addElement(person);
 					?'added department admin to readers set => '+readers+'\n';
 					//editors.addElement(person);
