@@ -272,6 +272,16 @@
 		groupAdminSet = iacucQ.customAttributes.groups;
 	}
 
+	var iacucStudyID = "{{id}}";
+	var isLegacy = false;
+	var indexCheck = iacucStudyID.indexOf('TZ:');
+	if(indexCheck >= 0){
+		isNonLegacyProtocol = false;
+	}
+	else{
+		isNonLegacyProtocol = true;
+	}
+
 	{{#each animalCounts}}
 		var aCount = {{actualNumberOfAnimals}};
 
@@ -316,40 +326,45 @@
 				?'Does Animal Exist in Set => '+exists.count()+'\n';
 
 				if(exists.count() > 0){
-					for(var i = 1; i<=exists.count(); i++){
-						var newAnimalCount = {{actualNumberOfAnimals}};
-						var item = exists.elements().item(i);
-						var currentAnimalCount = item.customAttributes._ProtocolGroup.customAttributes.approved;
-						var currentAnimalAvaliable = item.customAttributes._ProtocolGroup.customAttributes.available;
-						var currentAnimalUsed = item.customAttributes._ProtocolGroup.customAttributes.used;
-						var currentAnimalOnOrder = item.customAttributes._ProtocolGroup.customAttributes.onOrder;
-						var totalOrderUsed = currentAnimalUsed+currentAnimalOnOrder;
-						if(currentAnimalCount != newAnimalCount){
-							?'Protocol Group => '+item+' count is different\n';
-							item.customAttributes._ProtocolGroup.customAttributes.approved = newAnimalCount;
-							?'setting new animal count => '+newAnimalCount+'\n';
-						}
+					if(isNonLegacyProtocol){
+						for(var i = 1; i<=exists.count(); i++){
+							var newAnimalCount = {{actualNumberOfAnimals}};
+							var item = exists.elements().item(i);
+							var currentAnimalCount = item.customAttributes._ProtocolGroup.customAttributes.approved;
+							var currentAnimalAvaliable = item.customAttributes._ProtocolGroup.customAttributes.available;
+							var currentAnimalUsed = item.customAttributes._ProtocolGroup.customAttributes.used;
+							var currentAnimalOnOrder = item.customAttributes._ProtocolGroup.customAttributes.onOrder;
+							var totalOrderUsed = currentAnimalUsed+currentAnimalOnOrder;
+							if(currentAnimalCount != newAnimalCount){
+								?'Protocol Group => '+item+' count is different\n';
+								item.customAttributes._ProtocolGroup.customAttributes.approved = newAnimalCount;
+								?'setting new animal count => '+newAnimalCount+'\n';
+							}
 
-						if(currentAnimalAvaliable != newAnimalCount && totalOrderUsed < newAnimalCount){
-							?'Protocol Group => '+item+' count is different and there is more animal avaliable\n';
-							var newAvaliable = newAnimalCount - totalOrderUsed;
-							item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
-							?'setting new animal count(available) => '+newAvaliable+'\n';
+							if(currentAnimalAvaliable != newAnimalCount && totalOrderUsed < newAnimalCount){
+								?'Protocol Group => '+item+' count is different and there is more animal avaliable\n';
+								var newAvaliable = newAnimalCount - totalOrderUsed;
+								item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
+								?'setting new animal count(available) => '+newAvaliable+'\n';
+							}
+							else if(currentAnimalAvaliable != newAnimalCount && totalOrderUsed == 0){
+								?'Protocol Group => '+item+' no animal used or on order\n';
+								var newAvaliable = newAnimalCount;
+								item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
+								?'setting new animal count(available) => '+newAvaliable+'\n';
+							}
+							else if(currentAnimalAvaliable == newAnimalCount){
+								?'Protocol Group => '+item+' avaliable count is same\n';
+							}
+							else{
+								?'Protocol Group => '+item+' count is different and there less animal avaliable\n';
+								item.customAttributes._ProtocolGroup.customAttributes.available = 0;
+								?'setting new animal count(available) => 0\n';	
+							}
 						}
-						else if(currentAnimalAvaliable != newAnimalCount && totalOrderUsed == 0){
-							?'Protocol Group => '+item+' no animal used or on order\n';
-							var newAvaliable = newAnimalCount;
-							item.customAttributes._ProtocolGroup.customAttributes.available = newAvaliable;
-							?'setting new animal count(available) => '+newAvaliable+'\n';
-						}
-						else if(currentAnimalAvaliable == newAnimalCount){
-							?'Protocol Group => '+item+' avaliable count is same\n';
-						}
-						else{
-							?'Protocol Group => '+item+' count is different and there less animal avaliable\n';
-							item.customAttributes._ProtocolGroup.customAttributes.available = 0;
-							?'setting new animal count(available) => 0\n';	
-						}
+					}
+					else{
+						?'Legacy Protocol do not update animalGroup Numbers\n';
 					}
 				}
 				else{
