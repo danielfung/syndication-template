@@ -36,13 +36,21 @@ var iacucCompliedCreateTemplate = handlebars.compile(rawCreateIacucTemplate);
 var rawCreateIrbTemplate = fs.readFileSync(__dirname+'/irb/templates/create.tpl', {encoding:'utf8'});
 var irbCompliedCreateTemplate = handlebars.compile(rawCreateIrbTemplate);
 
-//CRMS Pre-Compile Create Template
-var rawCreateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/create.tpl', {encoding:'utf8'});
+//CRMS Pre-Compile Create Template - Research Navigator creation
+var rawCreateCrmsTemplate = fs.readFileSync(__dirname+'/crms/templates/createRnumber.tpl', {encoding:'utf8'});
 var crmsCompliedCreateTemplate = handlebars.compile(rawCreateCrmsTemplate);
 
-//RNUMBER Pre-Compile Template
-var rawCreateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/create.tpl', {encoding:'utf8'});
+//CRMS Pre-Compile Create Template - IRB Updates
+var rawCreateCrmsTemplateIRB = fs.readFileSync(__dirname+'/crms/templates/createIRB.tpl', {encoding:'utf8'});
+var crmsCompliedCreateTemplateIRB = handlebars.compile(rawCreateCrmsTemplateIRB);
+
+//RNUMBER Pre-Compile Template - IACUC Updates
+var rawCreateResearchNavigatorTemplate = fs.readFileSync(__dirname+'/rnumber/templates/createIACUC.tpl', {encoding:'utf8'});
 var rnumberCompliedCreateTemplate = handlebars.compile(rawCreateResearchNavigatorTemplate);
+
+//RNUMBER Pre-Compile Template - IRB Updates
+var rawCreateResearchNavigatorTemplateIRB = fs.readFileSync(__dirname+'/rnumber/templates/createIRB.tpl', {encoding:'utf8'});
+var rnumberCompliedCreateTemplateIRB = handlebars.compile(rawCreateResearchNavigatorTemplateIRB);
 
 //Locations Pre-Compile Template
 var rawCreateIacucLocationTemplate = fs.readFileSync(__dirname+'/locations/templates/create.tpl', {encoding:'utf8'});
@@ -135,7 +143,6 @@ handlebars.registerPartial("integrationIacucRoomCreate", rawDlarPartialPreCompil
 var rawPartialIacucBuildingCreateTemplate = fs.readFileSync(__dirname+'/locations/templates/facilityBuilding.tpl', {encoding:'utf8'});
 var rawDlarPartialPreCompileIacucBuildingTemplate = handlebars.compile(rawPartialIacucBuildingCreateTemplate);
 handlebars.registerPartial("integrationIacucBuildingCreate", rawDlarPartialPreCompileIacucBuildingTemplate);
-
 
 var rawPartialIacucCampusCreateTemplate = fs.readFileSync(__dirname+'/locations/templates/campus.tpl', {encoding:'utf8'});
 var rawDlarPartialPreCompileIacucCampusTemplate = handlebars.compile(rawPartialIacucCampusCreateTemplate);
