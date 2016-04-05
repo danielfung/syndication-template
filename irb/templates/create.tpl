@@ -108,7 +108,7 @@ if(status == "Submitted"){
 			?'submissionType =>'+irbQ.customAttributes.submissionType.ID+'\n';
 
 		/*
-			1f. set irb Settings, irbSubmissionCustomExtension.irbSettingsNYU, irb Group, brany(bool)
+			1f. set irb Settings, irbSubmissionCustomExtension.irbSettingsNYU, irb Group, brany(bool), externalIRBInvolved(bool)
 		*/
 			var irbSettings = _IRBSettings.getIRBSettings();
 			var setting = irbQ.customAttributes.irbSettings
@@ -140,13 +140,22 @@ if(status == "Submitted"){
 			}
 
 			var IRBname = "{{studyDetails.responsibleIRB.irbType}}";
-			if(IRBname == "BRANY IRB"){
+			if(IRBname == "BRANY"){
 				irbQ.customAttributes.irbSubmissionCustomExtension.setQualifiedAttribute("customAttributes.branyStudy", true);
 				?'set irb.irbSubmissionCustomExtension.branyStudy => true\n';
 			}
 			else{
 				irbQ.customAttributes.irbSubmissionCustomExtension.setQualifiedAttribute("customAttributes.branyStudy", false);
 				?'set irb.irbSubmissionCustomExtension.branyStudy => false\n';
+			}
+
+			if(IRBname == "Other (Specify)"){
+				irbQ.setQualifiedAttribute("customAttributes.externalIRBInvolved", true);
+				?'IRB External IRB Involved => true\n';
+			}
+			else{
+				irbQ.setQualifiedAttribute("customAttributes.externalIRBInvolved", false);
+				?'IRB External IRB Involved => false\n';			
 			}
 
 		/*
@@ -372,6 +381,7 @@ if(status == "Submitted"){
 					
 			{{/each}}
 
+			/*
 			//other study staff --> study team member --> create new role?? -- not done
 			{{#each studyDetails.otherStudyStaff}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'"); 
@@ -432,7 +442,7 @@ if(status == "Submitted"){
 						}
 					}		
 			{{/each}}
-
+			*/
 		/*
 			2c. set Drugs/Devices 
 			1f. set drugs and devices
@@ -462,7 +472,21 @@ if(status == "Submitted"){
 				if(irbDrugs != null && irbDrugs.count() > 0){
 					irbDrugs = irbDrugs.elements().item(1);
 					var newDrug = _Drug.createEntity();
-					newDrug.setQualifiedAttribute("customAttributes.drug", irbDrugs);
+					var drugItemID = irbDrugs.ID;
+					var today = new Date();
+					var TBDNAME = irbDrugs.item(i).customAttributes.brandName;
+					if(drugItemID != 'TBD00000001'){
+						newDrug.setQualifiedAttribute("customAttributes.drug", irbDrugs);
+					}
+					else{
+						newDrug.setQualifiedAttribute("customAttributes.tempBrandName", TBDNAME);
+						newDrug.setQualifiedAttribute("customAttributes.tempGenericName", TBDNAME);
+						newDrug.setQualifiedAttribute("customAttributes.drug.customAttributes.genericName",TBDNAME);
+						newDrug.setQualifiedAttribute("customAttributes.drug.customAttributes.brandName",TBDNAME);
+						newDrug.setQualifiedAttribute("customAttributes.drug.dateModified", today);
+						newDrug.setQualifiedAttribute("customAttributes.drug.dateCreated", today);
+						newDrug.setQualifiedAttribute("customAttributes.drug.customAttributes.project", newIRBSubmission);
+					}					
 					?'adding drug to drugSet =>'+newDrug+'\n';
 					drugSet.addElement(newDrug);
 				}
@@ -489,7 +513,19 @@ if(status == "Submitted"){
 				if(irbDevices != null && irbDevices.count() > 0){
 					irbDevices = irbDevices.elements().item(1);
 					var newDevice = _Device.createEntity();
-					newDevice.setQualifiedAttribute("customAttributes.device", irbDevices);
+					var deviceID = irbDevices.item(i).ID;
+					var today = new Date();
+					var TBDDEVICENAME = irbDevices.item(i).customAttributes.name;
+					if(deviceID != "TBDDEV00001"){
+						newDevice.setQualifiedAttribute("customAttributes.device", irbDevices);
+					}
+					else{
+					 	newDevice.setQualifiedAttribute("customAttributes.tempName", TBDDEVICENAME);
+						newDevice.setQualifiedAttribute("customAttributes.device.customAttributes.name", TBDDEVICENAME);
+						newDevice.setQualifiedAttribute("customAttributes.device.customAttributes.project", newIRBSubmission);
+						newDevice.setQualifiedAttribute("customAttributes.device.dateModified", today);
+						newDevice.setQualifiedAttribute("customAttributes.device.dateCreated", today);
+					}
 					?'adding device to deviceSet =>'+newDevice+'\n';
 					deviceSet.addElement(newDevice);
 				}
@@ -578,39 +614,75 @@ if(status == "Submitted"){
 			}
 
 			{{#each studyDetails.bellevueLocations}}
-				var location = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements().item(1);
-				irbQ.setQualifiedAttribute("customAttributes.locationsBellevue", location, "add");
-				?'adding belleuve location =>'+location+'\n';
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					irbQ.setQualifiedAttribute("customAttributes.locationsBellevue", location, "add");
+					?'adding belleuve location =>'+location+'\n';
+				}
+				else{
+					?'Bellevue Location not found by {{ID}}\n';
+				}
 			{{/each}}
 
 			{{#each studyDetails.nyuSchoolCollegeLocations}}
-				var location = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements().item(1);
-				irbQ.setQualifiedAttribute("customAttributes.nyuSchoolCollegeLocation", location, "add");
-				?'adding belleuve location =>'+location+'\n';
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					irbQ.setQualifiedAttribute("customAttributes.nyuSchoolCollegeLocation", location, "add");
+					?'adding NYU School College location =>'+location+'\n';
+				}
+				else{
+					?'NYU School College Location not found by {{ID}}\n';
+				}
 			{{/each}}
 
 			{{#each studyDetails.nyufgpLocations}}
-				var location = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements().item(1);
-				irbQ.setQualifiedAttribute("customAttributes.locationsOffsiteFgp", location, "add");
-				?'adding offsite FGP location =>'+location+'\n';
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					irbQ.setQualifiedAttribute("customAttributes.locationsOffsiteFgp", location, "add");
+					?'adding offsite FGP location =>'+location+'\n';
+				}
+				else{
+					?'FGP Location not found by {{ID}}\n';
+				}
 			{{/each}}
 
 			{{#each studyDetails.nyumcLocations}}
-				var location = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements().item(1);
-				irbQ.setQualifiedAttribute("customAttributes.nyumcLocations", location, "add");
-				?'adding NYUMC location =>'+location+'\n';
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					irbQ.setQualifiedAttribute("customAttributes.nyumcLocations", location, "add");
+					?'adding NYUMC location =>'+location+'\n';
+				}
+				else{
+					?'NYUMC Location not found by {{ID}}\n';
+				}
 			{{/each}}
 
 			{{#each studyDetails.otherLocations}}
-				var location = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements().item(1);
-				irbQ.setQualifiedAttribute("customAttributes.otherNYULocations", location, "add");
-				?'adding Other location =>'+location+'\n';
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					irbQ.setQualifiedAttribute("customAttributes.otherNYULocations", location, "add");
+					?'adding Other location =>'+location+'\n';
+				}
+				else{
+					?'Other Location not found by {{ID}}\n';
+				}
 			{{/each}}
 
 			{{#each studyDetails.vaHospitalLocations}}
-				var location = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements().item(1);
-				irbQ.setQualifiedAttribute("customAttributes.locationsVA", location, "add");
-				?'adding Other location =>'+location+'\n';
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					irbQ.setQualifiedAttribute("customAttributes.locationsVA", location, "add");
+					?'adding Other location =>'+location+'\n';
+				}
+				else{
+					?'VA Location not found by {{ID}}\n';
+				}
 			{{/each}}
 
 	}
@@ -618,9 +690,6 @@ if(status == "Submitted"){
 		irbQ = irbQ.elements().item(1);
 		?'IRB Study Found => '+irbQ+'\n';
 		?'IRB Study ID => '+irbQ.ID+'\n';
-
-		irbQ.dateModified = new Date();
-		?'irbQ.dateModified =>'+irbQ.dateModified+'\n';
 	}
 }
 else{

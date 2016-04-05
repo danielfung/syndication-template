@@ -6,10 +6,22 @@ var crmsQ = ApplicationEntity.getResultSet('_ClinicalTrial').query("ID='"+crms_i
 
 var status = '{{status}}
 
+function inArray(item,array)
+{
+    var count=array.length;
+    for(var i=0;i<count;i++)
+    {
+        if(array[i]===item){return true;}
+    }
+    return false;
+}
+
 if(status == "Approved"){
 	if(crmsQ.count() == 1){
 		crmsQ = crmsQ.elements().item(1);
 		?'CRMS Study found => '+crmsQ+'\n';
+
+
 
 	}
 	else{

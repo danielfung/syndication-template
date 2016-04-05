@@ -21,6 +21,16 @@ var rnumberQ = ApplicationEntity.getResultSet('_Research Project').query("ID='"+
 
 var submissionStatus = "{{status}}";
 
+function inArray(item,array)
+{
+    var count=array.length;
+    for(var i=0;i<count;i++)
+    {
+        if(array[i]===item){return true;}
+    }
+    return false;
+}
+
 {{#if submissionType}}
 //IRB UPDATE
 	if(submissionStatus == "Approved"){
@@ -102,7 +112,6 @@ var submissionStatus = "{{status}}";
 				}
 				else{
 					?'Other Location Eset Found => '+locationOther+'\n';
-					locationOther.removeAllElements();
 					locationOther = studyDetails.customAttributes.otherLocations;
 				}
 
@@ -119,8 +128,84 @@ var submissionStatus = "{{status}}";
 					locationVaHospital = studyDetails.customAttributes.vaHospitalLocations;
 				}
 
+
+				//Updating Locations to Rnumber from IRB
+				{{#each locationsBellevue}}
+				var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+				if(locationFind.count() == 1){
+					var location = locationFind.item(1);
+					locationBellevue.addElement(location);
+					?'Adding location to Bellevue Eset => {{ID}}\n';
+				}
+				else{
+					?'Bellevue Location not found by {{ID}}\n';
+				}
+				{{/each}}
+
+				{{#each nyuSchoolCollegeLocation}}
+					var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+					if(locationFind.count() == 1){
+						var location = locationFind.item(1);
+						locationNyuSchoolCollege.addElement(location);
+						?'Adding location to School College Eset => {{ID}}\n';
+					}
+					else{
+						?'School College Location not found by {{ID}}\n';
+					}
+				{{/each}}
+
+				{{#each locationsOffsiteFgp}}
+					var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+					if(locationFind.count() == 1){
+						var location = locationFind.item(1);
+						locationNyuFGP.addElement(location);
+						?'Adding location to NYU FGP Eset => {{ID}}\n';
+					}
+					else{
+						?'NYU FGP Location not found by {{ID}}\n';
+					}
+				{{/each}}
+
+				{{#each nyumcLocations}}
+					var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+					if(locationFind.count() == 1){
+						var location = locationFind.item(1);
+						locationNyumc.addElement(location);
+						?'Adding location to NYUMC Eset => {{ID}}\n';
+					}
+					else{
+						?'NYUMC Location not found by {{ID}}\n';
+					}
+				{{/each}}
+
+				{{#each otherNYULocations}}
+					var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+					if(locationFind.count() == 1){
+						var location = locationFind.item(1);
+						locationOther.addElement(location);
+						?'Adding location to other eset => {{ID}}\n';
+					}
+					else{
+						?'Other Location not found by {{ID}}\n';
+					}
+				{{/each}}
+
+				{{#each locationsVA}}
+					var locationFind = ApplicationEntity.getResultSet('_NYULocations').query("ID='{{ID}}'").elements();
+					if(locationFind.count() == 1){
+						var location = locationFind.item(1);
+						locationVaHospital.addElement(location);
+						?'Adding location to VA Hospital Eset => {{ID}}\n';
+					}
+					else{
+						?'VA Location not found by {{ID}}\n';
+					}
+				{{/each}}
+
 				/*
 					1b. Update Study Teaam Members(Sub Investigator, Research Coordinator, Other Study Staff, Team Members with read Only Access, Volunteer Study Staff)
+						- A. Create Eset if does not exist, else emtpy the esets -- done
+					 	- B. Add back to eset based on what is in IRB -- not done yet (Other Study Team Member, Team Volunteer - no mapping)
 				*/
 
 				var subInvestigatorEset = studyDetails.customAttributes.teamSubInvestigators;
@@ -170,7 +255,7 @@ var submissionStatus = "{{status}}";
 				}
 				else{
 				    ?'Sub Investigator Eset found => '+otherStudyTeamEset+'\n';
-				    otherStudyTeamEset.removeAllElements();
+				    //otherStudyTeamEset.removeAllElements();
 					otherStudyTeamEset = studyDetails.customAttributes.otherStudyStaff;
 				}
 
@@ -185,7 +270,7 @@ var submissionStatus = "{{status}}";
 				}
 				else{
 				    ?'Sub Investigator Eset found => '+teamMemberReadEset+'\n';
-				    teamMemberReadEset.removeAllElements();
+				    //teamMemberReadEset.removeAllElements();
 					teamMemberReadEset = studyDetails.customAttributes.teamCanNotEdit;
 				}
 
@@ -201,9 +286,72 @@ var submissionStatus = "{{status}}";
 				}
 				else{
 				    ?'Sub Investigator Eset found => '+volunteerEset+'\n';
-				    volunteerEset.removeAllElements();
+				    //volunteerEset.removeAllElements();
 					volunteerEset = studyDetails.customAttributes.teamVolunteers;
 				}
+
+				var coInvestigatorRoleName = "Co-Investigator";
+				var coInvestigatorPIRoleName = "Co-Principal Investigator";
+				var studyCoordRoleName = "Study Coordinator / Primary Contact";
+				var studyTeamMemRoleName = "Study Team Member";
+
+				{{#each studyTeamMembers}}
+					var personExist = ApplicationEntity.getResultSet('Person').query("{{studyTeamMember.userID}}");
+					if(personExist.count() == 1){
+						var person = personExist.elements().item(1);
+						var rolesForPerson = [];
+						{{#each rolesOnStudy}}
+							rolesForPerson.push("{{name}}");
+						{{/each}}
+
+						if(rolesForPerson.length > 0){
+							if(inArray(studyCoordRoleName, rolesForPerson)){
+								var createResearchCoord = wom.createTransientEntity("_Research Coordinator");
+								createResearchCoord.setQualifiedAttribute("customAttributes.coordinator", person);
+								researchCoordEset.addElement(createResearchCoord);
+								?'Addded person => {{studyTeamMember.userId}} to research coord eset\n';
+							}
+
+							if(inArray(coInvestigatorRoleName , rolesForPerson)){
+								subInvestigatorEset.addEelment(person);
+								?'Addded person => {{studyTeamMember.userId}} to sub investigator eset\n';
+							}
+							/*
+								//Not done -- roles not mapped in IRB
+								if(inArray("otherStudyStaff , rolesForPerson)){
+									otherStudyTeamEset.addElement(person);
+								}
+
+								if(inArray("volunteer" , rolesForPerson)){
+									volunteerEset.addElement(person);
+								}
+							*/					
+						}
+						else{
+							?'No Roles for this person => {{studyTeamMember.userID}}\n';
+						}
+					}
+					else{
+						?'person not found by user id => {{studyTeamMember.userID}}'
+					}
+				{{/each}}
+
+				/*
+					1c. Update investigator and rerun update editors/editors
+				*/
+				((#if investigator))
+					var piFind = ApplicationEntity.getResultSet('_Person').query("userID='{{studyTeamMember.userID}}'").elements();
+					if(piFind.count() == 1){
+						var pi = piFind.item(1);
+						studyDetails.setQualifiedAttribute("customAttributes.principalInvestigator", pi);
+						?'Setting pi to study => {{studyTeamMember.userID}}\n';
+					}					
+					else{
+						?'PI not found by userID => {{studyTeamMember.userID}}\n';
+					}
+				{{/if}}
+
+				rnumberQ.updateReadersAndEditors();
 	 		}
 			else{
 				?'Error => {{id}} studyDetails is null \n';
