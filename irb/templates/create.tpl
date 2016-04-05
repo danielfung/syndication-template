@@ -381,7 +381,7 @@ if(status == "Submitted"){
 					
 			{{/each}}
 
-			/*
+			
 			//other study staff --> study team member --> create new role?? -- not done
 			{{#each studyDetails.otherStudyStaff}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'"); 
@@ -442,7 +442,7 @@ if(status == "Submitted"){
 						}
 					}		
 			{{/each}}
-			*/
+			
 		/*
 			2c. set Drugs/Devices 
 			1f. set drugs and devices
