@@ -296,8 +296,8 @@ if(status == "Submitted"){
 			2b. set StudyTeam 
 			'customAttributes.studyDetails.customAttributes.teamSubInvestigators' --> co-investigator
 			'customAttributes.studyDetails.customAttributes.researchCoordinators' --> Study Coordinator/Primary Contact
-			'customAttributes.studyDetails.customAttributes.otherStudyStaff' --> studyTeamMember -- new role??? -- not done
-			'customAttributes.studyDetails.customAttributes.teamVolunteers' --> studyTeamMember --new role??? -- not done
+			'customAttributes.studyDetails.customAttributes.otherStudyStaff' --> studyTeamMember -- new role??? -- not done - defaulting to studyTeamMember
+			'customAttributes.studyDetails.customAttributes.teamVolunteers' --> studyTeamMember --new role??? -- not done -- defaulting to studyTeamMember
 			ex) var a = ApplicationEntity.createEntitySet("_StudyTeamMemberInfo");
 			    irbQ.setQualifiedAttribute("customAttributes.studyTeamMembers", a);	 
 				var stubTeamMap = {

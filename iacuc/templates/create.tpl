@@ -111,8 +111,6 @@ else{
 				?'RN Study ID =>{{id}}\n';
 				?'current status =>{{status}}\n';
 			}
-		}
-
 	}
 	else{
 		?'IACUC Protocol Already Exists =>'+iacuc_id+'\n';

@@ -34,7 +34,7 @@ function inArray(item,array)
 {{#if submissionType}}
 //IRB UPDATE
 	if(submissionStatus == "Approved"){
-		if(rnumberQ.count() > 0){
+		if(rnumberQ.count() == 1){
 			rnumberQ = rnumberQ.elements().item(1);
 			?'RN Study Found => '+rnumberQ.ID+'\n';
 			var studyDetails = rnumberQ.customAttributes.studyDetails;
@@ -352,6 +352,14 @@ function inArray(item,array)
 				{{/if}}
 
 				rnumberQ.updateReadersAndEditors();
+
+				/*
+					1d. Update name of study
+				*/
+
+				rnumberQ.name = "{{name}}";
+				?'updated name of study => '+rnumberQ.name+'\n';
+
 	 		}
 			else{
 				?'Error => {{id}} studyDetails is null \n';
