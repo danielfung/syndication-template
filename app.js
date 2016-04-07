@@ -246,11 +246,13 @@ var stepCreateTwo = function (req, res, next) {
   logger.info("ID => "+req.body.id+' => type => '+type+' => '+action);
   var jsonDocument = req.body.document;
   if(store == 'irb'){
-    var i = irb.compiledHandleBars(jsonDocument, req.preTemp);
-    var buf = new Buffer(i);
-    var compiledScript = buf.toString('base64');
-    i = '{"script":"'+compiledScript+'"}'
-    res.send(i);
+      if(type == '_Research Project' && action == 'researchproject:human:status'){
+        var i = irb.compiledHandleBars(jsonDocument, req.preTemp);
+        var buf = new Buffer(i);
+        var compiledScript = buf.toString('base64');
+        i = '{"script":"'+compiledScript+'"}'
+        res.send(i);
+      }
   }
   if(store == 'crms'){
     var i = crms.compiledHandleBars(jsonDocument, req.preTemp);
