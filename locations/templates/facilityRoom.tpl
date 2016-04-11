@@ -10,6 +10,11 @@ if(currentBuilding.count() == 1){
 		?'Facility Room Found => '+facRoomItem.ID+'\n';
 		var checkCurrentBuilding = currentBuilding.item(1);
 
+		//updating name of room
+		var facName = "{{name}}";
+		facRoomItem.setQualifiedAttribute("name", facName);;
+		?'facility.name => '+facRoomItem.name+'\n';
+
 		//Remove existing usage list
 		var facUsageEset = facRoomItem.customAttributes.usageList;
 		if(facUsageEset == null){
