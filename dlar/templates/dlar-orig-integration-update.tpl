@@ -140,18 +140,25 @@
 					person = person.item(1);
 					contactSet.addElement(person);
 					?'added person to contact set =>'+person+'\n';
-
-					var studyTeam = _StudyTeamMemberINfo.createEntity();
-					?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
-					studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
-					?'set person to studyTeamMember => '+person+'\n';
-					studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
-					?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
-					studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
-					?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
-
-					protocolTeamMembers.addElement(studyTeam);
-					?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
+					var personExists = protocolTeamMembers.query("customAttributes.studyTeamMember.userID='{{investigator.studyTeamMember.userId}}'");
+					if(personExists.count() == 0){
+						var studyTeam = _StudyTeamMemberINfo.createEntity();
+						?'create entity studyTeamMemberInfo => '+studyTeam+'\n';
+						studyTeam.setQualifiedAttribute('customAttributes.studyTeamMember', person);
+						?'set person to studyTeamMember => '+person+'\n';
+						studyTeam.customAttributes.isAuthorizedToOrderAnimals = dlarAuthorizedToOrderAnimals;
+						?'set isAuhtorizedToOrderAnimals => '+dlarAuthorizedToOrderAnimals+'\n';
+						studyTeam.customAttributes.isInvolvedInAnimalHandling = dlarInvolvedInAnimalHandling;
+						?'set isInvolvedInAnimalHandling => '+dlarInvolvedInAnimalHandling+'\n';
+						protocolTeamMembers.addElement(studyTeam);
+						?'added studyTeam to IACUC Study Team =>'+studyTeam+'\n';
+					}
+					else{
+						var personFound = personExists.elements().item(1);
+						personFound.setQualifiedAttribute("customAttributes.isAuthorizedToOrderAnimals", dlarAuthorizedToOrderAnimals);
+						personFound.setQualifiedAttribute("customAttributes.isInvolvedInAnimalHandling", dlarInvolvedInAnimalHandling);
+						?'Person already exists => '+personFound+'\n';						
+					}
 				}
 			{{/if}}
 
