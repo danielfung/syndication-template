@@ -300,12 +300,12 @@
 				var painCategoryC = ' Pain Category C ';
 				var painCategoryD = ' Pain Category D ';
 				var painCategoryE = ' Pain Category E ';
-				*/
+				
 				var speciesArray = [];
 				{{#each animalGroups}}
 					speciesArray.push({"species":"{{species.commonName}}", "name":"{{name}}"});
 				{{/each}}
-
+				*/
 				{{#each animalCounts}}
 
 				var aCount = {{actualNumberOfAnimals}};
