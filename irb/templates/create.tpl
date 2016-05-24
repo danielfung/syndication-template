@@ -83,7 +83,6 @@ if(status == "Submitted"){
 				}
 			}
 
-
 		/*
 			1d. set parentStudy to itself;
 			if null, set to itself inorder for read security to work correctly
@@ -93,7 +92,6 @@ if(status == "Submitted"){
 				irbQ.setQualifiedAttribute("customAttributes.parentStudy", irbQ);
 			}
 			?'parentStudy =>'+irbQ.customAttributes.parentStudy+'\n';
-
 
 		/*
 			1e. set submissionType = 'STUDY'; 
@@ -468,7 +466,7 @@ if(status == "Submitted"){
 			{{/if}}
 
 			{{#each studyDetails.Drugs}}
-				irbDrugs = ApplicationEntity.getResultSet("_DrugSelection").query("ID ='{{ID}}'");
+				irbDrugs = ApplicationEntity.getResultSet("_DrugSelection").query("customAttributes.genericName ='{{drug.genericName}}'");
 				if(irbDrugs != null && irbDrugs.count() > 0){
 					irbDrugs = irbDrugs.elements().item(1);
 					var newDrug = _Drug.createEntity();
@@ -491,7 +489,7 @@ if(status == "Submitted"){
 					drugSet.addElement(newDrug);
 				}
 				else{
-					?'Cant Find Drug => {{ID}}\n';
+					?'Cant Find Drug => {{drug.ID}} => {{drug.genericName}}\n';
 				}
 			{{/each}}
 
@@ -509,7 +507,7 @@ if(status == "Submitted"){
 			{{/if}}
 
 			{{#each studyDetails.Devices}}
-				irbDevices = ApplicationEntity.getResultSet("_DeviceSelection").query("ID ='{{deviceSelection.ID}}'");
+				irbDevices = ApplicationEntity.getResultSet("_DeviceSelection").query("customAttributes.name ='{{deviceSelection.deviceName}}'");
 				if(irbDevices != null && irbDevices.count() > 0){
 					irbDevices = irbDevices.elements().item(1);
 					var newDevice = _Device.createEntity();
@@ -530,7 +528,7 @@ if(status == "Submitted"){
 					deviceSet.addElement(newDevice);
 				}
 				else{
-					?'Cant Find Device => {{deviceSelection.ID}}\n';
+					?'Cant Find Device => {{deviceSelection.ID}} => {{deviceSelection.deviceName}}\n';
 				}
 			{{/each}}
 

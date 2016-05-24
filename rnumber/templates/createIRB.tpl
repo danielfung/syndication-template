@@ -42,7 +42,7 @@ function inArray(item,array)
 				/*
 					1a. Update Locations From IRB => My Studies 
 					 	- A. Create Eset if does not exist, else emtpy the esets -- done
-					 	- B. Add back to eset based on what is in IRB -- not done yet
+					 	- B. Add back to eset based on what is in IRB -- done
 				*/
 				var locationBellevue = studyDetails.customAttributes.bellevueLocations;
 				var locationNyuFGP = studyDetails.customAttributes.nyufgpLocations;
@@ -361,7 +361,7 @@ function inArray(item,array)
 					?'updated name of study => '+rnumberQ.name+'\n';
 
 				/*
-					2a. Update Drugs --not done
+					2a. Update Drugs --not done - remove all drugs? 
 				*/
 
 					var drugsEset = studyDetails.customAttributes.Drugs;
@@ -401,7 +401,7 @@ function inArray(item,array)
 						{{/if}}
 					{{/each}}
 				/*
-					2b. Update Devices --not done
+					2b. Update Devices --not done - remove all devices?
 				*/
 					var devicesEset = studyDetails.customAttributes.Devices;
 					if(devicesEset == null){
@@ -425,8 +425,7 @@ function inArray(item,array)
 								var createDeviceItem = wom.createTransientEntity("_Device");
 								createDeviceItem.setQualifiedAttribute("customAttributes.deviceSelection", findDeviceElement);
 								?'createDeviceItem => '+createDeviceItem+'\n';
-								devicesEset.addElement(createDeviceItem);
-					
+								devicesEset.addElement(createDeviceItem);		
 							}	
 							else{
 								 var tbdElement = ApplicationEntity.getResultSet('_Device Selection').query("customAttributes.deviceName='TBD'").elements().item(1);
