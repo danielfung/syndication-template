@@ -339,26 +339,107 @@ function inArray(item,array)
 				/*
 					1c. Update investigator and rerun update editors/editors
 				*/
-				((#if investigator))
-					var piFind = ApplicationEntity.getResultSet('_Person').query("userID='{{studyTeamMember.userID}}'").elements();
-					if(piFind.count() == 1){
-						var pi = piFind.item(1);
-						studyDetails.setQualifiedAttribute("customAttributes.principalInvestigator", pi);
-						?'Setting pi to study => {{studyTeamMember.userID}}\n';
-					}					
-					else{
-						?'PI not found by userID => {{studyTeamMember.userID}}\n';
-					}
-				{{/if}}
+					((#if investigator))
+						var piFind = ApplicationEntity.getResultSet('_Person').query("userID='{{studyTeamMember.userID}}'").elements();
+						if(piFind.count() == 1){
+							var pi = piFind.item(1);
+							studyDetails.setQualifiedAttribute("customAttributes.principalInvestigator", pi);
+							?'Setting pi to study => {{studyTeamMember.userID}}\n';
+						}					
+						else{
+							?'PI not found by userID => {{studyTeamMember.userID}}\n';
+						}
+					{{/if}}
 
-				rnumberQ.updateReadersAndEditors();
+					rnumberQ.updateReadersAndEditors();
 
 				/*
 					1d. Update name of study
 				*/
 
-				rnumberQ.name = "{{name}}";
-				?'updated name of study => '+rnumberQ.name+'\n';
+					rnumberQ.name = "{{name}}";
+					?'updated name of study => '+rnumberQ.name+'\n';
+
+				/*
+					2a. Update Drugs --not done
+				*/
+
+					var drugsEset = studyDetails.customAttributes.Drugs;
+					if(drugsEset == null){
+						var createDrugEset = ApplicationEntity.createEntitySet('_Investigational Drug');
+						studyDetails.setQualifiedAttribute("customAttributes.Drugs", createDrugEset);
+						drugsEset = studyDetails.customAttributes.Drugs;
+						?'create drug eset => '+drugsEset+'\n';
+					}
+					else{
+						//remove all drugs?
+					}
+
+					{{#each drugs}}
+						{{#if drug}}
+							//drug selected
+							var drugGenericName = "{{drug.genericName}}";
+							var drugBrandName = "{{drug.brandName}}";
+							var findDrug = ApplicationEntity.getResultSet('_Drug Selection').query("customAttributes.genericName='"+drugGenericName+"'");
+							if(findDrug.count() == 1){
+								var findDrugElement = findDrug.elements().item(1);
+								var createDrugItem = wom.createTransientEntity("_Investigational Drug");
+								?'create drug item => '+createDrugItem+'\n';
+								createDrugItem.setQualifiedAttribute('customAttributes.drug', findDrugElement);
+								drugsEset.addElement(createDrugItem);
+							}
+							else{
+								var tbdElement = ApplicationEntity.getResultSet('_Drug Selection').query("customAttributes.genericName='TBD'").elements().item(1);
+								var createDrugItem = wom.createTransientEntity("_Investigational Drug");
+								?'create drug item => '+createDrugItem+'\n';
+								createDrugItem.setQualifiedAttribute('customAttributes.drugName', drugGenericName);
+								?'drugName(generic) => '+createDrugItem.customAttributes.drugName+'\n';
+								createDrugItem.setQualifiedAttribute('customAttributes.drug', tbdElement);
+								drugsEset.addElement(createDrugItem);
+							}
+							
+						{{/if}}
+					{{/each}}
+				/*
+					2b. Update Devices --not done
+				*/
+					var devicesEset = studyDetails.customAttributes.Devices;
+					if(devicesEset == null){
+						var createDeviceEset = ApplicationEntity.createEntitySet('_Device');
+						studyDetails.setQualifiedAttribute("customAttributes.Devices", createDeviceEset);
+						devicesEset = studyDetails.customAttributes.Devices;
+						?'create device eset => '+devicesEset+'\n';
+					}
+					else{
+						//remove all devices?
+					}
+
+					{{#each devices}}
+						{{#if device}}
+							var deviceSelectID =  "{{device.ID}}";
+							var deviceSelectName = "{{device.name}}";
+							var findDevice = ApplicationEntity.getResultSet('_Device Selection').query("customAttributes.deviceName='"+deviceSelectName+"'");
+							
+							if(findDevice.count() == 1){
+								var findDeviceElement = findDevice.elements().item(1);
+								var createDeviceItem = wom.createTransientEntity("_Device");
+								createDeviceItem.setQualifiedAttribute("customAttributes.deviceSelection", findDeviceElement);
+								?'createDeviceItem => '+createDeviceItem+'\n';
+								devicesEset.addElement(createDeviceItem);
+					
+							}	
+							else{
+								 var tbdElement = ApplicationEntity.getResultSet('_Device Selection').query("customAttributes.deviceName='TBD'").elements().item(1);
+								 var createDeviceItem = wom.createTransientEntity("_Device");
+								 ?'create device item => '+createDeviceItem+'\n';
+								 createDeviceItem.setQualifiedAttribute("customAttributes.deviceSelection", tbdElement);
+								 ?'set device item tbd => '+createDeviceItem.customAttributes.deviceSelection+'\n';
+								 createDeviceItem.setQualifiedAttribute("customAttributes.deviceName", deviceSelectName);
+								 ?'set device item name => '+createDeviceItem.customAttributes.deviceName+'\n';
+								 devicesEset.addElement(createDeviceItem);
+							}				
+						{{/if}}
+					{{/each}}
 
 	 		}
 			else{
