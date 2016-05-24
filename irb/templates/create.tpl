@@ -119,7 +119,7 @@ if(status == "Submitted"){
 			if(irbCustomSettings == null){
 				var a = _IRBSubmissionCustomExtension.createEntity();
 				irbQ.customAttributes.irbSubmissionCustomExtension = a;
-				?'irbSubmissionCustomExtension created =>'+irbQ.customAttributes.irbSubmissionCustomExntesion+'\n';
+				?'irbSubmissionCustomExtension created =>'+irbQ.customAttributes.irbSubmissionCustomExtension+'\n';
 			}
 
 			irbCustomSettings = irbQ.customAttributes.irbSubmissionCustomExtension;
@@ -193,7 +193,7 @@ if(status == "Submitted"){
 			var resourceContainer = irbQ.resourceContainer;
 			if(resourceContainer == null){
 				var template = wom.getEntityFromString("com.webridge.entity.Entity[OID[7CDE218AEB7E7D45804ED6F0B895B017]]");
-				if(template != null && theParent.count()==1){
+				if(template != null && theParent != null){
 					irbQ.createWorkspace(theParent, template);
 					?'irbQ.resourceContainer =>'+irbQ.resourceContainer+'\n';
 				}
@@ -320,7 +320,7 @@ if(status == "Submitted"){
 			//teamSubInvestigators --> co-investigator
 			{{#each studyDetails.teamSubInvestigators}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'");
-					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[975C66840E61074B9E445C485B28B58C]]");
+					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[975C66840E61074B9E445C485B28B58C]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -351,7 +351,7 @@ if(status == "Submitted"){
 			//researchCoordinators --> Study Coordinator/Primary Contact
 			{{#each studyDetails.researchCoordinators}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{coordinator.userId}}'");
-					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[22DEA0DE85F4EB4684FCA11837F4B923]]");
+					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[22DEA0DE85F4EB4684FCA11837F4B923]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -383,7 +383,7 @@ if(status == "Submitted"){
 			//other study staff --> study team member --> create new role?? -- not done
 			{{#each studyDetails.otherStudyStaff}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'"); 
-					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
+					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -414,7 +414,7 @@ if(status == "Submitted"){
 			//team Volunteer --> study team member --> create new role?? -- not done
 			{{#each studyDetails.teamVolunteers}}
 					var existingMember = studyTeamMemberInfo.query("customAttributes.studyTeamMember.customAttributes.personCustomExtension.customAttributes.masterID ='{{userId}}'"); 
-					var role = entityUtils.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
+					var role = wom.getEntityFromString("com.webridge.entity.Entity[OID[6F29389EA272CA409AB4AEA2542F7D6D]]");
 					if(existingMember != null && existingMember.count > 0){
 
 						existingMember = existingMember.elements().item(1);
@@ -472,7 +472,7 @@ if(status == "Submitted"){
 					var newDrug = _Drug.createEntity();
 					var drugItemID = irbDrugs.ID;
 					var today = new Date();
-					var TBDNAME = irbDrugs.item(i).customAttributes.brandName;
+					var TBDNAME = irbDrugs.customAttributes.brandName;
 					if(drugItemID != 'TBD00000001'){
 						newDrug.setQualifiedAttribute("customAttributes.drug", irbDrugs);
 					}
@@ -511,9 +511,9 @@ if(status == "Submitted"){
 				if(irbDevices != null && irbDevices.count() > 0){
 					irbDevices = irbDevices.elements().item(1);
 					var newDevice = _Device.createEntity();
-					var deviceID = irbDevices.item(i).ID;
+					var deviceID = irbDevices.ID;
 					var today = new Date();
-					var TBDDEVICENAME = irbDevices.item(i).customAttributes.name;
+					var TBDDEVICENAME = irbDevices.customAttributes.name;
 					if(deviceID != "TBDDEV00001"){
 						newDevice.setQualifiedAttribute("customAttributes.device", irbDevices);
 					}
