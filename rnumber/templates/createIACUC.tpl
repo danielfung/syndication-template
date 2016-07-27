@@ -24,7 +24,8 @@ var submissionStatus = "{{status}}";
 {{#if typeOfSubmission}}
 //IACUC Update
 	//if(submissionStatus == "Approved" || submissionStatus == "Discarded" || submissionStatus == "Closed" || submissionStatus == "Approved - Managed Externally" || submissionStatus == "Expired - Managed Externally"){
-	if(submissionStatus == "Approved"){
+	//if(submissionStatus == "Approved"){
+	if(submissionStatus == "Approved" || submissionStatus == "Discarded" || submissionStatus == "Closed"){
 		if(rnumberQ.count() > 0){
 			rnumberQ = rnumberQ.elements().item(1);
 			?'RN Study Found => '+rnumberQ.ID+'\n';
@@ -121,6 +122,23 @@ var submissionStatus = "{{status}}";
 				}
 			{{/if}}		
 
+
+ 			var status = "{{status}}";		
+			if(status == "Discarded"){		
+ 				var discardStatus = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[A4395FC87BADA242B299D1E1B029FBE2]]');		
+ 				rnumberQ.setQualifiedAttribute("status",discardStatus);			
+ 				?'Updated status to discard => '+rnumberQ.status+'\n';		
+ 			}		
+ 			else if(status == "Closed"){		
+ 				var closedStatus = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[AB57EC44D558484DAB9CCFA2176AFAB0]]');		
+ 				rnumberQ.setQualifiedAttribute("status",closedStatus);	
+ 				?'Updated status to closed => '+rnumberQ.status+'\n';		
+ 			}		
+ 			else{		
+ 				var submitStatus = entityUtils.getObjectFromString('com.webridge.entity.Entity[OID[EC4D938EFD0F244FAD70F312C85E0AF7]]');		
+ 				rnumberQ.setQualifiedAttribute("status",submitStatus);		
+ 				?'Updated status to submit => '+rnumberQ.status+'\n';		
+ 			}
 
 			rnumberQ.updateReadersAndEditors();
 			?'running updateReadersAndEditors\n';
